@@ -1,0 +1,119 @@
+<div class="space-y-6">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">Programmes de signature</h1>
+      <p class="text-slate-500 text-sm">Consultez les programmes de signature créés dans la plateforme.</p>
+    </div>
+    <a
+      routerLink="/dashboard/programs/create"
+      class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition-all flex items-center gap-2 text-sm">
+      Créer un programme
+    </a>
+  </div>
+
+  <div *ngIf="loading" class="text-sm text-slate-500">
+    Chargement des programmes...
+  </div>
+
+  <div *ngIf="error && !loading" class="bg-red-50 text-red-700 px-4 py-3 rounded-md text-sm">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading" class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="bg-slate-50 border-b border-slate-100">
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Titre</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Type</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Statut</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Début</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Fin</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <tr *ngFor="let program of programs" class="hover:bg-slate-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+              {{ program.title }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
+              {{ program.programType }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span
+                class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-md w-[90px] justify-center"
+                [class.bg-green-100]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
+                [class.text-green-800]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
+                [class.bg-red-100]="program.status === 'CANCELLED'"
+                [class.text-red-800]="program.status === 'CANCELLED'">
+                {{ program.status }}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+              {{ program.startDate || '-' }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+              {{ program.endDate || '-' }}
+            </td>
+          </tr>
+          <tr *ngIf="programs.length === 0">
+            <td colspan="5" class="px-6 py-4 text-center text-gray-500 text-sm">
+              Aucun programme trouvé.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="total > 0" class="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200">
+      <div class="flex items-center space-x-4">
+        <div class="text-sm text-gray-700">
+          Affichage de {{ (page - 1) * pageSize + 1 }} à {{ Math.min(page * pageSize, total) }} sur {{ total }} résultats
+        </div>
+        <div class="flex items-center space-x-2">
+          <label for="pageSize" class="text-sm text-gray-700">Éléments par page :</label>
+          <select
+            id="pageSize"
+            [(ngModel)]="pageSize"
+            (change)="onPageSizeChange()"
+            class="px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+            <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button
+          (click)="onPageChange(1)"
+          [disabled]="page === 1"
+          class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Première page">
+          ««
+        </button>
+        <button
+          (click)="onPageChange(page - 1)"
+          [disabled]="page === 1"
+          class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+          Précédent
+        </button>
+        <span class="px-4 py-2 text-sm text-gray-700">
+          Page {{ page }} sur {{ getTotalPages() }}
+        </span>
+        <button
+          (click)="onPageChange(page + 1)"
+          [disabled]="page >= getTotalPages()"
+          class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+          Suivant
+        </button>
+        <button
+          (click)="onPageChange(getTotalPages())"
+          [disabled]="page >= getTotalPages()"
+          class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Dernière page">
+          »»
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

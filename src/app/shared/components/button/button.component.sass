@@ -1,0 +1,15 @@
+@import '../../../../assets/styles/mixins'
+
+button
+  @include transition
+  border-radius: 0.5rem
+  font-weight: 500
+  cursor: pointer
+  display: inline-flex
+  align-items: center
+  justify-content: center
+
+  &:disabled
+    opacity: 0.6
+    cursor: not-allowed
+

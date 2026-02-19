@@ -1,0 +1,101 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">Créer un programme de signature</h1>
+      <p class="text-slate-500 text-sm">Configurez les informations, les étapes de signature et validez avec un OTP.</p>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-4 text-sm">
+    <div class="flex items-center gap-2">
+      <div
+        class="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold"
+        [class.bg-indigo-600]="currentStep === 1"
+        [class.text-white]="currentStep === 1"
+        [class.bg-slate-200]="currentStep !== 1"
+        [class.text-slate-700]="currentStep !== 1">
+        1
+      </div>
+      <span [class.font-semibold]="currentStep === 1">Infos & documents</span>
+    </div>
+    <div class="h-px flex-1 bg-slate-200"></div>
+    <div class="flex items-center gap-2">
+      <div
+        class="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold"
+        [class.bg-indigo-600]="currentStep === 2"
+        [class.text-white]="currentStep === 2"
+        [class.bg-slate-200]="currentStep !== 2"
+        [class.text-slate-700]="currentStep !== 2">
+        2
+      </div>
+      <span [class.font-semibold]="currentStep === 2">Étapes de signature</span>
+    </div>
+    <div class="h-px flex-1 bg-slate-200"></div>
+    <div class="flex items-center gap-2">
+      <div
+        class="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold"
+        [class.bg-indigo-600]="currentStep === 3"
+        [class.text-white]="currentStep === 3"
+        [class.bg-slate-200]="currentStep !== 3"
+        [class.text-slate-700]="currentStep !== 3">
+        3
+      </div>
+      <span [class.font-semibold]="currentStep === 3">Récapitulatif</span>
+    </div>
+    <div class="h-px flex-1 bg-slate-200"></div>
+    <div class="flex items-center gap-2">
+      <div
+        class="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold"
+        [class.bg-indigo-600]="currentStep === 4"
+        [class.text-white]="currentStep === 4"
+        [class.bg-slate-200]="currentStep !== 4"
+        [class.text-slate-700]="currentStep !== 4">
+        4
+      </div>
+      <span [class.font-semibold]="currentStep === 4">OTP & création</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="bg-red-50 text-red-700 px-4 py-3 rounded-md text-sm">
+    {{ error }}
+  </div>
+
+  <div *ngIf="success" class="bg-green-50 text-green-700 px-4 py-3 rounded-md text-sm">
+    {{ success }}
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+    <app-program-step-one
+      *ngIf="currentStep === 1"
+      [initialValue]="draftProgram"
+      (validated)="onUpdateGeneral($event)">
+    </app-program-step-one>
+
+    <app-program-step-two
+      *ngIf="currentStep === 2"
+      [documents]="draftProgram.documents"
+      [initialSteps]="draftProgram.steps"
+      [users]="users"
+      (back)="goToStep(1)"
+      (validated)="onUpdateSteps($event)">
+    </app-program-step-two>
+
+    <app-program-step-three
+      *ngIf="currentStep === 3"
+      [program]="draftProgram"
+      [loading]="loading"
+      (back)="goToStep(2)"
+      (requestOtp)="onRequestOtp()">
+    </app-program-step-three>
+
+    <app-program-step-four
+      *ngIf="currentStep === 4"
+      [loading]="loading"
+      [email]="email"
+      (back)="goToStep(3)"
+      (submitOtp)="onSubmitProgram($event)">
+    </app-program-step-four>
+  </div>
+</div>
+
+

@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss/base'
+@import 'tailwindcss/components'
+@import 'tailwindcss/utilities'
+
+// Variables SASS personnalisées
+@import './assets/styles/variables'
+@import './assets/styles/mixins'
+
+// Styles globaux
+body
+  @apply bg-gray-50 text-gray-900
+  font-family: 'Inter', 'Roboto', sans-serif

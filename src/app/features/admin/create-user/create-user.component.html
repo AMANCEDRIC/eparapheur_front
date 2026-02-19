@@ -1,0 +1,90 @@
+<div class="p-6">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Créer un utilisateur</h1>
+      <p class="text-gray-600 mt-2">Ajouter un nouvel utilisateur à l'application</p>
+    </div>
+
+    <div class="max-w-2xl">
+      <app-card>
+        <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <div *ngIf="error" class="bg-danger/10 border border-danger text-danger px-4 py-3 rounded">
+            {{ error }}
+          </div>
+
+          <div *ngIf="success" class="bg-success/10 border border-success text-success px-4 py-3 rounded">
+            Utilisateur créé avec succès. Redirection...
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <app-input
+              formControlName="firstName"
+              label="Prénom"
+              placeholder="Prénom"
+              [required]="true"
+              [error]="createUserForm.get('firstName')?.hasError('required') && createUserForm.get('firstName')?.touched ? 'Le prénom est requis' : ''">
+            </app-input>
+
+            <app-input
+              formControlName="lastName"
+              label="Nom"
+              placeholder="Nom"
+              [required]="true"
+              [error]="createUserForm.get('lastName')?.hasError('required') && createUserForm.get('lastName')?.touched ? 'Le nom est requis' : ''">
+            </app-input>
+          </div>
+
+          <app-input
+            formControlName="email"
+            type="email"
+            label="Email"
+            placeholder="email@example.com"
+            [required]="true"
+            [error]="createUserForm.get('email')?.hasError('required') && createUserForm.get('email')?.touched ? 'L\'email est requis' : createUserForm.get('email')?.hasError('email') && createUserForm.get('email')?.touched ? 'Email invalide' : ''">
+          </app-input>
+
+          <app-input
+            formControlName="phone"
+            type="tel"
+            label="Téléphone"
+            placeholder="+33 6 12 34 56 78">
+          </app-input>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+            <select formControlName="gender" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              <option value="">Sélectionner</option>
+              <option value="M">Masculin</option>
+              <option value="F">Féminin</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Profil</label>
+            <select formControlName="profileId" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              <option value="2">Utilisateur</option>
+              <option value="1">Administrateur</option>
+              <option value="3">Agent d'Enregistrement</option>
+            </select>
+          </div>
+
+          <div class="flex space-x-4">
+            <app-button
+              type="submit"
+              variant="primary"
+              [loading]="loading"
+              [disabled]="createUserForm.invalid || loading || success">
+              Créer l'utilisateur
+            </app-button>
+            <app-button
+              type="button"
+              variant="secondary"
+              [disabled]="loading"
+              (click)="router.navigate(['/admin/users'])">
+              Annuler
+            </app-button>
+          </div>
+        </form>
+      </app-card>
+    </div>
+</div>
+

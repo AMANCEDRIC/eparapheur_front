@@ -1,0 +1,131 @@
+<!-- Overlay -->
+<div
+  *ngIf="isOpen"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  (click)="onClose()">
+  <!-- Modal Container -->
+  <div
+    class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col"
+    (click)="$event.stopPropagation()">
+    
+    <!-- Header rouge -->
+    <div class="bg-red-600 text-white px-6 py-4 rounded-t-lg flex items-center justify-between">
+      <h2 class="text-lg font-bold uppercase">Sélectionner une personne</h2>
+      <button
+        type="button"
+        (click)="onClose()"
+        class="text-white hover:text-gray-200 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Search Section -->
+    <div class="px-6 py-4 border-b border-slate-200">
+      <label class="block text-sm font-medium text-slate-700 mb-2">
+        Critère de recherche
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Rechercher par nom, prénom, numéro de téléphone"
+          class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+        <svg
+          class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Users List -->
+    <div class="flex-1 overflow-y-auto px-6 py-4">
+      <div *ngIf="filteredUsers.length === 0" class="text-center text-slate-500 py-8">
+        <p>Aucun utilisateur trouvé.</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          *ngFor="let user of filteredUsers"
+          (click)="toggleUserSelection(user)"
+          [class.border-indigo-500]="isUserSelected(user)"
+          [class.bg-indigo-50]="isUserSelected(user)"
+          class="border-2 rounded-lg p-4 cursor-pointer transition-all hover:shadow-md"
+          [class.border-slate-200]="!isUserSelected(user)">
+          
+          <!-- Checkbox -->
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <!-- Avatar -->
+              <div class="relative">
+                <div
+                  *ngIf="!user.avatar?.url"
+                  class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm"
+                  [style.background-color]="getAvatarColor(user)">
+                  {{ getUserInitials(user) }}
+                </div>
+                <img
+                  *ngIf="user.avatar?.url"
+                  [src]="user.avatar!.url"
+                  [alt]="getUserFullName(user)"
+                  class="w-12 h-12 rounded-full object-cover">
+                <!-- Indicateur de statut -->
+                <span
+                  class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white"
+                  [class.bg-green-500]="user.active"
+                  [class.bg-red-500]="!user.active">
+                </span>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-semibold text-slate-900 text-sm">
+                  {{ getUserFullName(user) }}
+                </h3>
+              </div>
+            </div>
+            <input
+              type="checkbox"
+              [checked]="isUserSelected(user)"
+              (click)="$event.stopPropagation(); toggleUserSelection(user)"
+              class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+          </div>
+
+          <!-- Email -->
+          <div class="mb-2">
+            <span class="text-xs text-slate-500">Mail</span>
+            <p class="text-sm text-slate-900 truncate">{{ user.login }}</p>
+          </div>
+
+          <!-- Fonction -->
+          <div>
+            <span class="text-xs text-slate-500">Fonction</span>
+            <p class="text-sm text-slate-900 truncate">{{ getUserFunction(user) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-slate-100 px-6 py-4 rounded-b-lg flex items-center justify-between">
+      <div class="text-sm text-slate-600">
+        <span *ngIf="selectedUsers.length > 0">
+          {{ selectedUsers.length }} utilisateur{{ selectedUsers.length > 1 ? 's' : '' }} sélectionné{{ selectedUsers.length > 1 ? 's' : '' }}
+        </span>
+        <span *ngIf="selectedUsers.length === 0" class="text-slate-400">
+          Aucune sélection
+        </span>
+      </div>
+      <button
+        type="button"
+        [disabled]="!canValidate"
+        (click)="onValidate()"
+        class="px-6 py-2 bg-slate-400 text-white rounded-md font-medium hover:bg-slate-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        Valider
+      </button>
+    </div>
+  </div>
+</div>
+

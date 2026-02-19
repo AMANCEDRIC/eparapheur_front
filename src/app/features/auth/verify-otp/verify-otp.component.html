@@ -1,0 +1,45 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        Vérification OTP
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Entrez le code à 6 chiffres reçu
+      </p>
+    </div>
+
+    <app-card>
+      <form [formGroup]="otpForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div *ngIf="error" class="bg-danger/10 border border-danger text-danger px-4 py-3 rounded">
+          {{ error }}
+        </div>
+
+        <app-input
+          formControlName="otp"
+          label="Code OTP"
+          placeholder="000000"
+          [required]="true"
+          maxlength="6"
+          [error]="otpForm.get('otp')?.hasError('required') && otpForm.get('otp')?.touched ? 'Le code OTP est requis' : otpForm.get('otp')?.hasError('pattern') && otpForm.get('otp')?.touched ? 'Le code doit contenir 6 chiffres' : ''">
+        </app-input>
+
+        <app-button
+          type="submit"
+          variant="primary"
+          [loading]="loading"
+          [disabled]="otpForm.invalid || loading"
+          [fullWidth]="true">
+          Vérifier
+        </app-button>
+
+        <div class="text-center">
+          <a routerLink="/login" class="text-sm font-medium text-primary hover:text-blue-700">
+            Retour à la connexion
+          </a>
+        </div>
+      </form>
+    </app-card>
+  </div>
+</div>
+
