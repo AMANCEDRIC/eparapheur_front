@@ -2,15 +2,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   CreateSignatureProgramRequest
-} from '../../../core/models/signature-program.model';
+} from '../../../../core/models/signature-program.model';
 
 @Component({
-  selector: 'app-program-step-three',
+  selector: 'app-step-three',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './program-step-three.component.html'
+  templateUrl: './step-three.component.html'
 })
-export class ProgramStepThreeComponent {
+export class StepThreeComponent {
   @Input() program!: Omit<CreateSignatureProgramRequest, 'otp' | 'email'>;
   @Input() loading = false;
 
@@ -25,5 +25,4 @@ export class ProgramStepThreeComponent {
     this.requestOtp.emit();
   }
 }
-
 

@@ -1,21 +1,21 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   SignatureProgramDocumentRequest,
   SignatureProgramStepRequest,
   SignatureProgramStepParticipantRequest
-} from '../../../core/models/signature-program.model';
-import { IAccountDetail } from '../../../core/models';
-import { UserSelectionModalComponent } from '../../../shared/components/user-selection-modal/user-selection-modal.component';
+} from '../../../../core/models/signature-program.model';
+import { IAccountDetail } from '../../../../core/models';
+import { UserSelectionModalComponent } from '../../../../shared/components/user-selection-modal/user-selection-modal.component';
 
 @Component({
-  selector: 'app-program-step-two',
+  selector: 'app-step-two',
   standalone: true,
   imports: [CommonModule, FormsModule, UserSelectionModalComponent],
-  templateUrl: './program-step-two.component.html'
+  templateUrl: './step-two.component.html'
 })
-export class ProgramStepTwoComponent {
+export class StepTwoComponent implements OnInit {
   @Input() documents: SignatureProgramDocumentRequest[] = [];
   @Input() initialSteps: SignatureProgramStepRequest[] = [];
   @Input() users: IAccountDetail[] = [];
@@ -213,5 +213,4 @@ export class ProgramStepTwoComponent {
     this.validated.emit(this.steps);
   }
 }
-
 

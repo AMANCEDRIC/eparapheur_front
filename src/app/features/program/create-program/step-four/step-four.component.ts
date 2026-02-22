@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-program-step-four',
+  selector: 'app-step-four',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './program-step-four.component.html'
+  templateUrl: './step-four.component.html'
 })
-export class ProgramStepFourComponent {
+export class StepFourComponent {
   @Input() loading = false;
   @Input() email = '';
 
@@ -28,5 +28,4 @@ export class ProgramStepFourComponent {
     this.submitOtp.emit({ otp: this.otp });
   }
 }
-
 

@@ -52,6 +52,18 @@ export class ProgramService {
       `${this.apiUrl}/${id}`
     );
   }
+
+  /**
+   * Télécharge un document PDF
+   * @param documentId ID du document
+   * @returns Observable avec le blob PDF
+   */
+  downloadDocument(documentId: number): Observable<Blob> {
+    return this.http.get(
+      `http://localhost:8081/documents/${documentId}/download`,
+      { responseType: 'blob' }
+    );
+  }
 }
 
 

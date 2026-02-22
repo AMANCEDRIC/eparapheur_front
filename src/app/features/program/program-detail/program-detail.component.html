@@ -1,0 +1,178 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <button
+        type="button"
+        (click)="goBack()"
+        class="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 mb-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Retour à la liste
+      </button>
+    
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-sm text-slate-500">
+    Chargement du programme...
+  </div>
+
+  <div *ngIf="error && !loading" class="bg-red-50 text-red-700 px-4 py-3 rounded-md text-sm">
+    {{ error }}
+  </div>
+
+  <div *ngIf="program && !loading" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Colonne gauche : Informations et liste des documents -->
+    <div class="lg:col-span-1 space-y-6">
+      <!-- Informations générales -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+        <h2 class="text-lg font-semibold text-slate-900 mb-4">Informations</h2>
+        <div class="space-y-3 text-sm">
+          <div>
+            <span class="font-medium text-slate-700">Titre :</span>
+            <p class="text-slate-900">{{ program.title }}</p>
+          </div>
+          <div *ngIf="program.description">
+            <span class="font-medium text-slate-700">Description :</span>
+            <p class="text-slate-900">{{ program.description }}</p>
+          </div>
+          <div>
+            <span class="font-medium text-slate-700">Type :</span>
+            <p class="text-slate-900">{{ program.programType }}</p>
+          </div>
+          <div>
+            <span class="font-medium text-slate-700">Statut :</span>
+            <span
+              class="px-2 py-1 text-xs font-semibold rounded-md"
+              [class.bg-green-100]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
+              [class.text-green-800]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
+              [class.bg-red-100]="program.status === 'CANCELLED'"
+              [class.text-red-800]="program.status === 'CANCELLED'">
+              {{ program.status }}
+            </span>
+          </div>
+          <div *ngIf="program.startDate">
+            <span class="font-medium text-slate-700">Début :</span>
+            <p class="text-slate-900">{{ program.startDate | date:'short' }}</p>
+          </div>
+          <div *ngIf="program.endDate">
+            <span class="font-medium text-slate-700">Fin :</span>
+            <p class="text-slate-900">{{ program.endDate | date:'short' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Liste des documents -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+        <h2 class="text-lg font-semibold text-slate-900 mb-4">Documents</h2>
+        <div *ngIf="documents.length === 0" class="text-sm text-slate-500">
+          Aucun document disponible pour le moment.
+        </div>
+        <ul class="space-y-2" *ngIf="documents.length > 0">
+          <li
+            *ngFor="let doc of documents"
+            (click)="selectDocument(doc)"
+            class="px-3 py-2 rounded-lg cursor-pointer transition-colors"
+            [class.bg-indigo-50]="selectedDocument === doc"
+            [class.border-indigo-200]="selectedDocument === doc"
+            [class.border]="selectedDocument === doc"
+            [class.hover:bg-slate-50]="selectedDocument !== doc">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-slate-900 truncate">{{ doc.documentName }}</p>
+                <p class="text-xs text-slate-500">{{ doc.documentSize | number }} octets</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Participants par étape -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+        <h2 class="text-lg font-semibold text-slate-900 mb-4">Participants</h2>
+        
+        <div *ngIf="steps.length === 0" class="text-sm text-slate-500">
+          Aucune étape définie.
+        </div>
+
+        <div class="space-y-4" *ngIf="steps.length > 0">
+          <!-- Pour chaque étape -->
+          <div *ngFor="let step of steps" class="border border-slate-200 rounded-lg p-3">
+            <!-- En-tête de l'étape -->
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-slate-500 uppercase">Étape {{ step.stepOrder }}</span>
+                <span class="text-sm font-semibold text-slate-900">{{ step.name }}</span>
+              </div>
+              <span class="text-xs px-2 py-1 rounded-md bg-indigo-100 text-indigo-800">
+                {{ getActionLabel(step.actionType) }}
+              </span>
+            </div>
+
+            <!-- Liste des participants de l'étape -->
+            <div *ngIf="!step.participants || step.participants.length === 0" class="text-xs text-slate-500 italic">
+              Aucun participant pour cette étape.
+            </div>
+
+            <div class="space-y-2" *ngIf="step.participants && step.participants.length > 0">
+              <div 
+                *ngFor="let participant of step.participants" 
+                class="flex items-center justify-between p-2 rounded-md bg-slate-50 hover:bg-slate-100 transition-colors">
+                <!-- Informations du participant -->
+                <div class="flex items-center gap-2 flex-1 min-w-0">
+                  <!-- Avatar ou icône -->
+                  <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                    <span class="text-xs font-semibold text-indigo-700">
+                      {{ getParticipantName(participant).charAt(0).toUpperCase() }}
+                    </span>
+                  </div>
+                  
+                  <!-- Nom et email -->
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-slate-900 truncate">
+                      {{ getParticipantName(participant) }}
+                    </p>
+                    <p class="text-xs text-slate-500 truncate">
+                      {{ participant.account.login }}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Statut -->
+                <div class="flex items-center gap-2 flex-shrink-0 ml-2">
+                  <span 
+                    class="px-2 py-1 text-xs font-semibold rounded-md"
+                    [ngClass]="getStatusClass(participant.status)">
+                    {{ getStatusLabel(participant.status) }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne droite : Viewer PDF -->
+    <div class="lg:col-span-2">
+      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+        <h2 class="text-lg font-semibold text-slate-900 mb-4">Aperçu du document</h2>
+        <div *ngIf="loadingPdf" class="text-sm text-slate-500 py-8 text-center">
+          Chargement du PDF...
+        </div>
+        <app-program-pdf-viewer
+          *ngIf="!loadingPdf && getPdfSrc(selectedDocument)"
+          [src]="getPdfSrc(selectedDocument)">
+        </app-program-pdf-viewer>
+        <div *ngIf="!loadingPdf && !getPdfSrc(selectedDocument) && selectedDocument" class="text-sm text-slate-500 py-8 text-center">
+          Aucun document sélectionné ou impossible de charger le PDF.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

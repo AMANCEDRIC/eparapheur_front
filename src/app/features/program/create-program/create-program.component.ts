@@ -7,20 +7,20 @@ import { ProgramService } from '../../../core/services/program.service';
 import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { IAccountDetail, IPaginatedResponse } from '../../../core/models';
-import { ProgramStepOneComponent } from './program-step-one.component';
-import { ProgramStepTwoComponent } from './program-step-two.component';
-import { ProgramStepThreeComponent } from './program-step-three.component';
-import { ProgramStepFourComponent } from './program-step-four.component';
+import { StepOneComponent } from './step-one/step-one.component';
+import { StepTwoComponent } from './step-two/step-two.component';
+import { StepThreeComponent } from './step-three/step-three.component';
+import { StepFourComponent } from './step-four/step-four.component';
 
 @Component({
   selector: 'app-create-program',
   standalone: true,
   imports: [
     CommonModule,
-    ProgramStepOneComponent,
-    ProgramStepTwoComponent,
-    ProgramStepThreeComponent,
-    ProgramStepFourComponent
+    StepOneComponent,
+    StepTwoComponent,
+    StepThreeComponent,
+    StepFourComponent
   ],
   templateUrl: './create-program.component.html'
 })

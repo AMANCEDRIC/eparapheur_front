@@ -48,19 +48,23 @@
     <div>
       <h3 class="text-sm font-semibold text-slate-900 mb-2">Documents</h3>
       <p class="text-xs text-slate-500 mb-2">
-        Importez un ou plusieurs fichiers à signer. Les documents seront associés aux étapes de signature.
+        Importez un ou plusieurs fichiers PDF à signer. Les documents seront associés aux étapes de signature.
       </p>
       <input
         type="file"
         multiple
+        accept="application/pdf"
         class="hidden"
         (change)="onFilesSelected($event)"
         #fileInput>
       <div
         class="border border-dashed border-rose-400 bg-slate-50/80 rounded-xl px-4 py-6 cursor-pointer flex items-center gap-3 text-slate-600"
-        (click)="fileInput.click()">
+        [class.opacity-50]="loadingFiles"
+        [class.cursor-not-allowed]="loadingFiles"
+        (click)="!loadingFiles && fileInput.click()">
         <span class="text-lg">+</span>
-        <span class="text-sm">Cliquer pour charger un fichier</span>
+        <span class="text-sm" *ngIf="!loadingFiles">Cliquer pour charger un fichier PDF</span>
+        <span class="text-sm" *ngIf="loadingFiles">Conversion en cours...</span>
       </div>
     </div>
 
@@ -78,14 +82,50 @@
             {{ doc.documentType }} • {{ doc.documentSize | number }} octets
           </span>
         </div>
-        <button
-          type="button"
-          class="text-xs text-red-600 hover:text-red-800 px-2 py-1 rounded-md hover:bg-red-50"
-          (click)="removeDocument(i)">
-          Supprimer
-        </button>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="p-1.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600"
+            (click)="onPreviewDocument(doc)"
+            title="Prévisualiser le PDF">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            class="text-xs text-red-600 hover:text-red-800 px-2 py-1 rounded-md hover:bg-red-50"
+            (click)="removeDocument(i)">
+            Supprimer
+          </button>
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- Aperçu PDF -->
+  <div class="mt-4 space-y-2" *ngIf="previewSrc">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-sm font-semibold text-slate-900">Aperçu du document sélectionné</h3>
+        <p class="text-xs text-slate-500">
+          Cliquez sur l’icône œil pour changer de document à prévisualiser.
+        </p>
+      </div>
+      <button
+        type="button"
+        class="text-xs text-slate-500 hover:text-slate-800 px-2 py-1 rounded-md hover:bg-slate-100"
+        (click)="onClosePreview()">
+        Fermer l’aperçu
+      </button>
+    </div>
+    <app-program-pdf-viewer
+      [src]="previewSrc">
+    </app-program-pdf-viewer>
   </div>
 
   <div class="flex justify-end pt-4">
@@ -98,5 +138,4 @@
     </button>
   </div>
 </div>
-
 

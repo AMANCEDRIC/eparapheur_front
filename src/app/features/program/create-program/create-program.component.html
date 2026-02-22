@@ -65,36 +65,36 @@
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
-    <app-program-step-one
+    <app-step-one
       *ngIf="currentStep === 1"
       [initialValue]="draftProgram"
       (validated)="onUpdateGeneral($event)">
-    </app-program-step-one>
+    </app-step-one>
 
-    <app-program-step-two
+    <app-step-two
       *ngIf="currentStep === 2"
       [documents]="draftProgram.documents"
       [initialSteps]="draftProgram.steps"
       [users]="users"
       (back)="goToStep(1)"
       (validated)="onUpdateSteps($event)">
-    </app-program-step-two>
+    </app-step-two>
 
-    <app-program-step-three
+    <app-step-three
       *ngIf="currentStep === 3"
       [program]="draftProgram"
       [loading]="loading"
       (back)="goToStep(2)"
       (requestOtp)="onRequestOtp()">
-    </app-program-step-three>
+    </app-step-three>
 
-    <app-program-step-four
+    <app-step-four
       *ngIf="currentStep === 4"
       [loading]="loading"
       [email]="email"
       (back)="goToStep(3)"
       (submitOtp)="onSubmitProgram($event)">
-    </app-program-step-four>
+    </app-step-four>
   </div>
 </div>
 

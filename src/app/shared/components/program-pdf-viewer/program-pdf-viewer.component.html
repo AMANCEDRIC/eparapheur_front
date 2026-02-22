@@ -1,0 +1,93 @@
+<div class="h-[500px] border border-slate-200 rounded-xl overflow-hidden bg-slate-100 flex flex-col">
+  <!-- Toolbar : mode + zoom -->
+  <div class="flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs text-slate-600">
+    <div class="flex items-center gap-2">
+      <span class="mr-1">Mode</span>
+      <button
+        type="button"
+        class="px-2 py-1 rounded border border-slate-300"
+        [class.bg-indigo-600]="viewMode === 'scroll'"
+        [class.text-white]="viewMode === 'scroll'"
+        [class.bg-white]="viewMode !== 'scroll'"
+        (click)="setViewMode('scroll')">
+        Défilement
+      </button>
+      <button
+        type="button"
+        class="px-2 py-1 rounded border border-slate-300"
+        [class.bg-indigo-600]="viewMode === 'page'"
+        [class.text-white]="viewMode === 'page'"
+        [class.bg-white]="viewMode !== 'page'"
+        (click)="setViewMode('page')">
+        Page par page
+      </button>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <span class="mr-1">Zoom</span>
+      <button
+        type="button"
+        class="px-2 py-1 rounded border border-slate-300 hover:bg-slate-100"
+        (click)="zoomOut()">
+        -
+      </button>
+      <span class="w-10 text-center">{{ (zoom * 100) | number:'1.0-0' }}%</span>
+      <button
+        type="button"
+        class="px-2 py-1 rounded border border-slate-300 hover:bg-slate-100"
+        (click)="zoomIn()">
+        +
+      </button>
+      <button
+        type="button"
+        class="ml-1 px-2 py-1 rounded border border-slate-300 hover:bg-slate-100"
+        (click)="resetZoom()">
+        Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  <!-- Barre de pagination (mode page uniquement) -->
+  <div
+    *ngIf="viewMode === 'page' && totalPages > 0"
+    class="flex items-center justify-center gap-3 px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs text-slate-600">
+    <button
+      type="button"
+      class="px-2 py-1 rounded border border-slate-300 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+      (click)="prevPage()"
+      [disabled]="page <= 1">
+      Précédent
+    </button>
+    <span>Page {{ page }} / {{ totalPages }}</span>
+    <button
+      type="button"
+      class="px-2 py-1 rounded border border-slate-300 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+      (click)="nextPage()"
+      [disabled]="page >= totalPages">
+      Suivant
+    </button>
+  </div>
+
+  <div *ngIf="!src" class="flex-1 flex items-center justify-center text-slate-500">
+    <div class="text-center">
+      <svg class="w-12 h-12 mx-auto mb-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <p class="text-sm">Aucun document sélectionné</p>
+    </div>
+  </div>
+
+  <pdf-viewer
+    *ngIf="src"
+    [src]="src"
+    [render-text]="true"
+    [original-size]="false"
+    [show-all]="showAll"
+    [page]="page"
+    [zoom]="zoom"
+    style="display:block; height: 100%;"
+    (page-rendered)="onPageRendered($event)"
+    (after-load-complete)="onAfterLoadComplete($event)">
+  </pdf-viewer>
+</div>
+

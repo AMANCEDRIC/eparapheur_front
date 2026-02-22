@@ -48,6 +48,11 @@ export const routes: Routes = [
         path: 'programs/create',
         loadComponent: () => import('./features/program/create-program/create-program.component')
           .then(m => m.CreateProgramComponent)
+      },
+      {
+        path: 'programs/:id',
+        loadComponent: () => import('./features/program/program-detail/program-detail.component')
+          .then(m => m.ProgramDetailComponent)
       }
     ]
   },
