@@ -97,8 +97,8 @@ export interface SignatureProgramDTO {
   endDate?: string;
   createdAt?: string;
   updatedAt?: string;
-  documents?: SignatureProgramDocumentRequest[];  // Documents du programme (optionnel, pour compatibilité)
-  steps?: SignatureProgramStepDTO[];  // Étapes de signature avec documents imbriqués
+  documents?: SignatureProgramDocumentRequest[];
+  steps?: SignatureProgramStepDTO[];
 }
 
 

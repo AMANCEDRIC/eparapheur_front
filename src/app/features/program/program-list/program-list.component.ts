@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ProgramService } from '../../../core/services/program.service';
-import { SignatureProgramDTO } from '../../../core/models/signature-program.model';
+import {SignatureProgramDTO, SignatureProgramStepParticipantDTO} from '../../../core/models/signature-program.model';
 import { IPaginatedResponse } from '../../../core/models';
 import { DateFrPipe } from '../../../shared/date-fr.pipe';
 
@@ -71,6 +71,58 @@ export class ProgramListComponent implements OnInit {
 
   get Math() {
     return Math;
+  }
+
+  getParticipantInitials(participant: SignatureProgramStepParticipantDTO): string {
+    const person = participant.account.person;
+    if (person?.firstName || person?.lastName) {
+      const first = (person.firstName || '').charAt(0).toUpperCase();
+      const last = (person.lastName || '').charAt(0).toUpperCase();
+      const initials = `${first}${last}`.trim();
+      return initials || participant.account.login.slice(0, 2).toUpperCase();
+    }
+    return participant.account.login.slice(0, 2).toUpperCase();
+  }
+
+  private getAllParticipantInitials(program: SignatureProgramDTO): string[] {
+    const accountMap = new Map<number, SignatureProgramStepParticipantDTO>();
+
+    (program.steps || []).forEach(step => {
+      (step.participants || []).forEach(p => {
+        const accountId = p.account.id;
+        if (!accountMap.has(accountId)) {
+          accountMap.set(accountId, p);
+        }
+      });
+    });
+
+    return Array.from(accountMap.values()).map(p => this.getParticipantInitials(p));
+  }
+
+  getVisibleParticipants(program: SignatureProgramDTO): string[] {
+    return this.getAllParticipantInitials(program).slice(0, 3);
+  }
+
+  getExtraParticipantsCount(program: SignatureProgramDTO): number {
+    const total = this.getAllParticipantInitials(program).length;
+    return total > 3 ? total - 3 : 0;
+  }
+
+  getInitiatorInitials(program: SignatureProgramDTO): string {
+    const initiator: any = program.initiator;
+
+    if (initiator?.person?.firstName || initiator?.person?.lastName) {
+      const first = (initiator.person.firstName || '').charAt(0).toUpperCase();
+      const last = (initiator.person.lastName || '').charAt(0).toUpperCase();
+      const initials = `${first}${last}`.trim();
+      return initials || (initiator.login ? initiator.login.slice(0, 2).toUpperCase() : 'IN');
+    }
+
+    if (initiator?.login) {
+      return initiator.login.slice(0, 2).toUpperCase();
+    }
+
+    return 'IN';
   }
 }
 
