@@ -1,4 +1,4 @@
-<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+<div class="app-card">
   <div class="flex justify-between items-start mb-4">
     <div [class]="'p-3 rounded-xl ' + getIconColorClass()">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,7 +15,7 @@
       {{ trend }}
     </div>
   </div>
-  <p class="text-slate-500 text-sm font-medium">{{ title }}</p>
+  <p class="app-text-muted text-sm font-medium">{{ title }}</p>
   <h3 class="text-2xl font-bold text-slate-900 mt-1">{{ value }}</h3>
 </div>
 

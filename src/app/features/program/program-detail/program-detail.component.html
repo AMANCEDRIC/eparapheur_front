@@ -4,7 +4,7 @@
       <button
         type="button"
         (click)="goBack()"
-        class="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 mb-2">
+        class="app-btn app-btn-outline flex items-center gap-2 text-sm mb-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
@@ -14,11 +14,11 @@
     </div>
   </div>
 
-  <div *ngIf="loading" class="text-sm text-slate-500">
+  <div *ngIf="loading" class="text-sm app-text-muted">
     Chargement du programme...
   </div>
 
-  <div *ngIf="error && !loading" class="bg-red-50 text-red-700 px-4 py-3 rounded-md text-sm">
+  <div *ngIf="error && !loading" class="app-badge app-badge-danger px-4 py-3 text-sm">
     {{ error }}
   </div>
 
@@ -26,7 +26,7 @@
     <!-- Colonne gauche : Informations et liste des documents -->
     <div class="lg:col-span-1 space-y-6">
       <!-- Informations générales -->
-      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+      <div class="app-card">
         <h2 class="text-lg font-semibold text-slate-900 mb-4">Informations</h2>
         <div class="space-y-3 text-sm">
           <div>
@@ -64,7 +64,7 @@
       </div>
 
       <!-- Liste des documents -->
-      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+      <div class="app-card">
         <h2 class="text-lg font-semibold text-slate-900 mb-4">Documents</h2>
         <div *ngIf="documents.length === 0" class="text-sm text-slate-500">
           Aucun document disponible pour le moment.
@@ -92,7 +92,7 @@
       </div>
 
       <!-- Participants par étape -->
-      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+      <div class="app-card">
         <h2 class="text-lg font-semibold text-slate-900 mb-4">Participants</h2>
         
         <div *ngIf="steps.length === 0" class="text-sm text-slate-500">

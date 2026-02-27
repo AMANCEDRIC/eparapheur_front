@@ -6,7 +6,278 @@
 @import './assets/styles/variables'
 @import './assets/styles/mixins'
 
+// Design system global (CSS variables)
+:root
+  --app-primary-color: #0083c0
+  --app-secondary-color: #689f38
+  --app-danger-color: #d32f2f
+  --app-succes-color: #689f38
+  --app-active-color: #a50034
+  --app-disabled-color: #d9dde2
+  --app-border-radius: 5px
+  --app-white-color: #ffffff
+  --app-bg-layout: #f2f3f7
+  --app-bg-warning: #ffc107
+
+  --app-primary-shade200-color: #74b0e0
+  --app-light-color: #e2e2e2cf
+  --app-success-shade300-color: #13802c
+  --app-success-shade100-color: #28a745
+  --app-text-grey-color: #495057
+  --app-border-radius-small: 0rem
 // Styles globaux
 body
-  @apply bg-gray-50 text-gray-900
+  background-color: var(--app-bg-layout)
+  color: var(--app-text-grey-color)
   font-family: 'Inter', 'Roboto', sans-serif
+
+// Boutons génériques
+.app-btn
+  border-radius: var(--app-border-radius)
+  padding: 0.5rem 1rem
+  font-weight: 500
+  border: none
+  cursor: pointer
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  @include transition
+
+  &:disabled
+    opacity: 0.6
+    cursor: not-allowed
+
+.app-btn-primary
+  background-color: var(--app-primary-color)
+  color: var(--app-white-color)
+
+  &:hover:not(:disabled)
+    background-color: var(--app-primary-shade200-color)
+
+.app-btn-secondary
+  background-color: var(--app-secondary-color)
+  color: var(--app-white-color)
+
+.app-btn-danger
+  background-color: var(--app-danger-color)
+  color: var(--app-white-color)
+
+.app-btn-outline
+  background-color: transparent
+  color: var(--app-primary-color)
+  border: 1px solid var(--app-primary-color)
+
+// Cartes / panneaux
+.app-card
+  background-color: var(--app-white-color)
+  border-radius: var(--app-border-radius)
+  border: 1px solid #e2e8f0
+  padding: 1rem
+  @include card-shadow
+
+// Badges
+.app-badge
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  padding: 0.1rem 0.4rem
+  border-radius: var(--app-border-radius-small)
+  font-size: 0.75rem
+  font-weight: 600
+
+.app-badge-success
+  background-color: var(--app-success-shade100-color)
+  color: var(--app-white-color)
+
+.app-badge-danger
+  background-color: var(--app-danger-color)
+  color: var(--app-white-color)
+
+.app-badge-warning
+  background-color: var(--app-bg-warning)
+  color: #212529
+
+.app-badge-active
+  background-color: var(--app-active-color)
+  color: var(--app-white-color)
+
+// Utilitaires texte / fond
+.app-text-muted
+  color: var(--app-text-grey-color)
+
+.app-bg-primary
+  background-color: var(--app-primary-color)
+
+.app-bg-card
+  background-color: var(--app-white-color)
+
+.app-bg-layout
+  background-color: var(--app-bg-layout)
+
+// Liens
+.app-link-primary
+  color: var(--app-primary-color)
+
+  &:hover
+    color: var(--app-primary-shade200-color)
+
+// Alertes
+.app-alert
+  padding: 0.75rem 1rem
+  border-radius: var(--app-border-radius)
+  font-size: 0.875rem
+
+.app-alert-danger
+  @extend .app-alert
+  background-color: rgba(211, 47, 47, 0.08)
+  border: 1px solid var(--app-danger-color)
+  color: var(--app-danger-color)
+
+.app-alert-success
+  @extend .app-alert
+  background-color: rgba(40, 167, 69, 0.08)
+  border: 1px solid var(--app-success-shade100-color)
+  color: var(--app-success-shade300-color)
+
+.app-alert-warning
+  @extend .app-alert
+  background-color: rgba(255, 193, 7, 0.12)
+  border: 1px solid var(--app-bg-warning)
+  color: #856404
+
+// Stepper
+.app-step-circle
+  width: 2rem
+  height: 2rem
+  border-radius: 999px
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  font-size: 0.75rem
+  font-weight: 600
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease
+
+.app-step-label
+  font-size: 0.875rem
+  color: var(--app-text-grey-color)
+  transition: color 0.15s ease, font-weight 0.15s ease
+
+.app-step-connector
+  height: 1px
+  flex: 1
+  background-color: #e2e8f0
+
+.app-step-connector--done
+  background-color: var(--app-secondary-color)
+
+.app-step-connector--between
+  background-image: linear-gradient(to right, var(--app-secondary-color) 33%, rgba(255,255,255,0) 0%)
+  background-position: top
+  background-size: 6px 1px
+  background-repeat: repeat-x
+
+.app-step-connector--upcoming
+  background-color: #e2e8f0
+
+// Étape active = primaire
+.app-step-circle--active
+  background-color: var(--app-primary-color)
+  color: var(--app-white-color)
+  transform: scale(1.05)
+
+.app-step-label--active
+  color: var(--app-primary-color)
+  font-weight: 600
+
+// Étapes terminées = secondaire
+.app-step-circle--done
+  background-color: var(--app-secondary-color)
+  color: var(--app-white-color)
+
+.app-step-label--done
+  color: var(--app-secondary-color)
+  font-weight: 500
+
+// Étapes à venir = gris clair
+.app-step-circle--upcoming
+  background-color: #e9ecef
+  color: #6c757d
+
+// Champs de formulaire
+.app-input
+  display: block
+  width: 100%
+  border-radius: 4px
+  border: 1px solid #d0d7e2
+  padding: 0.5rem 0.75rem
+  font-size: 0.875rem
+  line-height: 1.4
+  background-color: #ffffff
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease
+
+.app-input::placeholder
+  color: #adb5bd
+
+.app-input:focus-visible
+  outline: none
+  border-color: var(--app-primary-color)
+  box-shadow: 0 0 0 3px rgba(0, 131, 192, 0.16)
+  background-color: #ffffff
+
+.app-textarea
+  @extend .app-input
+  min-height: 3rem
+
+// Labels / titres importants
+.app-label-important
+  color: var(--app-secondary-color)
+  font-weight: 600
+
+.app-section-title
+  color: var(--app-secondary-color)
+  font-weight: 700
+
+// Zone d'upload de fichiers
+.app-upload-dropzone
+  border: 1px dashed var(--app-secondary-color)
+  border-radius: var(--app-border-radius)
+  background-color: rgba(104, 159, 56, 0.03)
+  color: var(--app-secondary-color)
+  @include transition
+
+  &:hover
+    background-color: rgba(104, 159, 56, 0.06)
+    box-shadow: 0 0 0 1px var(--app-secondary-color)
+
+// Collapses (details/summary) utilisés dans le récapitulatif
+.app-collapse
+  border-radius: 4px
+  border: 1px solid #e2e8f0
+  padding: 0.5rem 0.75rem
+  background-color: #f9fafb
+  cursor: pointer
+  @include transition
+
+  &[open]
+    background-color: #f3f4f6
+
+  summary
+    list-style: none
+    font-size: 0.75rem
+    font-weight: 600
+    color: var(--app-text-grey-color)
+    display: flex
+    align-items: center
+    justify-content: space-between
+
+  summary::-webkit-details-marker
+    display: none
+
+  summary::after
+    content: '+'
+    font-weight: 700
+    margin-left: 0.5rem
+    color: var(--app-secondary-color)
+
+  &[open] summary::after
+    content: '–'

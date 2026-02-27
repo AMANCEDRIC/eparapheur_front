@@ -1,70 +1,178 @@
 <div class="space-y-6">
-  <div class="flex items-center justify-between">
-    <div>
-      <h1 class="text-2xl font-bold text-slate-900">Créer un programme de signature</h1>
-      <p class="text-slate-500 text-sm">Configurez les informations, les étapes de signature et validez avec un OTP.</p>
-    </div>
-  </div>
+  <!-- En-tête -->
+<!--  <div class="flex items-center justify-between">-->
+<!--    <div>-->
+<!--      <h1 class="text-2xl font-bold text-slate-900">-->
+<!--        Créer un programme de signature-->
+<!--      </h1>-->
+<!--      <p class="app-text-muted text-sm">-->
+<!--        Configurez les informations, les étapes de signature et validez avec un OTP.-->
+<!--      </p>-->
+<!--    </div>-->
+<!--  </div>-->
 
+  <!-- Barre de progression étapes -->
   <div class="flex items-center gap-4 text-sm">
+    <!-- Étape 1 -->
     <div class="flex items-center gap-2">
       <div
-        class="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold"
-        [class.bg-indigo-600]="currentStep === 1"
-        [class.text-white]="currentStep === 1"
-        [class.bg-slate-200]="currentStep !== 1"
-        [class.text-slate-700]="currentStep !== 1">
-        1
+        class="app-step-circle"
+        [ngClass]="{
+          'app-step-circle--active': currentStep === 1,
+          'app-step-circle--done': currentStep > 1,
+          'app-step-circle--upcoming': currentStep < 1
+        }">
+        <ng-container *ngIf="currentStep > 1; else step1Number">
+          <svg class="w-3 h-3" viewBox="0 0 20 20" fill="none">
+            <path
+              d="M16.667 5L8.125 13.542 4.167 9.583"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </ng-container>
+        <ng-template #step1Number>1</ng-template>
       </div>
-      <span [class.font-semibold]="currentStep === 1">Infos & documents</span>
+      <span
+        class="app-step-label"
+        [ngClass]="{
+          'app-step-label--active': currentStep === 1,
+          'app-step-label--done': currentStep > 1
+        }">
+        Infos &amp; documents
+      </span>
     </div>
-    <div class="h-px flex-1 bg-slate-200"></div>
+
+    <div
+      class="app-step-connector"
+      [ngClass]="{
+        'app-step-connector--done': currentStep > 2,
+        'app-step-connector--between': currentStep === 2,
+        'app-step-connector--upcoming': currentStep < 2
+      }"></div>
+
+    <!-- Étape 2 -->
     <div class="flex items-center gap-2">
       <div
-        class="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold"
-        [class.bg-indigo-600]="currentStep === 2"
-        [class.text-white]="currentStep === 2"
-        [class.bg-slate-200]="currentStep !== 2"
-        [class.text-slate-700]="currentStep !== 2">
-        2
+        class="app-step-circle"
+        [ngClass]="{
+          'app-step-circle--active': currentStep === 2,
+          'app-step-circle--done': currentStep > 2,
+          'app-step-circle--upcoming': currentStep < 2
+        }">
+        <ng-container *ngIf="currentStep > 2; else step2Number">
+          <svg class="w-3 h-3" viewBox="0 0 20 20" fill="none">
+            <path
+              d="M16.667 5L8.125 13.542 4.167 9.583"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </ng-container>
+        <ng-template #step2Number>2</ng-template>
       </div>
-      <span [class.font-semibold]="currentStep === 2">Étapes de signature</span>
+      <span
+        class="app-step-label"
+        [ngClass]="{
+          'app-step-label--active': currentStep === 2,
+          'app-step-label--done': currentStep > 2
+        }">
+        Étapes de signature
+      </span>
     </div>
-    <div class="h-px flex-1 bg-slate-200"></div>
+
+    <div
+      class="app-step-connector"
+      [ngClass]="{
+        'app-step-connector--done': currentStep > 3,
+        'app-step-connector--between': currentStep === 3,
+        'app-step-connector--upcoming': currentStep < 3
+      }"></div>
+
+    <!-- Étape 3 -->
     <div class="flex items-center gap-2">
       <div
-        class="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold"
-        [class.bg-indigo-600]="currentStep === 3"
-        [class.text-white]="currentStep === 3"
-        [class.bg-slate-200]="currentStep !== 3"
-        [class.text-slate-700]="currentStep !== 3">
-        3
+        class="app-step-circle"
+        [ngClass]="{
+          'app-step-circle--active': currentStep === 3,
+          'app-step-circle--done': currentStep > 3,
+          'app-step-circle--upcoming': currentStep < 3
+        }">
+        <ng-container *ngIf="currentStep > 3; else step3Number">
+          <svg class="w-3 h-3" viewBox="0 0 20 20" fill="none">
+            <path
+              d="M16.667 5L8.125 13.542 4.167 9.583"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </ng-container>
+        <ng-template #step3Number>3</ng-template>
       </div>
-      <span [class.font-semibold]="currentStep === 3">Récapitulatif</span>
+      <span
+        class="app-step-label"
+        [ngClass]="{
+          'app-step-label--active': currentStep === 3,
+          'app-step-label--done': currentStep > 3
+        }">
+        Récapitulatif
+      </span>
     </div>
-    <div class="h-px flex-1 bg-slate-200"></div>
+
+    <div
+      class="app-step-connector"
+      [ngClass]="{
+        'app-step-connector--done': currentStep > 4,
+        'app-step-connector--between': currentStep === 4,
+        'app-step-connector--upcoming': currentStep < 4
+      }"></div>
+
+    <!-- Étape 4 -->
     <div class="flex items-center gap-2">
       <div
-        class="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold"
-        [class.bg-indigo-600]="currentStep === 4"
-        [class.text-white]="currentStep === 4"
-        [class.bg-slate-200]="currentStep !== 4"
-        [class.text-slate-700]="currentStep !== 4">
-        4
+        class="app-step-circle"
+        [ngClass]="{
+          'app-step-circle--active': currentStep === 4,
+          'app-step-circle--done': currentStep > 4,
+          'app-step-circle--upcoming': currentStep < 4
+        }">
+        <ng-container *ngIf="currentStep > 4; else step4Number">
+          <svg class="w-3 h-3" viewBox="0 0 20 20" fill="none">
+            <path
+              d="M16.667 5L8.125 13.542 4.167 9.583"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </ng-container>
+        <ng-template #step4Number>4</ng-template>
       </div>
-      <span [class.font-semibold]="currentStep === 4">OTP & création</span>
+      <span
+        class="app-step-label"
+        [ngClass]="{
+          'app-step-label--active': currentStep === 4,
+          'app-step-label--done': currentStep > 4
+        }">
+        OTP &amp; création
+      </span>
     </div>
   </div>
 
-  <div *ngIf="error" class="bg-red-50 text-red-700 px-4 py-3 rounded-md text-sm">
+  <!-- Alertes -->
+  <div *ngIf="error" class="app-alert-danger">
     {{ error }}
   </div>
 
-  <div *ngIf="success" class="bg-green-50 text-green-700 px-4 py-3 rounded-md text-sm">
+  <div *ngIf="success" class="app-alert-success">
     {{ success }}
   </div>
 
-  <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+  <!-- Contenu des étapes -->
+  <div class="app-card bg-slate-50 border border-slate-200 p-4">
     <app-step-one
       *ngIf="currentStep === 1"
       [initialValue]="draftProgram"
@@ -83,6 +191,7 @@
     <app-step-three
       *ngIf="currentStep === 3"
       [program]="draftProgram"
+      [users]="users"
       [loading]="loading"
       (back)="goToStep(2)"
       (requestOtp)="onRequestOtp()">
@@ -97,5 +206,3 @@
     </app-step-four>
   </div>
 </div>
-
-

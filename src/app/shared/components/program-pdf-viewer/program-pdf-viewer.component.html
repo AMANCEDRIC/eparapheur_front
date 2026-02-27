@@ -1,11 +1,11 @@
-<div class="h-[500px] border border-slate-200 rounded-xl overflow-hidden bg-slate-100 flex flex-col">
+<div class="h-[500px] border border-slate-200 rounded-xl overflow-hidden bg-slate-100 flex flex-col app-card">
   <!-- Toolbar : mode + zoom -->
-  <div class="flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs text-slate-600">
+  <div class="flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs app-text-muted">
     <div class="flex items-center gap-2">
       <span class="mr-1">Mode</span>
       <button
         type="button"
-        class="px-2 py-1 rounded border border-slate-300"
+        class="app-btn app-btn-outline px-2 py-1 rounded border border-slate-300"
         [class.bg-indigo-600]="viewMode === 'scroll'"
         [class.text-white]="viewMode === 'scroll'"
         [class.bg-white]="viewMode !== 'scroll'"
@@ -14,7 +14,7 @@
       </button>
       <button
         type="button"
-        class="px-2 py-1 rounded border border-slate-300"
+        class="app-btn app-btn-outline px-2 py-1 rounded border border-slate-300"
         [class.bg-indigo-600]="viewMode === 'page'"
         [class.text-white]="viewMode === 'page'"
         [class.bg-white]="viewMode !== 'page'"
@@ -27,20 +27,20 @@
       <span class="mr-1">Zoom</span>
       <button
         type="button"
-        class="px-2 py-1 rounded border border-slate-300 hover:bg-slate-100"
+        class="app-btn app-btn-outline px-2 py-1 rounded border border-slate-300 hover:bg-slate-100"
         (click)="zoomOut()">
         -
       </button>
       <span class="w-10 text-center">{{ (zoom * 100) | number:'1.0-0' }}%</span>
       <button
         type="button"
-        class="px-2 py-1 rounded border border-slate-300 hover:bg-slate-100"
+        class="app-btn app-btn-outline px-2 py-1 rounded border border-slate-300 hover:bg-slate-100"
         (click)="zoomIn()">
         +
       </button>
       <button
         type="button"
-        class="ml-1 px-2 py-1 rounded border border-slate-300 hover:bg-slate-100"
+        class="app-btn app-btn-outline ml-1 px-2 py-1 rounded border border-slate-300 hover:bg-slate-100"
         (click)="resetZoom()">
         Réinitialiser
       </button>
@@ -50,10 +50,10 @@
   <!-- Barre de pagination (mode page uniquement) -->
   <div
     *ngIf="viewMode === 'page' && totalPages > 0"
-    class="flex items-center justify-center gap-3 px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs text-slate-600">
+    class="flex items-center justify-center gap-3 px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs app-text-muted">
     <button
       type="button"
-      class="px-2 py-1 rounded border border-slate-300 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+      class="app-btn app-btn-outline px-2 py-1 rounded border border-slate-300 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
       (click)="prevPage()"
       [disabled]="page <= 1">
       Précédent
@@ -61,7 +61,7 @@
     <span>Page {{ page }} / {{ totalPages }}</span>
     <button
       type="button"
-      class="px-2 py-1 rounded border border-slate-300 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+      class="app-btn app-btn-outline px-2 py-1 rounded border border-slate-300 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
       (click)="nextPage()"
       [disabled]="page >= totalPages">
       Suivant

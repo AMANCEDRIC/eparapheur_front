@@ -1,4 +1,4 @@
-<div class="h-screen bg-gray-50 overflow-hidden">
+<div class="h-screen app-bg-layout overflow-hidden">
   <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 xl:px-12 py-4 sm:py-6 h-full">
     <div class="h-full flex">
       <!-- Left Column - Login Form -->
@@ -21,9 +21,9 @@
       </div>
 
       <!-- Login Form -->
-      <div class="bg-white py-4 px-6 shadow-sm rounded-lg border border-gray-200">
+      <div class="app-card">
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" *ngIf="!showOtp" class="space-y-4">
-          <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-md text-sm">
+          <div *ngIf="error" class="app-alert-danger">
             {{ error }}
           </div>
 
@@ -88,7 +88,7 @@
 
           <div class="flex items-center justify-between">
             <div class="text-sm">
-              <a routerLink="/forgot-password" class="font-medium text-primary hover:text-blue-700 text-xs">
+              <a routerLink="/forgot-password" class="font-medium app-link-primary text-xs">
                 Mot de passe oublié ?
               </a>
             </div>
@@ -97,7 +97,7 @@
           <button
             type="submit"
             [disabled]="loginForm.invalid || loading"
-            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            class="app-btn app-btn-primary w-full justify-center text-sm shadow-sm">
             <span *ngIf="loading" class="mr-2">
               <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -131,7 +131,7 @@
           </div>
 
           <!-- Message d'erreur -->
-          <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-md text-sm">
+          <div *ngIf="error" class="app-alert-danger">
             {{ error }}
           </div>
 
@@ -208,13 +208,13 @@
 
           <!-- Lien pour renvoyer le code -->
           <div class="text-center mb-4">
-            <p class="text-sm text-gray-600">
+              <p class="text-sm app-text-muted">
               Vous n'avez pas reçu le code ?
               <button
                 type="button"
                 (click)="resendOtp()"
                 [disabled]="loading"
-                class="text-primary hover:text-blue-700 font-medium underline focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed">
+                class="app-link-primary font-medium underline focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed">
                 Cliquez pour renvoyer
               </button>
             </p>
@@ -224,7 +224,7 @@
           <button
             type="submit"
             [disabled]="otpForm.invalid || loading || (timerMinutes === 0 && timerSeconds === 0)"
-            class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            class="app-btn app-btn-primary w-full justify-center text-sm shadow-sm">
             <span *ngIf="loading" class="mr-2">
               <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

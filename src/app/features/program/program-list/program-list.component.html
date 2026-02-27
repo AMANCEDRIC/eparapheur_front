@@ -2,74 +2,78 @@
   <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
     <div>
       <h1 class="text-2xl font-bold text-slate-900">Programmes de signature</h1>
-      <p class="text-slate-500 text-sm">Consultez les programmes de signature créés dans la plateforme.</p>
+      <p class="app-text-muted text-sm">Consultez les programmes de signature créés dans la plateforme.</p>
     </div>
     <a
       routerLink="/dashboard/programs/create"
-      class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition-all flex items-center gap-2 text-sm">
+      class="app-btn app-btn-primary px-4 py-2 font-medium flex items-center gap-2 text-sm">
       Créer un programme
     </a>
   </div>
 
-  <div *ngIf="loading" class="text-sm text-slate-500">
+  <div *ngIf="loading" class="text-sm app-text-muted">
     Chargement des programmes...
   </div>
 
-  <div *ngIf="error && !loading" class="bg-red-50 text-red-700 px-4 py-3 rounded-md text-sm">
+  <div *ngIf="error && !loading" class="app-alert-danger">
     {{ error }}
   </div>
 
-  <div *ngIf="!loading" class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left">
-        <thead>
-          <tr class="bg-slate-50 border-b border-slate-100">
-            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Titre</th>
-            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Type</th>
-            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Statut</th>
-            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Début</th>
-            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Fin</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100">
-          <tr *ngFor="let program of programs" class="hover:bg-slate-50">
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-              <a
-                [routerLink]="['/dashboard/programs', program.id]"
-                class="text-indigo-600 hover:text-indigo-800 hover:underline font-medium">
-                {{ program.title }}
-              </a>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
-              {{ program.programType }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <span
-                class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-md w-[90px] justify-center"
-                [class.bg-green-100]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
-                [class.text-green-800]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
-                [class.bg-red-100]="program.status === 'CANCELLED'"
-                [class.text-red-800]="program.status === 'CANCELLED'">
-                {{ program.status }}
-              </span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-              {{ program.startDate || '-' }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-              {{ program.endDate || '-' }}
-            </td>
-          </tr>
-          <tr *ngIf="programs.length === 0">
-            <td colspan="5" class="px-6 py-4 text-center text-gray-500 text-sm">
-              Aucun programme trouvé.
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div *ngIf="!loading">
+    <div *ngIf="programs.length === 0" class="app-card px-6 py-8 text-center text-gray-500 text-sm">
+      Aucun programme trouvé.
     </div>
 
-    <div *ngIf="total > 0" class="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200">
+    <div *ngIf="programs.length > 0" class="space-y-4">
+      <div
+        *ngFor="let program of programs"
+        class="app-card flex flex-col sm:flex-row justify-between gap-4 items-start">
+        <div class="space-y-2">
+          <a
+            [routerLink]="['/dashboard/programs', program.id]"
+            class="app-link-primary font-semibold text-base">
+            {{ program.title }}
+          </a>
+          <div class="text-xs app-text-muted">
+            Type :
+            <span class="font-medium text-slate-800">
+              {{ program.programType }}
+            </span>
+          </div>
+          <div class="flex flex-wrap gap-6 text-xs text-slate-500">
+            <div>
+              <div class="uppercase tracking-wide">Début</div>
+              <div class="font-medium text-slate-700">
+                {{ program.startDate || '-' }}
+              </div>
+            </div>
+            <div>
+              <div class="uppercase tracking-wide">Fin</div>
+              <div class="font-medium text-slate-700">
+                {{ program.endDate || '-' }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col items-end gap-2">
+          <span
+            class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-md w-[100px] justify-center"
+            [class.bg-green-100]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
+            [class.text-green-800]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
+            [class.bg-red-100]="program.status === 'CANCELLED'"
+            [class.text-red-800]="program.status === 'CANCELLED'">
+            {{ program.status }}
+          </span>
+          <a
+            [routerLink]="['/dashboard/programs', program.id]"
+            class="app-btn app-btn-outline px-3 py-1 text-xs">
+            Voir le détail
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="total > 0" class="mt-4 bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200">
       <div class="flex items-center space-x-4">
         <div class="text-sm text-gray-700">
           Affichage de {{ (page - 1) * pageSize + 1 }} à {{ Math.min(page * pageSize, total) }} sur {{ total }} résultats

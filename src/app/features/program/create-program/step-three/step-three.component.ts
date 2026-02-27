@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  CreateSignatureProgramRequest
+  CreateSignatureProgramRequest,
+  SignatureProgramStepRequest
 } from '../../../../core/models/signature-program.model';
+import { IAccountDetail } from '../../../../core/models';
 
 @Component({
   selector: 'app-step-three',
@@ -13,6 +15,7 @@ import {
 export class StepThreeComponent {
   @Input() program!: Omit<CreateSignatureProgramRequest, 'otp' | 'email'>;
   @Input() loading = false;
+  @Input() users: IAccountDetail[] = [];
 
   @Output() back = new EventEmitter<void>();
   @Output() requestOtp = new EventEmitter<void>();
@@ -23,6 +26,43 @@ export class StepThreeComponent {
 
   onRequestOtp(): void {
     this.requestOtp.emit();
+  }
+
+  getStepDocumentsLabel(step: SignatureProgramStepRequest): string {
+    if (!step.documentIds || step.documentIds.length === 0) {
+      return 'aucun';
+    }
+
+    if (!this.program || !this.program.documents) {
+      return step.documentIds.join(', ');
+    }
+
+    const labels = step.documentIds
+      .map(index => this.program.documents[index])
+      .filter(doc => !!doc)
+      .map((doc, idx) => `${idx + 1}. ${doc!.documentName}`);
+
+    return labels.join(', ');
+  }
+
+  getUserLabel(user: IAccountDetail): string {
+    if (user.person) {
+      const first = user.person.firstName ?? '';
+      const last = user.person.lastName ?? '';
+      const full = `${first} ${last}`.trim();
+      if (full) {
+        return `${full} (${user.login})`;
+      }
+    }
+    return user.login;
+  }
+
+  getParticipantName(accountId: number): string {
+    const user = this.users.find(u => u.id === accountId);
+    if (user) {
+      return this.getUserLabel(user);
+    }
+    return `Compte #${accountId}`;
   }
 }
 

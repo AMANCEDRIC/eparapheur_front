@@ -1,17 +1,17 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen flex items-center justify-center app-bg-layout py-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-md w-full space-y-8">
     <div>
       <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
         Vérification OTP
       </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
+      <p class="mt-2 text-center text-sm app-text-muted">
         Entrez le code à 6 chiffres reçu
       </p>
     </div>
 
     <app-card>
       <form [formGroup]="otpForm" (ngSubmit)="onSubmit()" class="space-y-6">
-        <div *ngIf="error" class="bg-danger/10 border border-danger text-danger px-4 py-3 rounded">
+        <div *ngIf="error" class="app-alert-danger">
           {{ error }}
         </div>
 
@@ -34,7 +34,7 @@
         </app-button>
 
         <div class="text-center">
-          <a routerLink="/login" class="text-sm font-medium text-primary hover:text-blue-700">
+          <a routerLink="/login" class="text-sm font-medium app-link-primary">
             Retour à la connexion
           </a>
         </div>
