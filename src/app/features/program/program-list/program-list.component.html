@@ -24,50 +24,77 @@
       Aucun programme trouvé.
     </div>
 
-    <div *ngIf="programs.length > 0" class="space-y-4">
+    <div *ngIf="programs.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       <div
         *ngFor="let program of programs"
-        class="app-card flex flex-col sm:flex-row justify-between gap-4 items-start">
-        <div class="space-y-2">
-          <a
-            [routerLink]="['/dashboard/programs', program.id]"
-            class="app-link-primary font-semibold text-base">
-            {{ program.title }}
-          </a>
-          <div class="text-xs app-text-muted">
-            Type :
-            <span class="font-medium text-slate-800">
-              {{ program.programType }}
-            </span>
+        class="relative flex flex-col justify-between rounded-2xl bg-white/80 backdrop-blur
+               border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-0.5
+               transition-all duration-200 p-4">
+
+        <!-- Header : titre + statut -->
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h2 class="text-base font-semibold text-slate-900 mb-1 line-clamp-2">
+              {{ program.title }}
+            </h2>
+            <p class="text-[11px] uppercase tracking-wide app-label-important">
+              Type :
+              <span class="font-medium text-slate-700">
+                {{ program.programType }}
+              </span>
+            </p>
           </div>
-          <div class="flex flex-wrap gap-6 text-xs text-slate-500">
-            <div>
-              <div class="uppercase tracking-wide">Début</div>
-              <div class="font-medium text-slate-700">
-                {{ program.startDate || '-' }}
-              </div>
+
+          <span
+            class="app-badge"
+            [ngClass]="{
+              'app-badge-success': program.status === 'ACTIVE' || program.status === 'DRAFT',
+              'app-badge-danger': program.status === 'CANCELLED'
+            }">
+            {{ program.status }}
+          </span>
+        </div>
+
+        <!-- Dates -->
+        <div class="mt-4 grid grid-cols-2 gap-4 text-xs text-slate-500">
+          <div>
+            <div class="uppercase tracking-wide text-[10px] app-label-important">Début</div>
+            <div class="font-medium text-slate-800">
+              {{ program.startDate | dateFr:'short' }}
             </div>
-            <div>
-              <div class="uppercase tracking-wide">Fin</div>
-              <div class="font-medium text-slate-700">
-                {{ program.endDate || '-' }}
-              </div>
+          </div>
+          <div>
+            <div class="uppercase tracking-wide text-[10px] app-label-important">Fin</div>
+            <div class="font-medium text-slate-800">
+              {{ program.endDate | dateFr:'short' }}
             </div>
           </div>
         </div>
-        <div class="flex flex-col items-end gap-2">
-          <span
-            class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-md w-[100px] justify-center"
-            [class.bg-green-100]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
-            [class.text-green-800]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
-            [class.bg-red-100]="program.status === 'CANCELLED'"
-            [class.text-red-800]="program.status === 'CANCELLED'">
-            {{ program.status }}
-          </span>
+
+        <!-- Pied de carte : action discrète avec icône oeil -->
+        <div class="mt-5 flex items-center justify-between text-xs text-slate-500">
+          <div class="text-[11px] text-slate-400">
+            Programme de signature
+          </div>
+
           <a
             [routerLink]="['/dashboard/programs', program.id]"
-            class="app-btn app-btn-outline px-3 py-1 text-xs">
-            Voir le détail
+            class="app-btn app-btn-outline h-8 w-8 rounded-full flex items-center justify-center
+                   bg-white hover:bg-slate-50 transition-colors"
+            title="Voir le détail">
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="var(--app-secondary-color)"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5
+                       c4.477 0 8.268 2.943 9.542 7
+                       -1.274 4.057-5.065 7-9.542 7
+                       -4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
           </a>
         </div>
       </div>

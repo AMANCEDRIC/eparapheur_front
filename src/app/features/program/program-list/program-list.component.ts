@@ -5,11 +5,12 @@ import { RouterModule } from '@angular/router';
 import { ProgramService } from '../../../core/services/program.service';
 import { SignatureProgramDTO } from '../../../core/models/signature-program.model';
 import { IPaginatedResponse } from '../../../core/models';
+import { DateFrPipe } from '../../../shared/date-fr.pipe';
 
 @Component({
   selector: 'app-program-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, DateFrPipe],
   templateUrl: './program-list.component.html',
   // styleUrl: './program-list.component.sass'
 })
