@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import {AlertComponent} from '../../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,8 @@ import { AuthService } from '../../../core/services/auth.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    AlertComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.sass'
@@ -25,12 +27,12 @@ export class LoginComponent implements OnDestroy {
   showPassword = false;
   otpSent = false;
   userEmail = '';
-  
+
   // Timer OTP
   timerMinutes = 3;
   timerSeconds = 0;
   timerInterval: any;
-  
+
   // Références aux champs OTP
   @ViewChild('otpInput1') otpInput1!: ElementRef;
   @ViewChild('otpInput2') otpInput2!: ElementRef;
@@ -70,7 +72,7 @@ export class LoginComponent implements OnDestroy {
             // Vérifier si OTP est requis ou si le message indique qu'un OTP a été envoyé
             const message = response.status_message || response.data.message || '';
             const requiresOtp = response.data.requiresOtp === true || message.toLowerCase().includes('otp');
-            
+
             if (requiresOtp) {
               // Afficher le champ OTP pour les admins
               this.tempToken = response.data.token || '';
@@ -202,7 +204,7 @@ export class LoginComponent implements OnDestroy {
 
   onOtpKeyDown(event: KeyboardEvent, index: number): void {
     const input = event.target as HTMLInputElement;
-    
+
     // Gérer le backspace
     if (event.key === 'Backspace' && input && !input.value && index > 1) {
       this.focusOtpInput(index - 1);
@@ -248,7 +250,7 @@ export class LoginComponent implements OnDestroy {
   startTimer(): void {
     this.timerMinutes = 3;
     this.timerSeconds = 0;
-    
+
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
     }

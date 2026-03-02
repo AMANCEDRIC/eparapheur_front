@@ -6,6 +6,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { CardComponent } from '../../../shared/components/card/card.component';
+import {AlertComponent} from '../../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-forgot-password',
@@ -16,7 +17,8 @@ import { CardComponent } from '../../../shared/components/card/card.component';
     RouterModule,
     ButtonComponent,
     InputComponent,
-    CardComponent
+    CardComponent,
+    AlertComponent
   ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.sass'
@@ -26,6 +28,7 @@ export class ForgotPasswordComponent {
   loading = false;
   error = '';
   success = false;
+  message ="Un email de réinitialisation a été envoyé à votre adresse.";
 
   constructor(
     private fb: FormBuilder,

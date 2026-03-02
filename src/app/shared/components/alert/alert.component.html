@@ -1,0 +1,53 @@
+<div
+  class="app-alert flex items-start gap-3 rounded-md text-sm"
+  [ngClass]="{
+    'app-alert-success': type === 'success',
+    'app-alert-danger': type === 'error',
+    'app-alert-warning': type === 'warning',
+    'bg-blue-50 border border-blue-200 text-blue-800': type === 'info'
+  }"
+>
+  <!-- Icône -->
+  <div class="mt-0.5">
+    <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/40 text-current">
+      <!-- icône simplifiée via SVG -->
+      <svg *ngIf="type === 'success'" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <svg *ngIf="type === 'error'" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a1 1 0 00.86 1.5h18.64a1 1 0 00.86-1.5L13.71 3.86a1 1 0 00-1.72 0z" />
+      </svg>
+      <svg *ngIf="type === 'warning'" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v4m0 4h.01M4.93 19h14.14L12 5 4.93 19z" />
+      </svg>
+      <svg *ngIf="type === 'info'" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M12 3a9 9 0 110 18 9 9 0 010-18z" />
+      </svg>
+    </span>
+  </div>
+
+  <!-- Texte -->
+  <div class="flex-1">
+    <div *ngIf="title" class="font-semibold mb-0.5 text-xs uppercase tracking-wide">
+      {{ title }}
+    </div>
+    <div class="text-xs leading-snug">
+      {{ message }}
+    </div>
+  </div>
+
+  <!-- Bouton fermer -->
+  <button
+    *ngIf="closable"
+    type="button"
+    class="ml-2 text-xs text-current/70 hover:text-current focus:outline-none"
+    (click)="onClose()"
+    aria-label="Fermer"
+  >
+    ✕
+  </button>
+</div>
