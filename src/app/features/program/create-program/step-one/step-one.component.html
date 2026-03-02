@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<form class="space-y-6" [formGroup]="form" (ngSubmit)="onNext()">
   <!-- Titre bloc -->
 <!--  <div>-->
 <!--    <h2 class="text-xl font-semibold text-slate-900">Informations générales</h2>-->
@@ -15,10 +15,14 @@
       </label>
       <input
         type="text"
-        [(ngModel)]="form.label"
-        name="label"
+        formControlName="label"
         class="app-input"
         placeholder="Ex : Signature contrat de prestation">
+      <div
+        class="text-xs text-red-500 mt-1"
+        *ngIf="form.get('label')?.touched && form.get('label')?.hasError('required')">
+        Le libellé est obligatoire.
+      </div>
     </div>
 
     <div>
@@ -26,8 +30,7 @@
         Description
       </label>
       <textarea
-        [(ngModel)]="form.description"
-        name="description"
+        formControlName="description"
         rows="3"
         class="app-textarea"
         placeholder="Décrivez le contexte du programme de signature"></textarea>
@@ -39,8 +42,7 @@
       </label>
       <input
         type="datetime-local"
-        [(ngModel)]="form.startDate"
-        name="startDate"
+        formControlName="startDate"
         class="app-input">
     </div>
 
@@ -50,8 +52,7 @@
       </label>
       <input
         type="datetime-local"
-        [(ngModel)]="form.endDate"
-        name="endDate"
+        formControlName="endDate"
         class="app-input">
     </div>
   </div>
@@ -148,11 +149,10 @@
   <!-- Actions -->
   <div class="flex justify-end pt-4">
     <button
-      type="button"
+      type="submit"
       class="app-btn app-btn-primary text-sm px-4 py-2 disabled:opacity-50"
-      [disabled]="!form.label.trim()"
-      (click)="onNext()">
+      [disabled]="!isValid()">
       Suivant
     </button>
   </div>
-</div>
+</form>

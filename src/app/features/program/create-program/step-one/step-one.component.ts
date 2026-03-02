@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   SignatureProgramDocumentRequest
 } from '../../../../core/models/signature-program.model';
@@ -9,7 +9,7 @@ import { ProgramPdfViewerComponent } from '../../../../shared/components/program
 @Component({
   selector: 'app-step-one',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProgramPdfViewerComponent],
+  imports: [CommonModule, ReactiveFormsModule, ProgramPdfViewerComponent],
   templateUrl: './step-one.component.html'
 })
 export class StepOneComponent implements OnInit {
@@ -29,25 +29,29 @@ export class StepOneComponent implements OnInit {
     documents: SignatureProgramDocumentRequest[];
   }>();
 
-  form = {
-    label: '',
-    description: '',
-    startDate: '',
-    endDate: ''
-  };
+  form: FormGroup;
 
   documents: SignatureProgramDocumentRequest[] = [];
   loadingFiles = false;
   previewDocument: SignatureProgramDocumentRequest | null = null;
 
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      label: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+      startDate: [''],
+      endDate: ['']
+    });
+  }
+
   ngOnInit(): void {
     if (this.initialValue) {
-      this.form = {
+      this.form.patchValue({
         label: this.initialValue.label,
         description: this.initialValue.description || '',
         startDate: this.initialValue.startDate || '',
         endDate: this.initialValue.endDate || ''
-      };
+      });
       this.documents = [...this.initialValue.documents];
     }
   }
@@ -143,13 +147,18 @@ export class StepOneComponent implements OnInit {
     return null;
   }
 
+  isValid(): boolean {
+    return this.form.valid && this.documents.length > 0;
+  }
+
   onNext(): void {
-    if (!this.form.label.trim()) {
+    if (this.form.invalid || this.documents.length === 0) {
+      this.form.markAllAsTouched();
       return;
     }
 
     this.validated.emit({
-      ...this.form,
+      ...this.form.value,
       documents: this.documents
     });
   }

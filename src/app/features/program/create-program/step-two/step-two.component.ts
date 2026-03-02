@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   SignatureProgramDocumentRequest,
   SignatureProgramStepRequest,
@@ -12,7 +12,7 @@ import { UserSelectionModalComponent } from '../../../../shared/components/user-
 @Component({
   selector: 'app-step-two',
   standalone: true,
-  imports: [CommonModule, FormsModule, UserSelectionModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, UserSelectionModalComponent],
   templateUrl: './step-two.component.html'
 })
 export class StepTwoComponent implements OnInit {
@@ -23,9 +23,27 @@ export class StepTwoComponent implements OnInit {
   @Output() back = new EventEmitter<void>();
   @Output() validated = new EventEmitter<SignatureProgramStepRequest[]>();
 
+  form: FormGroup;
   steps: SignatureProgramStepRequest[] = [];
   isModalOpen = false;
   currentStepForModal: SignatureProgramStepRequest | null = null;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      steps: this.fb.array([])
+    });
+  }
+
+  get stepsForm(): FormArray {
+    return this.form.get('steps') as FormArray;
+  }
+
+  private createStepGroup(step?: SignatureProgramStepRequest): FormGroup {
+    return this.fb.group({
+      actionType: [step?.actionType ?? 'SIGN', Validators.required],
+      description: [step?.description ?? '']
+    });
+  }
 
   ngOnInit(): void {
     this.steps = this.initialSteps && this.initialSteps.length
@@ -35,6 +53,11 @@ export class StepTwoComponent implements OnInit {
           participants: step.participants.map(p => ({ ...p }))
         }))
       : [];
+
+    // Initialiser le FormArray à partir des étapes
+    this.steps.forEach(step => {
+      this.stepsForm.push(this.createStepGroup(step));
+    });
   }
 
   addStep(): void {
@@ -48,6 +71,7 @@ export class StepTwoComponent implements OnInit {
       participants: []
     };
     this.steps.push(newStep);
+    this.stepsForm.push(this.createStepGroup(newStep));
   }
 
   /**
@@ -65,12 +89,17 @@ export class StepTwoComponent implements OnInit {
   /**
    * Met à jour le nom de l'étape quand le type change
    */
-  onActionTypeChange(step: SignatureProgramStepRequest): void {
-    step.name = this.getStepNameFromActionType(step.actionType);
+  onActionTypeChange(index: number): void {
+    const group = this.stepsForm.at(index) as FormGroup;
+    const actionType = group.get('actionType')?.value;
+    const step = this.steps[index];
+    step.actionType = actionType;
+    step.name = this.getStepNameFromActionType(actionType);
   }
 
   removeStep(index: number): void {
     this.steps.splice(index, 1);
+    this.stepsForm.removeAt(index);
     this.steps.forEach((s, i) => (s.stepOrder = i + 1));
   }
 
@@ -165,6 +194,10 @@ export class StepTwoComponent implements OnInit {
    * Valide que tous les champs requis sont remplis
    */
   isValid(): boolean {
+    if (this.form.invalid) {
+      return false;
+    }
+
     if (this.steps.length === 0) {
       return false;
     }
@@ -196,10 +229,24 @@ export class StepTwoComponent implements OnInit {
     return true;
   }
 
+  /**
+   * Synchronise les valeurs du formulaire vers le tableau steps
+   */
+  private syncFormToSteps(): void {
+    this.steps.forEach((step, index) => {
+      const group = this.stepsForm.at(index) as FormGroup;
+      step.actionType = group.get('actionType')?.value;
+      step.description = group.get('description')?.value;
+      // step.name déjà mis à jour par onActionTypeChange
+    });
+  }
+
   onNext(): void {
     if (!this.isValid()) {
       return; // ne pas émettre si invalide
     }
+
+    this.syncFormToSteps();
 
     // S'assurer que required est toujours true et que les positions sont à jour
     this.steps.forEach(step => {

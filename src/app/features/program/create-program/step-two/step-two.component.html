@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<form class="space-y-6" [formGroup]="form" (ngSubmit)="onNext()">
   <div class="flex items-center justify-between">
     <div>
       <h2 class="text-xl font-semibold app-section-title">Étapes de signature</h2>
@@ -26,9 +26,10 @@
     Aucune étape définie pour le moment. Cliquez sur « Ajouter une étape » pour commencer.
   </div>
 
-  <div class="space-y-4" *ngIf="steps.length > 0">
+  <div class="space-y-4" formArrayName="steps" *ngIf="steps.length > 0">
     <div
       *ngFor="let step of steps; let i = index"
+      [formGroupName]="i"
       class="app-card space-y-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
@@ -53,10 +54,8 @@
             Type d'action <span class="text-red-500">*</span>
           </label>
           <select
-            [(ngModel)]="step.actionType"
-            (ngModelChange)="onActionTypeChange(step)"
-            name="actionType-{{ i }}"
-            required
+            formControlName="actionType"
+            (change)="onActionTypeChange(i)"
             class="app-input text-xs py-1.5">
             <option value="SIGN">Signature</option>
             <option value="VALIDATION">Validation</option>
@@ -69,8 +68,7 @@
           </label>
           <input
             type="text"
-            [(ngModel)]="step.description"
-            name="description-{{ i }}"
+            formControlName="description"
             class="app-input text-xs py-1.5"
             placeholder="Ex : Signature du contrat par les parties">
         </div>
@@ -158,10 +156,9 @@
       Retour
     </button>
     <button
-      type="button"
+      type="submit"
       class="app-btn app-btn-primary text-sm px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
-      [disabled]="!isValid()"
-      (click)="onNext()">
+      [disabled]="!isValid()">
       Suivant
     </button>
   </div>
@@ -174,4 +171,4 @@
     (close)="onModalClose()"
     (validate)="onUsersSelected($event)">
   </app-user-selection-modal>
-</div>
+</form>
