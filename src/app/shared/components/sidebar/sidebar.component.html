@@ -1,4 +1,4 @@
-<aside 
+<aside
   [class.w-64]="isOpen"
   [class.w-20]="!isOpen"
   class="bg-slate-900 text-slate-300 transition-all duration-300 flex flex-col min-h-screen fixed left-0 top-0 z-50">
@@ -32,15 +32,15 @@
         <span *ngIf="isOpen" class="font-medium text-sm">Mes signatures</span>
       </a>
 
-      <a
-        routerLink="/dashboard/history"
-        routerLinkActive="app-bg-primary text-white"
-        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-slate-800 hover:text-white">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span *ngIf="isOpen" class="font-medium text-sm">Historique</span>
-      </a>
+<!--      <a-->
+<!--        routerLink="/dashboard/history"-->
+<!--        routerLinkActive="app-bg-primary text-white"-->
+<!--        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-slate-800 hover:text-white">-->
+<!--        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+<!--          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />-->
+<!--        </svg>-->
+<!--        <span *ngIf="isOpen" class="font-medium text-sm">Historique</span>-->
+<!--      </a>-->
       <a
         routerLink="/dashboard/programs"
         routerLinkActive="app-bg-primary text-white"

@@ -64,5 +64,16 @@ export class StepThreeComponent {
     }
     return `Compte #${accountId}`;
   }
+
+  getDocumentLabel(index: number): string {
+    if (!this.program || !this.program.documents) {
+      return `Document ${index + 1}`;
+    }
+    const doc = this.program.documents[index];
+    if (!doc) {
+      return `Document ${index + 1}`;
+    }
+    return doc.documentName || doc.documentPath || `Document ${index + 1}`;
+  }
 }
 

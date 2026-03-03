@@ -1,4 +1,4 @@
-<form class="space-y-6" [formGroup]="form" (ngSubmit)="onNext()">
+<form class="space-y-6 app-fade-slide-in" [formGroup]="form" (ngSubmit)="onNext()">
   <!-- Titre bloc -->
 <!--  <div>-->
 <!--    <h2 class="text-xl font-semibold text-slate-900">Informations générales</h2>-->
@@ -93,7 +93,7 @@
     <div class="space-y-2" *ngIf="documents.length > 0">
       <div
         *ngFor="let doc of documents; let i = index"
-        class="flex items-center justify-between px-3 py-2 rounded-lg bg-white border border-slate-200 text-xs text-slate-700">
+        class="flex items-center justify-between px-3 py-2 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 app-spring-in">
         <div class="flex flex-col">
           <span class="font-medium truncate max-w-xs">
             {{ doc.documentName }}
@@ -106,21 +106,32 @@
           <button
             type="button"
             class="app-btn app-btn-outline p-1.5 text-xs border border-slate-200 text-slate-600 hover:bg-slate-50"
-            (click)="onPreviewDocument(doc)"
-            title="Prévisualiser le PDF">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            [class.bg-slate-100]="isPreviewed(doc)"
+            (click)="onTogglePreview(doc)"
+            [title]="isPreviewed(doc) ? 'Fermer la prévisualisation' : 'Prévisualiser le PDF'">
+            <!-- œil normal -->
+            <svg *ngIf="!isPreviewed(doc)" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
+            <!-- œil barré -->
+            <svg *ngIf="isPreviewed(doc)" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.97 9.97 0 012.17-3.568M6.18 6.18A9.956 9.956 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.97 9.97 0 01-1.249 2.592M3 3l18 18" />
+            </svg>
           </button>
 
           <button
             type="button"
-            class="app-btn app-btn-danger text-xs px-2 py-1"
-            (click)="removeDocument(i)">
-            Supprimer
+            class="app-btn app-btn-danger p-1.5 text-xs"
+            (click)="removeDocument(i)"
+            title="Supprimer le document">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M6 7h12M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2m-1 0v11a2 2 0 01-2 2H9a2 2 0 01-2-2V7z" />
+            </svg>
           </button>
         </div>
       </div>
@@ -133,15 +144,9 @@
       <div>
         <h3 class="text-sm font-semibold text-slate-900">Aperçu du document sélectionné</h3>
         <p class="text-xs app-text-muted">
-          Cliquez sur l’icône œil pour changer de document à prévisualiser.
+          Cliquez sur l’icône œil pour changer de document à prévisualiser ou fermer l’aperçu.
         </p>
       </div>
-      <button
-        type="button"
-        class="app-btn app-btn-outline text-xs px-2 py-1"
-        (click)="onClosePreview()">
-        Fermer l’aperçu
-      </button>
     </div>
     <app-program-pdf-viewer [src]="previewSrc"></app-program-pdf-viewer>
   </div>

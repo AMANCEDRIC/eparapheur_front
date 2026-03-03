@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import {
   CreateSignatureProgramRequest
 } from '../../../core/models/signature-program.model';
 import { ProgramService } from '../../../core/services/program.service';
 import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { AppNotificationService } from '../../../core/services/app-notification.service';
 import { IAccountDetail, IPaginatedResponse } from '../../../core/models';
 import { StepOneComponent } from './step-one/step-one.component';
 import { StepTwoComponent } from './step-two/step-two.component';
@@ -47,7 +49,9 @@ export class CreateProgramComponent {
   constructor(
     private programService: ProgramService,
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router,
+    private appNotificationService: AppNotificationService
   ) {
     const currentUser = this.authService.getCurrentUser();
     this.email = currentUser?.login ?? '';
@@ -104,12 +108,14 @@ export class CreateProgramComponent {
     this.authService.requestProgramOtp(detail).subscribe({
       next: (res) => {
         this.success = res.status_message || 'Un code OTP vient de vous être envoyé.';
+        this.appNotificationService.success(this.success, 'E-Parapheur');
         this.goToStep(4); 
         this.loading = false;
       },
       error: (err) => {
         this.error =
           err?.error?.status_message || 'Erreur lors de l’envoi du code OTP.';
+        this.appNotificationService.error(this.error, 'E-Parapheur');
         this.loading = false;
         console.error(err);
       }
@@ -133,6 +139,8 @@ export class CreateProgramComponent {
       next: (res) => {
         if (res.status_code === 7000) {
           this.success = 'Programme créé avec succès.';
+          this.appNotificationService.success('Programme créé avec succès.', 'E-Parapheur');
+          this.router.navigate(['/dashboard/programs']);
         } else {
           this.error = res.status_message || 'Erreur lors de la création du programme.';
         }

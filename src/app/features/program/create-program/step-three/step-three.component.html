@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div class="space-y-6 app-fade-slide-in">
   <div>
     <h2 class="text-xl font-semibold app-section-title">Récapitulatif du programme</h2>
     <p class="app-text-muted text-sm">
@@ -6,122 +6,122 @@
     </p>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Colonne gauche : infos générales + documents -->
-    <div class="lg:col-span-1 space-y-4">
-      <div class="app-card space-y-1">
-        <h3 class="text-sm font-semibold app-label-important">Informations générales</h3>
-        <p class="text-sm">
-          <span class="font-medium">Libellé :</span> {{ program.label }}
+  <div class="app-card space-y-6">
+    <!-- En-tête du programme (2 colonnes) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-b border-slate-200 pb-4">
+      <div class="space-y-2">
+        <h3 class="text-xs font-semibold app-label-important uppercase">Titre du programme</h3>
+        <p class="text-sm font-semibold text-slate-900">
+          {{ program.label }}
         </p>
-        <p class="text-sm" *ngIf="program.description">
-          <span class="font-medium">Description :</span> {{ program.description }}
-        </p>
-        <p class="text-sm">
-          <span class="font-medium">Type :</span> {{ program.programType }}
-        </p>
-        <p class="text-sm" *ngIf="program.startDate">
-          <span class="font-medium">Début :</span> {{ program.startDate }}
-        </p>
-        <p class="text-sm" *ngIf="program.endDate">
-          <span class="font-medium">Fin :</span> {{ program.endDate }}
-        </p>
+        <!-- Période du programme, avec style amélioré -->
+        <div
+          *ngIf="program.startDate || program.endDate"
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-slate-50 border border-slate-200 text-[11px] app-text-muted mt-1">
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5A2 2 0 003 7v12a2 2 0 002 2z" />
+          </svg>
+          <span *ngIf="program.startDate">Début : {{ program.startDate }}</span>
+          <span *ngIf="program.startDate && program.endDate"> • </span>
+          <span *ngIf="program.endDate">Fin : {{ program.endDate }}</span>
+        </div>
       </div>
 
-      <div class="app-card space-y-2">
-        <h3 class="text-sm font-semibold app-label-important">Documents</h3>
-        <p *ngIf="program.documents.length === 0" class="text-sm app-text-muted">
-          Aucun document défini.
+      <div class="space-y-1">
+        <h3 class="text-xs font-semibold app-label-important uppercase">Description du programme</h3>
+        <p class="text-sm text-slate-800" *ngIf="program.description; else noDescription">
+          {{ program.description }}
         </p>
-        <ul *ngIf="program.documents.length > 0" class="space-y-1 text-sm">
-          <li *ngFor="let doc of program.documents; let i = index" class="flex justify-between">
-            <span>{{ i + 1 }}. {{ doc.documentName || doc.documentPath }}</span>
-            <span class="text-xs app-text-muted">{{ doc.documentType }}</span>
-          </li>
-        </ul>
+        <ng-template #noDescription>
+          <p class="text-sm app-text-muted">
+            Aucune description fournie.
+          </p>
+        </ng-template>
       </div>
     </div>
 
-    <!-- Colonne droite : étapes de signature -->
-    <div class="lg:col-span-2 app-card space-y-4">
+    <!-- Étapes de signature -->
+    <div class="space-y-3">
       <h3 class="text-sm font-semibold app-label-important">Étapes de signature</h3>
 
       <p *ngIf="program.steps.length === 0" class="text-sm app-text-muted">
         Aucune étape définie.
       </p>
 
-      <div *ngIf="program.steps.length > 0" class="space-y-3">
-        <div
-          *ngFor="let step of program.steps"
-          class="border border-slate-200 rounded-lg p-3 flex gap-3">
-          <!-- Badge étape -->
-          <div class="flex flex-col items-center pt-1">
-            <div class="w-7 h-7 rounded-full app-bg-primary text-white text-xs font-semibold flex items-center justify-center">
-              {{ step.stepOrder }}
-            </div>
-          </div>
+      <div *ngIf="program.steps.length > 0" class="space-y-2">
+        <details
+          *ngFor="let step of program.steps; let idx = index"
+          [attr.open]="idx === 0 ? '' : null"
+          class="border border-slate-200 rounded-lg bg-slate-50 app-spring-in">
 
-          <!-- Contenu étape -->
-          <div class="flex-1 space-y-3">
-            <!-- En-tête de l'étape -->
-            <div class="flex items-center justify-between">
+          <!-- Ligne d'en-tête de l'étape (summary pliable) -->
+          <summary class="flex items-center justify-between px-4 py-3 gap-3 cursor-pointer list-none">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-full app-bg-primary text-white text-xs font-semibold flex items-center justify-center">
+                {{ step.stepOrder }}
+              </div>
               <div>
                 <p class="text-sm font-semibold text-slate-800">
                   {{ step.name || 'Signature' }}
                 </p>
-                <p class="text-xs app-text-muted">
-                  Type : {{ step.actionType }}
-                </p>
               </div>
+            </div>
+
+            <div class="flex items-center gap-2">
               <span class="app-badge app-badge-active text-xs">
                 {{ step.actionType }}
               </span>
+              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 9l-7 7-7-7" />
+              </svg>
             </div>
+          </summary>
 
-            <p *ngIf="step.description" class="text-xs app-text-muted">
-              Description de l'étape : {{ step.description }}
-            </p>
-
-            <!-- Deux colonnes : signataires / documents -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-1">
-              <!-- Colonne gauche : signataires -->
+          <!-- Contenu détaillé : participants + documents -->
+          <div class="app-collapse-body">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-200 px-4 py-3">
+              <!-- Participants -->
               <div class="space-y-2">
-                <details class="app-collapse">
-                  <summary>
-                    ({{ step.participants.length || 0 }}) signataires
-                  </summary>
-                  <p *ngIf="!step.participants || step.participants.length === 0" class="text-xs app-text-muted mt-1">
-                    Aucun participant défini pour cette étape.
-                  </p>
-                  <ul *ngIf="step.participants && step.participants.length > 0" class="mt-1 space-y-0.5 text-xs">
-                    <li *ngFor="let p of step.participants">
-                      • {{ getParticipantName(p.accountId) }}
-<!--                        (position {{ p.position ?? 0 }},-->
-<!--                        {{ p.required ? 'obligatoire' : 'optionnel' }})-->
-                    </li>
-                  </ul>
-                </details>
+                <h4 class="text-xs font-semibold app-label-important">
+                  Participants ({{ step.participants.length || 0 }})
+                </h4>
+                <p *ngIf="!step.participants || step.participants.length === 0" class="text-xs app-text-muted">
+                  Aucun participant défini pour cette étape.
+                </p>
+                <ul *ngIf="step.participants && step.participants.length > 0" class="space-y-1 text-xs">
+                  <li
+                    *ngFor="let p of step.participants"
+                    class="flex items-center justify-between rounded-md bg-white border border-slate-200 px-2 py-1.5">
+                    <span class="text-slate-800">
+                      {{ getParticipantName(p.accountId) }}
+                    </span>
+                  </li>
+                </ul>
               </div>
 
-              <!-- Colonne droite : documents -->
+              <!-- Documents de l'étape -->
               <div class="space-y-2">
-                <details class="app-collapse">
-                  <summary>
-                    Documents ({{ step.documentIds.length || 0 }})
-                  </summary>
-                  <p *ngIf="!step.documentIds || step.documentIds.length === 0" class="text-xs app-text-muted mt-1">
-                    Aucun document associé à cette étape.
-                  </p>
-                  <ul *ngIf="step.documentIds && step.documentIds.length > 0" class="mt-1 space-y-0.5 text-xs">
-                    <li>
-                      {{ getStepDocumentsLabel(step) }}
-                    </li>
-                  </ul>
-                </details>
+                <h4 class="text-xs font-semibold app-label-important">
+                  Documents de l'étape ({{ step.documentIds.length || 0 }})
+                </h4>
+                <p *ngIf="!step.documentIds || step.documentIds.length === 0" class="text-xs app-text-muted">
+                  Aucun document associé à cette étape.
+                </p>
+                <ul *ngIf="step.documentIds && step.documentIds.length > 0" class="space-y-1 text-xs">
+                  <li
+                    *ngFor="let docIndex of step.documentIds"
+                    class="rounded-md bg-white border border-slate-200 px-2 py-1.5">
+                    <span class="text-slate-800 truncate">
+                      {{ getDocumentLabel(docIndex) }}
+                    </span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
-        </div>
+        </details>
       </div>
     </div>
   </div>

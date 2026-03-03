@@ -126,12 +126,16 @@ export class StepOneComponent implements OnInit {
     }
   }
 
-  onPreviewDocument(doc: SignatureProgramDocumentRequest): void {
+  onTogglePreview(doc: SignatureProgramDocumentRequest): void {
+    if (this.previewDocument && this.previewDocument === doc) {
+      this.previewDocument = null;
+      return;
+    }
     this.previewDocument = doc;
   }
 
-  onClosePreview(): void {
-    this.previewDocument = null;
+  isPreviewed(doc: SignatureProgramDocumentRequest): boolean {
+    return this.previewDocument === doc;
   }
 
   get previewSrc(): string | null {
