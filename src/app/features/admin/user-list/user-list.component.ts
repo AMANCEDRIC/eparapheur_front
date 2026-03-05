@@ -149,7 +149,17 @@ export class UserListComponent implements OnInit {
    * Génère une couleur pour l'avatar par défaut basée sur l'ID
    */
   getAvatarColor(user: IAccountDetail): string {
-    const colors = ['#EF4444', '#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'];
+    // Palette volontairement désaturée / grisée pour que les avatars restent discrets
+    const colors = [
+      '#E5E7EB', // gray-200
+      '#D1D5DB', // gray-300
+      '#CBD5F5', // bleu très pâle
+      '#E5E4FF', // violet très pâle
+      '#F3E8FF', // mauve clair
+      '#E0F2FE', // bleu ciel clair
+      '#F1F5F9', // slate-100
+      '#E2E8F0'  // slate-200
+    ];
     const index = (user.id || 0) % colors.length;
     return colors[index];
   }

@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div class="space-y-6 app-fade-slide-in">
   <div class="flex items-center justify-between">
     <div>
       <button
@@ -23,26 +23,22 @@
   </div>
 
   <div *ngIf="program && !loading" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Colonne gauche : Informations et liste des documents -->
+    <!-- Colonne gauche : informations + workflow -->
     <div class="lg:col-span-1 space-y-6">
       <!-- Informations générales -->
-      <div class="app-card">
-        <h2 class="text-lg font-semibold text-slate-900 mb-4">Informations</h2>
-        <div class="space-y-3 text-sm">
+      <div class="app-card space-y-3">
+        <h2 class="text-sm font-semibold app-section-title">Informations du programme</h2>
+        <div class="space-y-2 text-sm">
           <div>
-            <span class="font-medium text-slate-700">Titre :</span>
+            <span class="font-medium text-slate-700">Titre</span>
             <p class="text-slate-900">{{ program.title }}</p>
           </div>
           <div *ngIf="program.description">
-            <span class="font-medium text-slate-700">Description :</span>
+            <span class="font-medium text-slate-700">Description</span>
             <p class="text-slate-900">{{ program.description }}</p>
           </div>
-          <div>
-            <span class="font-medium text-slate-700">Type :</span>
-            <p class="text-slate-900">{{ program.programType }}</p>
-          </div>
-          <div>
-            <span class="font-medium text-slate-700">Statut :</span>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="font-medium text-slate-700">Statut</span>
             <span
               class="px-2 py-1 text-xs font-semibold rounded-md"
               [class.bg-green-100]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
@@ -52,104 +48,128 @@
               {{ program.status }}
             </span>
           </div>
-          <div *ngIf="program.startDate">
-            <span class="font-medium text-slate-700">Début :</span>
-            <p class="text-slate-900">{{ program.startDate | date:'short' }}</p>
-          </div>
-          <div *ngIf="program.endDate">
-            <span class="font-medium text-slate-700">Fin :</span>
-            <p class="text-slate-900">{{ program.endDate | date:'short' }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Liste des documents -->
-      <div class="app-card">
-        <h2 class="text-lg font-semibold text-slate-900 mb-4">Documents</h2>
-        <div *ngIf="documents.length === 0" class="text-sm text-slate-500">
-          Aucun document disponible pour le moment.
-        </div>
-        <ul class="space-y-2" *ngIf="documents.length > 0">
-          <li
-            *ngFor="let doc of documents"
-            (click)="selectDocument(doc)"
-            class="px-3 py-2 rounded-lg cursor-pointer transition-colors"
-            [class.bg-indigo-50]="selectedDocument === doc"
-            [class.border-indigo-200]="selectedDocument === doc"
-            [class.border]="selectedDocument === doc"
-            [class.hover:bg-slate-50]="selectedDocument !== doc">
-            <div class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-slate-900 truncate">{{ doc.documentName }}</p>
-                <p class="text-xs text-slate-500">{{ doc.documentSize | number }} octets</p>
-              </div>
+          <div class="flex flex-col gap-1 text-xs">
+            <div *ngIf="program.startDate">
+              <span class="font-medium text-slate-700">Début :</span>
+              <span class="text-slate-900 ml-1">{{ program.startDate | date:'short' }}</span>
             </div>
-          </li>
-        </ul>
+            <div *ngIf="program.endDate">
+              <span class="font-medium text-slate-700">Fin :</span>
+              <span class="text-slate-900 ml-1">{{ program.endDate | date:'short' }}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Participants par étape -->
-      <div class="app-card">
-        <h2 class="text-lg font-semibold text-slate-900 mb-4">Participants</h2>
-        
+      <!-- Workflow de signature : étapes + participants + documents -->
+      <div class="app-card space-y-4">
+        <h2 class="text-sm font-semibold app-section-title">Workflow de signature</h2>
+
         <div *ngIf="steps.length === 0" class="text-sm text-slate-500">
-          Aucune étape définie.
+          Aucune étape définie pour ce programme.
         </div>
 
-        <div class="space-y-4" *ngIf="steps.length > 0">
-          <!-- Pour chaque étape -->
-          <div *ngFor="let step of steps" class="border border-slate-200 rounded-lg p-3">
-            <!-- En-tête de l'étape -->
-            <div class="flex items-center justify-between mb-3">
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-semibold text-slate-500 uppercase">Étape {{ step.stepOrder }}</span>
-                <span class="text-sm font-semibold text-slate-900">{{ step.name }}</span>
+        <!-- Timeline verticale des étapes -->
+        <div *ngIf="steps.length > 0" class="space-y-2">
+          <div
+            *ngFor="let step of steps; let last = last"
+            class="flex gap-3">
+            <!-- Colonne timeline (rond + ligne) -->
+            <div class="flex flex-col items-center pt-1">
+              <div
+                class="w-6 h-6 rounded-full text-[11px] font-semibold flex items-center justify-center border"
+                [class.bg-indigo-600]="selectedStep === step"
+                [class.text-white]="selectedStep === step"
+                [class.border-indigo-600]="selectedStep === step"
+                [class.bg-slate-100]="selectedStep !== step"
+                [class.text-slate-600]="selectedStep !== step"
+                [class.border-slate-300]="selectedStep !== step">
+                {{ step.stepOrder }}
               </div>
-              <span class="text-xs px-2 py-1 rounded-md bg-indigo-100 text-indigo-800">
-                {{ getActionLabel(step.actionType) }}
-              </span>
+              <div
+                *ngIf="!last"
+                class="flex-1 w-px bg-slate-200 mt-1">
+              </div>
             </div>
 
-            <!-- Liste des participants de l'étape -->
-            <div *ngIf="!step.participants || step.participants.length === 0" class="text-xs text-slate-500 italic">
-              Aucun participant pour cette étape.
-            </div>
+            <!-- Carte de contenu de l'étape -->
+            <div
+              class="flex-1 border rounded-lg p-3 cursor-pointer transition-colors"
+              [class.border-indigo-600]="selectedStep === step"
+              [class.bg-indigo-50]="selectedStep === step"
+              [class.bg-slate-50]="selectedStep !== step"
+              (click)="selectStep(step)">
 
-            <div class="space-y-2" *ngIf="step.participants && step.participants.length > 0">
-              <div 
-                *ngFor="let participant of step.participants" 
-                class="flex items-center justify-between p-2 rounded-md bg-slate-50 hover:bg-slate-100 transition-colors">
-                <!-- Informations du participant -->
-                <div class="flex items-center gap-2 flex-1 min-w-0">
-                  <!-- Avatar ou icône -->
-                  <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                    <span class="text-xs font-semibold text-indigo-700">
-                      {{ getParticipantName(participant).charAt(0).toUpperCase() }}
+              <!-- En-tête de l'étape -->
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <p class="text-sm font-semibold text-slate-900">
+                    {{ step.name }}
+                  </p>
+                  <p class="text-[11px] app-text-muted">
+                    {{ getActionLabel(step.actionType) }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Signing order / participants -->
+              <div class="space-y-1 mt-2">
+                <p class="text-[11px] app-label-important">Ordre de signature</p>
+
+                <div *ngIf="!step.participants || step.participants.length === 0" class="text-xs text-slate-500 italic">
+                  Aucun participant pour cette étape.
+                </div>
+
+                <div class="space-y-1" *ngIf="step.participants && step.participants.length > 0">
+                  <div
+                    *ngFor="let participant of step.participants"
+                    class="flex items-center justify-between px-2 py-1 rounded-md bg-white border border-slate-200">
+                    <div class="flex items-center gap-2 flex-1 min-w-0">
+                      <div class="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                        <span class="text-[11px] font-semibold text-indigo-700">
+                          {{ getParticipantName(participant).charAt(0).toUpperCase() }}
+                        </span>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <p class="text-xs font-medium text-slate-900 truncate">
+                          {{ getParticipantName(participant) }}
+                        </p>
+                        <p class="text-[11px] text-slate-500 truncate">
+                          {{ participant.account.login }}
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      class="px-2 py-0.5 text-[10px] font-semibold rounded-md"
+                      [ngClass]="getStatusClass(participant.status)">
+                      {{ getStatusLabel(participant.status) }}
                     </span>
                   </div>
-                  
-                  <!-- Nom et email -->
-                  <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-slate-900 truncate">
-                      {{ getParticipantName(participant) }}
-                    </p>
-                    <p class="text-xs text-slate-500 truncate">
-                      {{ participant.account.login }}
-                    </p>
-                  </div>
+                </div>
+              </div>
+
+              <!-- Documents de l'étape -->
+              <div class="space-y-1 mt-3">
+                <p class="text-[11px] app-label-important">Documents de l'étape</p>
+
+                <div *ngIf="!step.documents || step.documents.length === 0" class="text-xs text-slate-500 italic">
+                  Aucun document associé à cette étape.
                 </div>
 
-                <!-- Statut -->
-                <div class="flex items-center gap-2 flex-shrink-0 ml-2">
-                  <span 
-                    class="px-2 py-1 text-xs font-semibold rounded-md"
-                    [ngClass]="getStatusClass(participant.status)">
-                    {{ getStatusLabel(participant.status) }}
-                  </span>
-                </div>
+                <ul *ngIf="step.documents && step.documents.length > 0" class="space-y-1 text-xs">
+                  <li
+                    *ngFor="let doc of step.documents"
+                    class="flex items-center gap-2 px-2 py-1 rounded-md bg-white border border-slate-200 cursor-pointer"
+                    (click)="selectDocument(doc)">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="truncate flex-1">
+                      {{ doc.documentName }}
+                    </span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -157,19 +177,48 @@
       </div>
     </div>
 
-    <!-- Colonne droite : Viewer PDF -->
-    <div class="lg:col-span-2">
-      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
-        <h2 class="text-lg font-semibold text-slate-900 mb-4">Aperçu du document</h2>
-        <div *ngIf="loadingPdf" class="text-sm text-slate-500 py-8 text-center">
-          Chargement du PDF...
+    <!-- Colonne droite : barre de document + viewer PDF -->
+    <div class="lg:col-span-2 flex flex-col space-y-3">
+      <!-- Barre d'entête du document -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-100 px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center">
+            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7 3h8l4 4v10a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <p class="text-sm font-semibold text-slate-900 truncate">
+              {{ selectedDocument?.documentName || 'Aucun document sélectionné' }}
+            </p>
+            <p class="text-[11px] text-slate-500" *ngIf="selectedDocument">
+              {{ selectedDocument.documentSize | number }} octets
+            </p>
+          </div>
         </div>
-        <app-program-pdf-viewer
-          *ngIf="!loadingPdf && getPdfSrc(selectedDocument)"
-          [src]="getPdfSrc(selectedDocument)">
-        </app-program-pdf-viewer>
-        <div *ngIf="!loadingPdf && !getPdfSrc(selectedDocument) && selectedDocument" class="text-sm text-slate-500 py-8 text-center">
-          Aucun document sélectionné ou impossible de charger le PDF.
+
+        <button
+          type="button"
+          class="app-btn app-btn-primary text-xs px-3 py-1.5 disabled:opacity-50"
+          [disabled]="!selectedDocument">
+          Télécharger
+        </button>
+      </div>
+
+      <!-- Viewer PDF dans une carte qui occupe la hauteur disponible -->
+      <div class="flex-1">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 h-full p-4">
+          <div *ngIf="loadingPdf" class="text-sm text-slate-500 py-8 text-center">
+            Chargement du PDF...
+          </div>
+          <app-program-pdf-viewer
+            *ngIf="!loadingPdf && getPdfSrc(selectedDocument)"
+            [src]="getPdfSrc(selectedDocument)">
+          </app-program-pdf-viewer>
+          <div *ngIf="!loadingPdf && !getPdfSrc(selectedDocument) && selectedDocument" class="text-sm text-slate-500 py-8 text-center">
+            Aucun document sélectionné ou impossible de charger le PDF.
+          </div>
         </div>
       </div>
     </div>

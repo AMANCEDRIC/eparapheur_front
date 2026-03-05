@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProgramService } from '../../../core/services/program.service';
-import { SignatureProgramDTO, SignatureProgramDocumentRequest, SignatureProgramDocumentDTO, SignatureProgramStepParticipantDTO, SignatureActionType } from '../../../core/models/signature-program.model';
+import { SignatureProgramDTO, SignatureProgramDocumentRequest, SignatureProgramDocumentDTO, SignatureProgramStepParticipantDTO, SignatureActionType, SignatureProgramStepDTO } from '../../../core/models/signature-program.model';
 import { IApiResponse } from '../../../core/models';
 import { ProgramPdfViewerComponent } from '../../../shared/components/program-pdf-viewer/program-pdf-viewer.component';
 
@@ -16,6 +16,7 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
   program: SignatureProgramDTO | null = null;
   documents: SignatureProgramDocumentRequest[] = [];
   selectedDocument: SignatureProgramDocumentRequest | null = null;
+  selectedStep: SignatureProgramStepDTO | null = null;
   loading = false;
   loadingPdf = false;
   error = '';
@@ -54,6 +55,11 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
           
           // Extraire les documents depuis steps[].documents[]
           this.extractDocumentsFromSteps(response.data);
+
+          // Étape sélectionnée par défaut : première étape si disponible
+          if (this.program.steps && this.program.steps.length > 0) {
+            this.selectedStep = this.program.steps[0];
+          }
           
           // Sélectionner le premier document si disponible
           if (this.documents.length > 0) {
@@ -105,6 +111,10 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
     this.selectedDocument = doc;
     // Charger le PDF si nécessaire
     this.loadPdfForDocument(doc);
+  }
+
+  selectStep(step: SignatureProgramStepDTO): void {
+    this.selectedStep = step;
   }
 
   /**
