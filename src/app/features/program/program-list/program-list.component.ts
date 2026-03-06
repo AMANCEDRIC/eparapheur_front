@@ -6,11 +6,12 @@ import { ProgramService } from '../../../core/services/program.service';
 import {SignatureProgramDTO, SignatureProgramStepParticipantDTO} from '../../../core/models/signature-program.model';
 import { IPaginatedResponse } from '../../../core/models';
 import { DateFrPipe } from '../../../shared/date-fr.pipe';
+import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-program-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, DateFrPipe],
+  imports: [CommonModule, RouterModule, FormsModule, DateFrPipe, LoadingSpinnerComponent],
   templateUrl: './program-list.component.html',
   // styleUrl: './program-list.component.sass'
 })

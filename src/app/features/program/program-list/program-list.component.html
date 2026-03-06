@@ -11,8 +11,8 @@
     </a>
   </div>
 
-  <div *ngIf="loading" class="text-sm app-text-muted">
-    Chargement des programmes...
+  <div *ngIf="loading" class="flex justify-center py-12">
+    <app-loading-spinner message="Chargement des utilisateurs..."></app-loading-spinner>
   </div>
 
   <div *ngIf="error && !loading" class="app-alert-danger">
