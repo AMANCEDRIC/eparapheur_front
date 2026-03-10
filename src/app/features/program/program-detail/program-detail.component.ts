@@ -5,11 +5,12 @@ import { ProgramService } from '../../../core/services/program.service';
 import { SignatureProgramDTO, SignatureProgramDocumentRequest, SignatureProgramDocumentDTO, SignatureProgramStepParticipantDTO, SignatureActionType, SignatureProgramStepDTO } from '../../../core/models/signature-program.model';
 import { IApiResponse } from '../../../core/models';
 import { ProgramPdfViewerComponent } from '../../../shared/components/program-pdf-viewer/program-pdf-viewer.component';
+import {DateFrPipe} from "../../../shared/date-fr.pipe";
 
 @Component({
   selector: 'app-program-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, ProgramPdfViewerComponent],
+    imports: [CommonModule, RouterModule, ProgramPdfViewerComponent, DateFrPipe],
   templateUrl: './program-detail.component.html'
 })
 export class ProgramDetailComponent implements OnInit, OnDestroy {
@@ -52,7 +53,7 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
       next: (response: IApiResponse<SignatureProgramDTO>) => {
         if (response.status_code === 7000) {
           this.program = response.data;
-          
+
           // Extraire les documents depuis steps[].documents[]
           this.extractDocumentsFromSteps(response.data);
 
@@ -60,7 +61,7 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
           if (this.program.steps && this.program.steps.length > 0) {
             this.selectedStep = this.program.steps[0];
           }
-          
+
           // Sélectionner le premier document si disponible
           if (this.documents.length > 0) {
             this.selectDocument(this.documents[0]);
@@ -84,7 +85,7 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
    */
   private extractDocumentsFromSteps(program: SignatureProgramDTO): void {
     this.documents = [];
-    
+
     if (program.steps && program.steps.length > 0) {
       program.steps.forEach(step => {
         // Le backend retourne des documents avec la structure SignatureProgramDocumentDTO
