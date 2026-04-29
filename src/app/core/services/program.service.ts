@@ -13,7 +13,7 @@ import {
 export class ProgramService {
   private apiUrl = 'http://localhost:8081/signature-programs';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Création d'un programme de signature
@@ -54,15 +54,17 @@ export class ProgramService {
   }
 
   /**
-   * Télécharge un document PDF
+   * Télécharge un document PDF (Original ou Signé)
    * @param documentId ID du document
+   * @param forceRefresh Force le rechargement via un timestamp
    * @returns Observable avec le blob PDF
    */
-  downloadDocument(documentId: number): Observable<Blob> {
-    return this.http.get(
-      `http://localhost:8081/documents/${documentId}/download`,
-      { responseType: 'blob' }
-    );
+  downloadDocument(documentId: number, forceRefresh = false): Observable<Blob> {
+    let url = `http://localhost:8081/files/documents/${documentId}`;
+    if (forceRefresh) {
+      url += `?t=${Date.now()}`;
+    }
+    return this.http.get(url, { responseType: 'blob' });
   }
 }
 

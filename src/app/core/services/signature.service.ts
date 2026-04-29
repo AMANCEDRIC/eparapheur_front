@@ -109,4 +109,25 @@ export class SignatureService {
       payload
     );
   }
+
+  /**
+   * Formate une URL relative en URL absolue pour le backend,
+   * en supprimant le préfixe '/api' si présent (car le backend sert à la racine).
+   */
+  formatFileUrl(relativeUrl: string | undefined): string {
+    if (!relativeUrl) {
+      return '';
+    }
+    if (relativeUrl.startsWith('http')) {
+      return relativeUrl;
+    }
+    let path = relativeUrl;
+    if (path.startsWith('/api')) {
+      path = path.substring(4);
+    }
+    if (!path.startsWith('/')) {
+      path = '/' + path;
+    }
+    return `${this.baseUrl}${path}`;
+  }
 }

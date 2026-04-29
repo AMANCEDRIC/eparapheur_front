@@ -10,6 +10,7 @@ export interface SignatureVisual {
   active: boolean;
   /** Contenu image base64 (avec ou sans préfixe data:), si renvoyé par l’API */
   image?: string;
+  visualUrl?: string;
 }
 
 export interface UserCertificate {

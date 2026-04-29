@@ -88,6 +88,9 @@ export class SignatureVisualsComponent implements OnInit {
   }
 
   getVisualImageSrc(v: SignatureVisual): string {
+    if (v.visualUrl) {
+      return this.signatureService.formatFileUrl(v.visualUrl);
+    }
     if (!v.image?.trim()) {
       return '';
     }
@@ -98,7 +101,7 @@ export class SignatureVisualsComponent implements OnInit {
   }
 
   hasImage(v: SignatureVisual): boolean {
-    return !!v.image?.trim();
+    return !!v.visualUrl || !!v.image?.trim();
   }
 
   onFileSelect(event: Event): void {

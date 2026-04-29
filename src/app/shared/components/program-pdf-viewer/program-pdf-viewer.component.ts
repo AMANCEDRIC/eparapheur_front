@@ -52,17 +52,14 @@ export class ProgramPdfViewerComponent implements OnInit, OnChanges, OnDestroy {
   private activeDragCleanup: (() => void) | null = null;
   private lastEventSource: { pageNumber: number; viewport: any } | null = null;
   private lastBoxPosition: { left: number; top: number; page: number } | null = null;
+  private renderedPages = new Map<number, { div: HTMLElement; viewport: any }>();
 
   constructor(
     private readonly elementRef: ElementRef<HTMLElement>,
     private readonly renderer: Renderer2
   ) {}
 
-  /** En mode placement : une seule page à la fois, pour positionner le cadre. */
   get effectiveShowAll(): boolean {
-    if (this.placementMode) {
-      return false;
-    }
     return this.viewMode === 'scroll';
   }
 
@@ -77,15 +74,19 @@ export class ProgramPdfViewerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['src'] || changes['zoom']) {
+      this.renderedPages.clear();
+      this.removeAllPlacementOverlays();
+      this.lastEventSource = null;
+    }
     if (changes['placementMode'] || changes['placementImage']) {
       if (this.placementMode) {
-        this.savedViewMode = this.viewMode;
-        this.viewMode = 'page';
         if (this.page < 1) {
           this.page = 1;
         }
+        // Forcer un rafraîchissement si on a déjà des pages
+        setTimeout(() => this.refreshPlacementOverlay(), 50);
       } else {
-        this.viewMode = this.savedViewMode;
         this.removeAllPlacementOverlays();
         this.clearDrag();
       }
@@ -138,16 +139,31 @@ export class ProgramPdfViewerComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  onPageChange(page: number): void {
+    this.page = page;
+    this.pageChangeOutput.emit(page);
+    this.refreshPlacementOverlay();
+    // Fallback pour les ralentissements de rendu
+    setTimeout(() => this.refreshPlacementOverlay(), 150);
+  }
+
   onPageRendered(event: any): void {
+    const e = event?.detail && typeof event.detail === 'object' ? event.detail : event;
+    const pageNumber = e?.pageNumber ?? 0;
+    const pageDiv = e?.source?.div;
+    const viewport = e?.source?.viewport;
+    
+    if (pageNumber && pageDiv && viewport) {
+      this.renderedPages.set(pageNumber, { div: pageDiv, viewport });
+    }
+
     if (this.placementMode && this.placementImage) {
-      const e = event?.detail && typeof event.detail === 'object' ? event.detail : event;
-      const pageNumber = e?.pageNumber ?? 0;
-      const pageDiv = e?.source?.div;
-      const viewport = e?.source?.viewport;
       if (!pageNumber || !pageDiv || !viewport) {
         return;
       }
+
       if (pageNumber !== this.page) {
+        this.removePlacementOverlaysInPageDiv(pageDiv);
         return;
       }
       this.lastEventSource = { pageNumber, viewport };
@@ -155,6 +171,24 @@ export class ProgramPdfViewerComponent implements OnInit, OnChanges, OnDestroy {
       this.installPlacementBox(pageNumber, pageDiv, viewport);
     } else if (!this.placementMode) {
       this.removeAllPlacementOverlays();
+      this.renderedPages.clear();
+    }
+  }
+
+  private refreshPlacementOverlay(): void {
+    if (!this.placementMode || !this.placementImage) {
+      return;
+    }
+    this.removeAllPlacementOverlays();
+    const current = this.renderedPages.get(this.page);
+    if (current) {
+      // Vérifier si l'élément est toujours dans le DOM
+      if (current.div.offsetParent !== null) {
+        this.installPlacementBox(this.page, current.div, current.viewport);
+      } else {
+        // La page a probablement été déchargée par le viewer
+        this.renderedPages.delete(this.page);
+      }
     }
   }
 
@@ -226,6 +260,8 @@ export class ProgramPdfViewerComponent implements OnInit, OnChanges, OnDestroy {
     this.renderer.setStyle(box, 'cursor', 'move');
     this.renderer.setStyle(box, 'userSelect', 'none');
     this.renderer.setStyle(box, 'touchAction', 'none');
+    this.renderer.setStyle(box, 'opacity', '0');
+    this.renderer.setStyle(box, 'transition', 'opacity 0.2s ease-in-out');
 
     const img = this.renderer.createElement('img') as HTMLImageElement;
     img.setAttribute('src', this.placementImage!);
@@ -235,6 +271,9 @@ export class ProgramPdfViewerComponent implements OnInit, OnChanges, OnDestroy {
     this.renderer.setStyle(img, 'pointerEvents', 'none');
     this.renderer.appendChild(box, img);
     this.renderer.appendChild(pageDiv, box);
+    
+    // Affichage progressif
+    setTimeout(() => this.renderer.setStyle(box, 'opacity', '1'), 10);
 
     const getLocalPoint = (clientX: number, clientY: number) => {
       const r = pageDiv.getBoundingClientRect();

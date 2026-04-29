@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProgramService } from '../../../core/services/program.service';
+import { SafeUrlPipe } from '../../../shared/safe-url.pipe';
 import { AuthService } from '../../../core/services/auth.service';
 import { SignatureService } from '../../../core/services/signature.service';
 import { AppNotificationService } from '../../../core/services/app-notification.service';
@@ -26,7 +27,7 @@ export type SignFlowState = 'idle' | 'placing' | 'sendingOtp' | 'otp' | 'finaliz
 @Component({
   selector: 'app-program-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ProgramPdfViewerComponent],
+  imports: [CommonModule, RouterModule, FormsModule, ProgramPdfViewerComponent, SafeUrlPipe],
   templateUrl: './program-detail.component.html'
 })
 export class ProgramDetailComponent implements OnInit, OnDestroy {
@@ -160,7 +161,8 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
                 documentName: doc.documentName,
                 documentPath: doc.documentPath,
                 documentSize: doc.documentSize,
-                documentType: doc.documentType
+                documentType: doc.documentType,
+                documentUrl: doc.documentUrl
               });
             }
           });
@@ -181,11 +183,17 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
     this.loadPdfForDocument(doc);
   }
 
+  refreshCurrentDocument(): void {
+    if (this.selectedDocument) {
+      this.loadPdfForDocument(this.selectedDocument, true);
+    }
+  }
+
   selectStep(step: SignatureProgramStepDTO): void {
     this.selectedStep = step;
   }
 
-  private loadPdfForDocument(doc: SignatureProgramDocumentRequest): void {
+  private loadPdfForDocument(doc: SignatureProgramDocumentRequest, forceRefresh = false): void {
     if (!doc || !doc.id) {
       return;
     }
@@ -194,7 +202,7 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
       this.pdfBlobUrl = null;
     }
     this.loadingPdf = true;
-    this.programService.downloadDocument(doc.id).subscribe({
+    this.programService.downloadDocument(doc.id, forceRefresh).subscribe({
       next: (blob: Blob) => {
         this.pdfBlobUrl = URL.createObjectURL(blob);
         this.loadingPdf = false;
@@ -341,6 +349,9 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
     if (!visual) {
       return this.tinyPngDataUrl;
     }
+    if (visual.visualUrl) {
+      return this.signatureService.formatFileUrl(visual.visualUrl);
+    }
     const i = visual.image;
     if (!i?.trim()) {
       return this.tinyPngDataUrl;
@@ -461,6 +472,7 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
             if (this.programIdForReload != null) {
               this.loadProgram(this.programIdForReload);
             }
+            this.refreshCurrentDocument();
           } else {
             this.signing = 'otp';
             this.appNotificationService.error(
@@ -485,5 +497,9 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
     this.currentPlacement = null;
     this.signOtp = '';
     this.pendingParticipant = null;
+  }
+
+  formatUrl(url: string | undefined): string {
+    return this.signatureService.formatFileUrl(url);
   }
 }

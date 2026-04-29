@@ -9,6 +9,7 @@ export interface SignatureProgramDocumentRequest {
   documentSize: number;
   documentType: string;
   binary?: string;        // base64 pour la création/la prévisualisation
+  documentUrl?: string;
 }
 
 // Interface pour un document retourné par le backend (dans steps[])
@@ -21,6 +22,7 @@ export interface SignatureProgramDocumentDTO {
   uploadedByAccount?: number;
   uploadedAt?: string;
   createdAt?: string;
+  documentUrl?: string;
 }
 
 // Interface pour un participant retourné par le backend (dans steps[].participants[])

@@ -118,6 +118,7 @@
     [zoom]="zoom"
     style="display:block; height: 100%;"
     (page-rendered)="onPageRendered($event)"
+    (pageChange)="onPageChange($event)"
     (after-load-complete)="onAfterLoadComplete($event)">
   </pdf-viewer>
 </div>

@@ -45,6 +45,9 @@
             [class.bg-indigo-50]="selectedVisualId === v.id"
             (click)="onSelectExistingVisual(v)">
             <input type="radio" [checked]="selectedVisualId === v.id" (change)="onSelectExistingVisual(v)" class="w-3 h-3" />
+            <div class="w-10 h-10 bg-slate-100 rounded border border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+              <img [src]="getVisualThumbnail(v)" class="max-h-full max-w-full object-contain" alt="" />
+            </div>
             <span class="text-sm text-slate-800 flex-1">{{ v.label || 'Visuel' }} ({{ v.visualType }})</span>
           </label>
         </div>

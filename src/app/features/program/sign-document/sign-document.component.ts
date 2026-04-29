@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SafeUrlPipe } from '../../../shared/safe-url.pipe';
 import { ProgramPdfViewerComponent, PlacementResult } from '../../../shared/components/program-pdf-viewer/program-pdf-viewer.component';
 import { SignatureService } from '../../../core/services/signature.service';
 import { AppNotificationService } from '../../../core/services/app-notification.service';
@@ -10,7 +11,7 @@ import { SignatureActionResult, SignatureVisual } from '../../../core/models/sig
 @Component({
   selector: 'app-sign-document',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProgramPdfViewerComponent],
+  imports: [CommonModule, FormsModule, ProgramPdfViewerComponent, SafeUrlPipe],
   templateUrl: './sign-document.component.html'
 })
 export class SignDocumentComponent implements OnInit {
@@ -237,6 +238,16 @@ export class SignDocumentComponent implements OnInit {
     if (!this.selectedVisualId) {
       return;
     }
+    const visual = this.visuals.find(v => v.id === this.selectedVisualId);
+    if (!visual) {
+      return;
+    }
+
+    if (visual.visualUrl) {
+      this.placementDataUrl = this.signatureService.formatFileUrl(visual.visualUrl);
+      return;
+    }
+
     if (this.idLastCreatedVisual === this.selectedVisualId) {
       this.placementDataUrl =
         this.lastDrawDataUrl || this.uploadDataUrl || this.placeholderDataUrl();
@@ -366,5 +377,15 @@ export class SignDocumentComponent implements OnInit {
     if (this.step > 0) {
       this.step--;
     }
+  }
+
+  getVisualThumbnail(v: SignatureVisual): string {
+    if (v.visualUrl) {
+      return this.signatureService.formatFileUrl(v.visualUrl);
+    }
+    if (v.image) {
+      return v.image.startsWith('data:') ? v.image : `data:image/png;base64,${v.image}`;
+    }
+    return '';
   }
 }
