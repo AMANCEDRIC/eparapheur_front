@@ -1,6 +1,11 @@
 <div class="h-[600px] border border-slate-200 rounded-md overflow-hidden bg-slate-100 flex flex-col ">
+  <div *ngIf="placementMode" class="px-3 py-2 bg-indigo-50 border-b border-indigo-100 text-xs text-indigo-800">
+    Glissez le cadre pour placer le visuel de signature sur le PDF, puis validez à l’étape suivante.
+  </div>
   <!-- Toolbar : mode + zoom -->
-  <div class="flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs app-text-muted">
+  <div
+    *ngIf="!placementMode"
+    class="flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs app-text-muted">
     <div class="flex items-center gap-2">
       <span class="mr-1">Mode</span>
       <button
@@ -46,10 +51,36 @@
       </button>
     </div>
   </div>
+  <div
+    *ngIf="placementMode"
+    class="flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs app-text-muted">
+    <span>Zoom</span>
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        class="app-btn app-btn-outline px-2 py-1 rounded border border-slate-300 hover:bg-slate-100"
+        (click)="zoomOut()">
+        -
+      </button>
+      <span class="w-10 text-center">{{ (zoom * 100) | number:'1.0-0' }}%</span>
+      <button
+        type="button"
+        class="app-btn app-btn-outline px-2 py-1 rounded border border-slate-300 hover:bg-slate-100"
+        (click)="zoomIn()">
+        +
+      </button>
+      <button
+        type="button"
+        class="app-btn app-btn-outline ml-1 px-2 py-1 rounded border border-slate-300 hover:bg-slate-100"
+        (click)="resetZoom()">
+        Réinitialiser
+      </button>
+    </div>
+  </div>
 
   <!-- Barre de pagination (mode page uniquement) -->
   <div
-    *ngIf="viewMode === 'page' && totalPages > 0"
+    *ngIf="(viewMode === 'page' && totalPages > 0) || placementMode"
     class="flex items-center justify-center gap-3 px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs app-text-muted">
     <button
       type="button"
@@ -82,7 +113,7 @@
     [src]="src"
     [render-text]="true"
     [original-size]="false"
-    [show-all]="showAll"
+    [show-all]="effectiveShowAll"
     [page]="page"
     [zoom]="zoom"
     style="display:block; height: 100%;"

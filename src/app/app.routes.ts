@@ -40,6 +40,11 @@ export const routes: Routes = [
           .then(m => m.ProfileComponent)
       },
       {
+        path: 'signatures',
+        loadComponent: () => import('./features/signature-visuals/signature-visuals.component')
+          .then(m => m.SignatureVisualsComponent)
+      },
+      {
         path: 'programs',
         loadComponent: () => import('./features/program/program-list/program-list.component')
           .then(m => m.ProgramListComponent)

@@ -212,32 +212,98 @@
     <!-- Colonne droite : barre d’info document + viewer PDF -->
     <div class="flex-1 bg-white overflow-y-auto px-4 lg:px-8 py-4 lg:py-6">
       <div class="max-w-5xl mx-auto flex flex-col space-y-3 h-full">
-        <!-- Barre d'entête du document -->
-<!--        <div class="bg-white rounded-xl shadow-sm border border-slate-100 px-4 py-3 flex items-center justify-between">-->
-<!--          <div class="flex items-center gap-3">-->
-<!--            <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center">-->
-<!--              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
-<!--                      d="M7 3h8l4 4v10a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />-->
-<!--              </svg>-->
-<!--            </div>-->
-<!--            <div class="min-w-0">-->
-<!--              <p class="text-sm font-semibold text-slate-900 truncate">-->
-<!--                {{ selectedDocument?.documentName || 'Aucun document sélectionné' }}-->
-<!--              </p>-->
-<!--              <p class="text-[11px] text-slate-500" *ngIf="selectedDocument">-->
-<!--                {{ selectedDocument.documentSize | number }} octets-->
-<!--              </p>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          <button-->
-<!--            type="button"-->
-<!--            class="app-btn app-btn-primary text-xs px-3 py-1.5 disabled:opacity-50"-->
-<!--            [disabled]="!selectedDocument">-->
-<!--            Télécharger-->
-<!--          </button>-->
-<!--        </div>-->
+        <div
+          *ngIf="selectedDocument"
+          class="bg-white rounded-xl shadow-sm border border-slate-100 px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 3h8l4 4v10a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-slate-900 truncate">
+                {{ selectedDocument.documentName }}
+              </p>
+              <p class="text-[11px] text-slate-500">
+                {{ selectedDocument.documentSize | number }} octets
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 flex-shrink-0 w-full sm:w-auto">
+            <ng-container *ngIf="signing === 'idle'">
+              <button
+                *ngIf="canStartSignFlow()"
+                type="button"
+                class="app-btn app-btn-primary text-sm px-4 py-2"
+                (click)="onSignClick()">
+                Signer
+              </button>
+              <p
+                *ngIf="!canStartSignFlow() && canShowSignButton() && !pdfBlobUrl"
+                class="text-xs text-amber-700">Chargement du PDF requis…</p>
+            </ng-container>
+            <ng-container *ngIf="signing === 'placing' || signing === 'sendingOtp'">
+              <p class="text-xs text-indigo-800 bg-indigo-50 px-2 py-1 rounded self-start sm:self-center">
+                Glissez le cadre pour placer le visuel, puis confirmez.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  class="app-btn app-btn-primary text-sm px-3 py-1.5 disabled:opacity-50"
+                  [disabled]="!currentPlacement || signing === 'sendingOtp'"
+                  (click)="onConfirmPlacement()">
+                  {{ signing === "sendingOtp" ? "Envoi du code…" : "Confirmer la position" }}
+                </button>
+                <button
+                  type="button"
+                  class="app-btn app-btn-outline text-sm px-3 py-1.5"
+                  (click)="cancelSignFlow()">
+                  Annuler
+                </button>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="signing === 'otp' || signing === 'finalizing'">
+              <div class="flex flex-col gap-1 w-full sm:max-w-xs">
+                <label class="text-[10px] app-label-important">Code OTP (6 chiffres)</label>
+                <input
+                  type="text"
+                  [(ngModel)]="signOtp"
+                  name="docSignOtp"
+                  maxlength="6"
+                  inputmode="numeric"
+                  autocomplete="one-time-code"
+                  class="app-input text-sm text-center tracking-[0.2em] font-semibold"
+                  placeholder="______" />
+              </div>
+              <div class="flex flex-wrap gap-2 sm:ml-1">
+                <button
+                  type="button"
+                  class="app-btn app-btn-primary text-sm px-3 py-1.5 disabled:opacity-50"
+                  [disabled]="signOtp.length !== 6 || signing === 'finalizing'"
+                  (click)="onValidateOtpAndSign()">
+                  {{ signing === "finalizing" ? "Signature…" : "Valider la signature" }}
+                </button>
+                <button
+                  type="button"
+                  class="app-btn app-btn-outline text-sm px-3 py-1.5"
+                  [disabled]="signing === 'finalizing'"
+                  (click)="cancelSignFlow()">
+                  Annuler
+                </button>
+              </div>
+            </ng-container>
+            <p
+              *ngIf="getSignableParticipantForSelection() === null && selectedDocument && signing === 'idle'"
+              class="text-xs text-slate-500">
+              Signature disponible seulement si vous êtes participant en attente sur ce document.
+            </p>
+          </div>
+        </div>
 
         <!-- Viewer PDF -->
         <div class="flex-1">
@@ -247,7 +313,10 @@
             </div>
             <app-program-pdf-viewer
               *ngIf="!loadingPdf && getPdfSrc(selectedDocument)"
-              [src]="getPdfSrc(selectedDocument)">
+              [src]="getPdfSrc(selectedDocument)!"
+              [placementMode]="placementModeActive"
+              [placementImage]="placementImageUrl"
+              (placementChange)="onPlacementChange($event)">
             </app-program-pdf-viewer>
             <div *ngIf="!loadingPdf && !getPdfSrc(selectedDocument) && selectedDocument" class="text-sm text-slate-500 py-8 text-center">
               Aucun document sélectionné ou impossible de charger le PDF.
@@ -257,4 +326,5 @@
       </div>
     </div>
   </div>
+
 </div>

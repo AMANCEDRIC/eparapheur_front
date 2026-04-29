@@ -7,6 +7,7 @@ export * from './iaccount-detail.model';
 export * from './ipaginated-response.model';
 export * from './iapi-response.model';
 export * from './signature-program.model';
+export * from './signature.model';
 
 // Interfaces existantes
 export * from './auth-request.model';

@@ -1,0 +1,113 @@
+<div class="max-w-5xl mx-auto space-y-6">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">Mes signatures</h1>
+      <p class="app-text-muted text-sm mt-1">Gérez les visuels qui seront apposés sur les PDF lors d’une signature numérique.</p>
+    </div>
+    <div class="flex gap-2">
+      <a routerLink="/dashboard" class="app-btn app-btn-outline text-sm">Retour au tableau de bord</a>
+      <button type="button" class="app-btn app-btn-primary text-sm" (click)="toggleAddForm()">
+        {{ showAddForm ? "Fermer" : "Nouvelle signature" }}
+      </button>
+    </div>
+  </div>
+
+  <div
+    *ngIf="showAddForm && accountId"
+    class="app-card p-4 border-2 border-indigo-100 bg-indigo-50/30 space-y-4">
+    <h2 class="text-sm font-semibold app-section-title">Enregistrer un nouveau visuel</h2>
+    <div class="flex gap-2 text-xs">
+      <button
+        type="button"
+        [class.app-btn-primary]="newTab === 'upload'"
+        [class.app-btn-outline]="newTab !== 'upload'"
+        class="app-btn rounded px-3 py-1.5"
+        (click)="newTab = 'upload'">Importer</button>
+      <button
+        type="button"
+        [class.app-btn-primary]="newTab === 'draw'"
+        [class.app-btn-outline]="newTab !== 'draw'"
+        class="app-btn rounded px-3 py-1.5"
+        (click)="newTab = 'draw'">Dessiner</button>
+    </div>
+
+    <div *ngIf="newTab === 'upload'" class="space-y-2 max-w-md">
+      <input type="file" accept="image/png,image/jpeg" (change)="onFileSelect($event)" class="text-sm block" />
+      <p *ngIf="uploadFileName" class="text-xs text-slate-600">Fichier : {{ uploadFileName }}</p>
+      <div *ngIf="uploadDataUrl" class="border border-slate-200 rounded p-2 inline-block bg-white">
+        <img [src]="uploadDataUrl" class="max-h-24 object-contain" alt="" />
+      </div>
+      <label class="text-xs app-label-important">Libellé</label>
+      <input type="text" class="app-input w-full text-sm" [(ngModel)]="newLabel" name="nl" />
+      <button
+        type="button"
+        class="app-btn app-btn-primary text-sm"
+        [disabled]="saving || !uploadBase64"
+        (click)="uploadFileVisual()">
+        {{ saving ? "Enregistrement…" : "Enregistrer" }}
+      </button>
+    </div>
+
+    <div *ngIf="newTab === 'draw'" class="space-y-2">
+      <canvas
+        #drawCanvas
+        width="400"
+        height="150"
+        class="border border-slate-200 rounded w-full max-w-md touch-none cursor-crosshair bg-white"
+        (pointerdown)="drawStart($event, drawCanvas)"
+        (pointermove)="drawMove($event, drawCanvas)"
+        (pointerup)="drawEnd()"></canvas>
+      <div class="flex flex-wrap gap-2 items-end max-w-md">
+        <div class="flex-1 min-w-[8rem]">
+          <label class="text-xs app-label-important">Libellé</label>
+          <input type="text" class="app-input w-full text-sm mt-1" [(ngModel)]="newLabel" name="nl2" />
+        </div>
+        <button type="button" class="app-btn app-btn-outline text-sm" (click)="clearDraw(drawCanvas)">Effacer</button>
+        <button
+          type="button"
+          class="app-btn app-btn-primary text-sm"
+          [disabled]="saving"
+          (click)="drawAndSave()">
+          {{ saving ? "Enregistrement…" : "Enregistrer" }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="listLoading" class="text-sm app-text-muted">Chargement…</div>
+
+  <div
+    *ngIf="!listLoading && !visuals.length"
+    class="app-card p-8 text-center text-slate-600 text-sm">
+    Aucun visuel enregistré. Cliquez sur <strong>Nouvelle signature</strong> pour en ajouter un.
+  </div>
+
+  <div
+    *ngIf="!listLoading && visuals.length"
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div
+      *ngFor="let v of visuals"
+      class="app-card p-4 flex flex-col border border-slate-200"
+      [class.ring-2]="isDefaultVisual(v)"
+      [class.ring-indigo-500]="isDefaultVisual(v)">
+      <div class="h-28 bg-slate-100 rounded border border-slate-200 flex items-center justify-center overflow-hidden mb-3">
+        <img *ngIf="hasImage(v)" [src]="getVisualImageSrc(v)" [alt]="v.label" class="max-h-full max-w-full object-contain" />
+        <span *ngIf="!hasImage(v)" class="text-xs text-slate-500 px-2 text-center">Aperçu non fourni</span>
+      </div>
+      <p class="font-medium text-slate-900 text-sm truncate" [title]="v.label">{{ v.label || "Visuel" }}</p>
+      <p class="text-[11px] app-text-muted mb-2">{{ v.visualType }}</p>
+      <div class="mt-auto flex flex-wrap gap-2">
+        <span
+          *ngIf="isDefaultVisual(v)"
+          class="text-[10px] font-semibold uppercase text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">
+          Par défaut
+        </span>
+        <button
+          *ngIf="!isDefaultVisual(v)"
+          type="button"
+          class="app-btn app-btn-outline text-xs flex-1 min-w-0"
+          (click)="setAsDefault(v)">Définir par défaut</button>
+      </div>
+    </div>
+  </div>
+</div>

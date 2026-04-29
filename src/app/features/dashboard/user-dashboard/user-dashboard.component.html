@@ -81,15 +81,36 @@
       </div>
     </div>
 
-    <!-- Add Signature Panel -->
+    <!-- Visuel de signature courant -->
     <div class="app-card h-fit">
-      <div class="p-6 flex flex-col items-center justify-center text-slate-600 min-h-[320px]">
-        <div class="w-16 h-16 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-400 mb-4">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-        </div>
-        <div class="text-sm font-medium text-center">Ajoutez une signature</div>
+      <div class="p-5">
+        <h3 class="font-bold text-slate-900 mb-1">Visuel de signature</h3>
+        <p class="text-xs app-text-muted mb-4">Celui utilisé par défaut lors d’une signature sur un document.</p>
+        <div *ngIf="signatureWidgetLoading" class="text-sm app-text-muted py-8 text-center">Chargement…</div>
+        <ng-container *ngIf="!signatureWidgetLoading && mySignatureVisual as v">
+          <div class="border border-slate-200 rounded-lg bg-slate-50 h-32 flex items-center justify-center overflow-hidden mb-3">
+            <img
+              *ngIf="hasVisualImage(v)"
+              [src]="getSignatureImageSrc(v)"
+              [alt]="v.label"
+              class="max-h-full max-w-full object-contain" />
+            <span *ngIf="!hasVisualImage(v)" class="text-xs text-slate-500 px-2 text-center">Aperçu indisponible</span>
+          </div>
+          <p class="text-sm font-medium text-slate-800 truncate" [title]="v.label">{{ v.label || "Signature" }}</p>
+          <a
+            routerLink="/dashboard/signatures"
+            class="app-btn app-btn-outline w-full text-center text-sm mt-3 block">
+            Gérer les visuels
+          </a>
+        </ng-container>
+        <ng-container *ngIf="!signatureWidgetLoading && !mySignatureVisual">
+          <p class="text-sm text-slate-600 mb-3">Aucun visuel configuré.</p>
+          <a
+            routerLink="/dashboard/signatures"
+            class="app-btn app-btn-primary w-full text-center text-sm block">
+            Configurer ma signature
+          </a>
+        </ng-container>
       </div>
     </div>
   </div>
