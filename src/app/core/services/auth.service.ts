@@ -112,6 +112,13 @@ export class AuthService {
     );
   }
 
+  validateAccount(token: string, password: string): Observable<IApiResponse<any>> {
+    return this.http.post<IApiResponse<any>>(
+      `${this.apiUrl}/validate`,
+      { token, password }
+    );
+  }
+
   register(userData: any): Observable<IApiResponse<any>> {
     return this.http.post<IApiResponse<any>>(
       `${this.apiUrl}/register`,

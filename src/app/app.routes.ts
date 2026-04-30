@@ -24,6 +24,21 @@ export const routes: Routes = [
       .then(m => m.ResetPasswordComponent)
   },
   {
+    path: 'accounts',
+    children: [
+      {
+        path: 'validate',
+        loadComponent: () => import('./features/auth/validate-account/validate-account.component')
+          .then(m => m.ValidateAccountComponent)
+      },
+      {
+        path: 'reset-password',
+        loadComponent: () => import('./features/auth/reset-password/reset-password.component')
+          .then(m => m.ResetPasswordComponent)
+      }
+    ]
+  },
+  {
     path: 'dashboard',
     loadComponent: () => import('./layouts/main-layout/main-layout.component')
       .then(m => m.MainLayoutComponent),

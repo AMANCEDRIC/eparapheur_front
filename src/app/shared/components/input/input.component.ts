@@ -23,8 +23,11 @@ export class InputComponent implements ControlValueAccessor {
   @Input() error: string = '';
   @Input() required: boolean = false;
   @Input() disabled: boolean = false;
+  @Input() icon: string = '';
 
   value: string = '';
+  showPassword = false;
+
   onChange = (value: string) => {};
   onTouched = () => {};
 
@@ -51,11 +54,22 @@ export class InputComponent implements ControlValueAccessor {
     this.onTouched();
   }
 
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  get currentType(): string {
+    if (this.type === 'password') {
+      return this.showPassword ? 'text' : 'password';
+    }
+    return this.type;
+  }
+
   getInputClasses(): string {
-    const baseClasses = 'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent';
+    const baseClasses = 'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200';
     const errorClass = this.error ? 'border-danger' : 'border-gray-300';
     const disabledClass = this.disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white';
-    return `${baseClasses} ${errorClass} ${disabledClass}`.trim();
+    const iconPadding = this.type === 'password' ? 'pr-10' : '';
+    return `${baseClasses} ${errorClass} ${disabledClass} ${iconPadding}`.trim();
   }
 }
-

@@ -6,6 +6,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { CardComponent } from '../../../shared/components/card/card.component';
+import {AlertComponent} from '../../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-reset-password',
@@ -16,7 +17,8 @@ import { CardComponent } from '../../../shared/components/card/card.component';
     RouterModule,
     ButtonComponent,
     InputComponent,
-    CardComponent
+    CardComponent,
+    AlertComponent
   ],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.sass'
@@ -28,6 +30,12 @@ export class ResetPasswordComponent implements OnInit {
   success = false;
   token: string = '';
 
+  passwordStrength = 0;
+  hasLength = false;
+  hasUpper = false;
+  hasNumber = false;
+  hasSpecial = false;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -35,33 +43,41 @@ export class ResetPasswordComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.resetPasswordForm = this.fb.group({
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
+
+    this.resetPasswordForm.get('password')?.valueChanges.subscribe(val => {
+      this.checkPasswordStrength(val);
+    });
   }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.token = params['token'] || '';
       if (!this.token) {
-        this.router.navigate(['/login']);
+        this.error = 'Token de réinitialisation manquant.';
       }
     });
   }
 
   passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password');
-    const confirmPassword = form.get('confirmPassword');
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
-      confirmPassword.setErrors({ passwordMismatch: true });
-    } else if (confirmPassword?.hasError('passwordMismatch')) {
-      confirmPassword.setErrors(null);
-    }
-    return null;
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordMismatch: true };
+  }
+
+  checkPasswordStrength(password: string): void {
+    this.hasLength = (password || '').length >= 8;
+    this.hasUpper = /[A-Z]/.test(password || '');
+    this.hasNumber = /[0-9]/.test(password || '');
+    this.hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password || '');
+
+    this.passwordStrength = [this.hasLength, this.hasUpper, this.hasNumber, this.hasSpecial].filter(v => v).length;
   }
 
   onSubmit(): void {
-    if (this.resetPasswordForm.valid && this.token) {
+    if (this.resetPasswordForm.valid && this.token && this.passwordStrength >= 4) {
       this.loading = true;
       this.error = '';
 
@@ -71,7 +87,7 @@ export class ResetPasswordComponent implements OnInit {
             this.success = true;
             setTimeout(() => {
               this.router.navigate(['/login']);
-            }, 2000);
+            }, 3000);
           } else {
             this.error = response.status_message || 'Erreur lors de la réinitialisation';
           }
