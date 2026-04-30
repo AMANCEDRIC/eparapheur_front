@@ -41,15 +41,54 @@
 <!--        </svg>-->
 <!--        <span *ngIf="isOpen" class="font-medium text-sm">Historique</span>-->
 <!--      </a>-->
-      <a
-        routerLink="/dashboard/programs"
-        routerLinkActive="app-bg-primary text-white"
-        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-slate-800 hover:text-white">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6M5 8h14M5 16h14" />
-        </svg>
-        <span *ngIf="isOpen" class="font-medium text-sm">Programmes</span>
-      </a>
+      <div class="space-y-1">
+        <button
+          (click)="toggleProgramsMenu($event)"
+          class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors hover:bg-slate-800 hover:text-white"
+          [class.app-bg-primary]="isProgramsMenuOpen"
+          [class.text-white]="isProgramsMenuOpen">
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6M5 8h14M5 16h14" />
+            </svg>
+            <span *ngIf="isOpen" class="font-medium text-sm">Programmes</span>
+          </div>
+          <svg
+            *ngIf="isOpen"
+            class="w-4 h-4 transition-transform duration-200"
+            [class.rotate-180]="isProgramsMenuOpen"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Sub-menu Programs (Collapsible) -->
+        <div
+          *ngIf="isOpen"
+          class="pl-11 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0 opacity-0': !isProgramsMenuOpen, 'max-h-40 opacity-100 mt-1': isProgramsMenuOpen}">
+          <a
+            routerLink="/dashboard/programs/all"
+            routerLinkActive="text-white bg-slate-800"
+            class="block px-3 py-1.5 rounded-md text-xs transition-colors hover:text-white hover:bg-slate-800">
+            Tous les programmes
+          </a>
+          <a
+            routerLink="/dashboard/programs/my-creations"
+            routerLinkActive="text-white bg-slate-800"
+            class="block px-3 py-1.5 rounded-md text-xs transition-colors hover:text-white hover:bg-slate-800">
+            Mes créations
+          </a>
+          <a
+            routerLink="/dashboard/programs/involved"
+            routerLinkActive="text-white bg-slate-800"
+            class="block px-3 py-1.5 rounded-md text-xs transition-colors hover:text-white hover:bg-slate-800">
+            Me concernant
+          </a>
+        </div>
+      </div>
     </ng-container>
 
     <!-- Section Administration - uniquement pour ROOT et ADMIN -->

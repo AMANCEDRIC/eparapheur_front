@@ -45,6 +45,40 @@ export class ProgramService {
   }
 
   /**
+   * Récupère la liste des programmes dont l'utilisateur connecté est l'initiateur.
+   */
+  getMyCreations(
+    page: number = 1,
+    size: number = 25
+  ): Observable<IPaginatedResponse<SignatureProgramDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<IPaginatedResponse<SignatureProgramDTO>>(
+      `${this.apiUrl}/liste-mes-creations`,
+      { params }
+    );
+  }
+
+  /**
+   * Récupère la liste des programmes où l'utilisateur connecté est impliqué.
+   */
+  getInvolvingMe(
+    page: number = 1,
+    size: number = 25
+  ): Observable<IPaginatedResponse<SignatureProgramDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<IPaginatedResponse<SignatureProgramDTO>>(
+      `${this.apiUrl}/liste-me-concernant`,
+      { params }
+    );
+  }
+
+  /**
    * Détail d'un programme
    */
   getProgramById(id: number): Observable<IApiResponse<SignatureProgramDTO>> {

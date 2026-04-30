@@ -84,6 +84,9 @@ export class ProgramPdfViewerComponent implements OnInit, OnChanges, OnDestroy {
         if (this.page < 1) {
           this.page = 1;
         }
+        if (this.placementImage) {
+          this.updateSizeFromImage(this.placementImage);
+        }
         // Forcer un rafraîchissement si on a déjà des pages
         setTimeout(() => this.refreshPlacementOverlay(), 50);
       } else {
@@ -91,6 +94,20 @@ export class ProgramPdfViewerComponent implements OnInit, OnChanges, OnDestroy {
         this.clearDrag();
       }
     }
+  }
+
+  private updateSizeFromImage(src: string): void {
+    const img = new Image();
+    img.onload = () => {
+      if (img.width > 0 && img.height > 0) {
+        const ratio = img.width / img.height;
+        const targetWidth = 160; // Largeur de base un peu plus grande
+        const targetHeight = Math.round(targetWidth / ratio);
+        this.placementSize = { width: targetWidth, height: targetHeight };
+        this.refreshPlacementOverlay();
+      }
+    };
+    img.src = src;
   }
 
   ngOnDestroy(): void {
@@ -255,9 +272,10 @@ export class ProgramPdfViewerComponent implements OnInit, OnChanges, OnDestroy {
     this.renderer.setStyle(box, 'height', `${h}px`);
     this.renderer.setStyle(box, 'zIndex', '20');
     this.renderer.setStyle(box, 'boxSizing', 'border-box');
-    this.renderer.setStyle(box, 'border', '2px dashed #4f46e5');
-    this.renderer.setStyle(box, 'background', 'rgba(255,255,255,0.9)');
+    this.renderer.setStyle(box, 'border', '1.5px dashed #4f46e5');
+    this.renderer.setStyle(box, 'background', 'rgba(79, 70, 229, 0.05)');
     this.renderer.setStyle(box, 'cursor', 'move');
+    this.renderer.setStyle(box, 'padding', '4px'); // Ajouter un peu d'espace interne
     this.renderer.setStyle(box, 'userSelect', 'none');
     this.renderer.setStyle(box, 'touchAction', 'none');
     this.renderer.setStyle(box, 'opacity', '0');

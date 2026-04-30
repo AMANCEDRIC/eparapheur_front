@@ -15,6 +15,7 @@ export class SidebarComponent implements OnInit {
   @Input() isOpen: boolean = true;
   @Input() currentRoute: string = '';
   currentUser: IAccountDetail | null = null;
+  isProgramsMenuOpen: boolean = false;
 
   constructor(public authService: AuthService) {}
 
@@ -28,6 +29,17 @@ export class SidebarComponent implements OnInit {
     if (this.authService.isAuthenticated() && !this.currentUser) {
       this.authService.loadCurrentUser().subscribe();
     }
+
+    // Ouvrir le menu si on est déjà sur une route de programme
+    if (window.location.pathname.includes('/dashboard/programs')) {
+      this.isProgramsMenuOpen = true;
+    }
+  }
+
+  toggleProgramsMenu(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isProgramsMenuOpen = !this.isProgramsMenuOpen;
   }
 
   logout(): void {

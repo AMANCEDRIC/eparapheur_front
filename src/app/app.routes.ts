@@ -46,18 +46,41 @@ export const routes: Routes = [
       },
       {
         path: 'programs',
-        loadComponent: () => import('./features/program/program-list/program-list.component')
-          .then(m => m.ProgramListComponent)
-      },
-      {
-        path: 'programs/create',
-        loadComponent: () => import('./features/program/create-program/create-program.component')
-          .then(m => m.CreateProgramComponent)
-      },
-      {
-        path: 'programs/:id',
-        loadComponent: () => import('./features/program/program-detail/program-detail.component')
-          .then(m => m.ProgramDetailComponent)
+        children: [
+          {
+            path: '',
+            redirectTo: 'all',
+            pathMatch: 'full'
+          },
+          {
+            path: 'all',
+            loadComponent: () => import('./features/program/program-list/program-list.component')
+              .then(m => m.ProgramListComponent),
+            data: { listType: 'all' }
+          },
+          {
+            path: 'my-creations',
+            loadComponent: () => import('./features/program/program-list/program-list.component')
+              .then(m => m.ProgramListComponent),
+            data: { listType: 'creations' }
+          },
+          {
+            path: 'involved',
+            loadComponent: () => import('./features/program/program-list/program-list.component')
+              .then(m => m.ProgramListComponent),
+            data: { listType: 'involved' }
+          },
+          {
+            path: 'create',
+            loadComponent: () => import('./features/program/create-program/create-program.component')
+              .then(m => m.CreateProgramComponent)
+          },
+          {
+            path: ':id',
+            loadComponent: () => import('./features/program/program-detail/program-detail.component')
+              .then(m => m.ProgramDetailComponent)
+          }
+        ]
       }
     ]
   },
