@@ -18,6 +18,7 @@ export class StepOneComponent implements OnInit {
     description?: string;
     startDate?: string;
     endDate?: string;
+    displayIdentity?: boolean;
     documents: SignatureProgramDocumentRequest[];
   };
 
@@ -26,6 +27,7 @@ export class StepOneComponent implements OnInit {
     description?: string;
     startDate?: string;
     endDate?: string;
+    displayIdentity?: boolean;
     documents: SignatureProgramDocumentRequest[];
   }>();
 
@@ -40,7 +42,8 @@ export class StepOneComponent implements OnInit {
       label: ['', [Validators.required]],
       description: ['', [Validators.required]],
       startDate: [''],
-      endDate: ['']
+      endDate: [''],
+      displayIdentity: [false]
     });
   }
 
@@ -50,7 +53,8 @@ export class StepOneComponent implements OnInit {
         label: this.initialValue.label,
         description: this.initialValue.description || '',
         startDate: this.initialValue.startDate || '',
-        endDate: this.initialValue.endDate || ''
+        endDate: this.initialValue.endDate || '',
+        displayIdentity: this.initialValue.displayIdentity ?? false
       });
       this.documents = [...this.initialValue.documents];
     }

@@ -35,6 +35,7 @@ export class CreateProgramComponent {
     programType: 'INTERNAL_FLOW',
     startDate: '',
     endDate: '',
+    displayIdentity: false,
     documents: [],
     steps: []
   };
@@ -80,6 +81,7 @@ export class CreateProgramComponent {
     description?: string;
     startDate?: string;
     endDate?: string;
+    displayIdentity?: boolean;
     documents: CreateSignatureProgramRequest['documents'];
   }): void {
     this.draftProgram = {

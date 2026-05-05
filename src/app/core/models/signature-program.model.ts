@@ -83,6 +83,7 @@ export interface CreateSignatureProgramRequest {
   programType: string;
   startDate?: string;
   endDate?: string;
+  displayIdentity?: boolean;
   documents: SignatureProgramDocumentRequest[];
   steps: SignatureProgramStepRequest[];
 }
