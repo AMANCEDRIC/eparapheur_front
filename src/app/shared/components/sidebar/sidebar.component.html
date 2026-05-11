@@ -1,130 +1,110 @@
 <aside
   [class.w-64]="isOpen"
   [class.w-20]="!isOpen"
-  class="bg-slate-900 text-slate-300 transition-all duration-300 flex flex-col min-h-screen fixed left-0 top-0 z-50">
-  <!-- Logo -->
-  <div class="p-6 flex items-center justify-center border-b border-slate-800">
-    <img src="assets/images/logos/Cryptoneo_logo.png" alt="E-Parapheur" class="h-8 w-auto object-contain" />
+  class="app-sidebar transition-all duration-300 flex flex-col min-h-screen fixed left-0 top-0 z-50 shadow-sm border-r border-slate-100">
+  
+  <!-- Logo Section -->
+  <div class="h-24 flex flex-col items-center justify-center border-b border-slate-50">
+    <img 
+      src="assets/images/logos/Cryptoneo_logo.png" 
+      alt="Cryptoneo" 
+      class="h-7 w-auto object-contain transition-all duration-300" />
+    <span *ngIf="isOpen" class="text-[8px] font-bold text-slate-300 uppercase tracking-[0.2em] mt-1.5 animate-pulse">Enterprise Edition</span>
   </div>
 
   <!-- Navigation -->
-  <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-    <!-- Menus utilisateur - uniquement pour les utilisateurs non-admin -->
+  <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+    <!-- Main Menu -->
     <ng-container *ngIf="!isAdmin()">
       <a
         routerLink="/dashboard"
-        routerLinkActive="app-bg-primary text-white"
+        routerLinkActive="active"
         [routerLinkActiveOptions]="{exact: true}"
-        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-slate-800 hover:text-white">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-        </svg>
-        <span *ngIf="isOpen" class="font-medium text-sm">Tableau de bord</span>
+        class="app-sidebar-item">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span *ngIf="isOpen" class="flex-1">Tableau de bord</span>
       </a>
 
       <a
         routerLink="/dashboard/signatures"
-        routerLinkActive="app-bg-primary text-white"
-        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-slate-800 hover:text-white">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-        <span *ngIf="isOpen" class="font-medium text-sm">Mes signatures</span>
+        routerLinkActive="active"
+        class="app-sidebar-item">
+        <span class="material-symbols-outlined">ink_pen</span>
+        <span *ngIf="isOpen" class="flex-1">Mes signatures</span>
       </a>
 
-<!--      <a-->
-<!--        routerLink="/dashboard/history"-->
-<!--        routerLinkActive="app-bg-primary text-white"-->
-<!--        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-slate-800 hover:text-white">-->
-<!--        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />-->
-<!--        </svg>-->
-<!--        <span *ngIf="isOpen" class="font-medium text-sm">Historique</span>-->
-<!--      </a>-->
       <div class="space-y-1">
         <button
           (click)="toggleProgramsMenu($event)"
-          class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors hover:bg-slate-800 hover:text-white"
-          [class.app-bg-primary]="isProgramsMenuOpen"
-          [class.text-white]="isProgramsMenuOpen">
-          <div class="flex items-center gap-3">
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6M5 8h14M5 16h14" />
-            </svg>
-            <span *ngIf="isOpen" class="font-medium text-sm">Programmes</span>
+          class="app-sidebar-item w-full flex items-center justify-between"
+          [class.active]="isProgramsMenuOpen">
+          <div class="flex items-center gap-3.5">
+            <span class="material-symbols-outlined">account_tree</span>
+            <span *ngIf="isOpen" class="flex-1">Programmes</span>
           </div>
-          <svg
+          <span
             *ngIf="isOpen"
-            class="w-4 h-4 transition-transform duration-200"
-            [class.rotate-180]="isProgramsMenuOpen"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
+            class="material-symbols-outlined text-sm transition-transform duration-300"
+            [class.rotate-180]="isProgramsMenuOpen">
+            expand_more
+          </span>
         </button>
 
-        <!-- Sub-menu Programs (Collapsible) -->
+        <!-- Sub-menu Programs (Premium Collapsible) -->
         <div
           *ngIf="isOpen"
-          class="pl-11 space-y-1 overflow-hidden transition-all duration-300"
-          [ngClass]="{'max-h-0 opacity-0': !isProgramsMenuOpen, 'max-h-40 opacity-100 mt-1': isProgramsMenuOpen}">
+          class="pl-12 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0 opacity-0': !isProgramsMenuOpen, 'max-h-48 opacity-100 mt-1 mb-2': isProgramsMenuOpen}">
           <a
             routerLink="/dashboard/programs/all"
-            routerLinkActive="text-white bg-slate-800"
-            class="block px-3 py-1.5 rounded-md text-xs transition-colors hover:text-white hover:bg-slate-800">
+            routerLinkActive="active"
+            class="app-sidebar-item py-2 px-3 text-[11px] rounded-md">
             Tous les programmes
           </a>
           <a
             routerLink="/dashboard/programs/my-creations"
-            routerLinkActive="text-white bg-slate-800"
-            class="block px-3 py-1.5 rounded-md text-xs transition-colors hover:text-white hover:bg-slate-800">
+            routerLinkActive="active"
+            class="app-sidebar-item py-2 px-3 text-[11px] rounded-md">
             Mes créations
           </a>
           <a
             routerLink="/dashboard/programs/involved"
-            routerLinkActive="text-white bg-slate-800"
-            class="block px-3 py-1.5 rounded-md text-xs transition-colors hover:text-white hover:bg-slate-800">
+            routerLinkActive="active"
+            class="app-sidebar-item py-2 px-3 text-[11px] rounded-md">
             Me concernant
           </a>
         </div>
       </div>
     </ng-container>
 
-    <!-- Section Administration - uniquement pour ROOT et ADMIN -->
-    <div *ngIf="canAccessAdminSection()" class="pt-4 mt-4 border-t border-slate-800 space-y-2">
-      <p *ngIf="isOpen" class="px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Administration</p>
+    <!-- Admin Section -->
+    <div *ngIf="canAccessAdminSection()" class="pt-4 mt-4 border-t border-slate-100 space-y-1">
+      <p *ngIf="isOpen" class="px-4 mb-2 text-[9px] font-bold text-slate-400 uppercase tracking-widest">Administration</p>
       <a
         routerLink="/admin/dashboard"
-        routerLinkActive="app-bg-primary text-white"
-        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-slate-800 hover:text-white">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg>
-        <span *ngIf="isOpen" class="font-medium text-sm">Dashboard Admin</span>
+        routerLinkActive="active"
+        class="app-sidebar-item">
+        <span class="material-symbols-outlined">monitoring</span>
+        <span *ngIf="isOpen" class="flex-1">Dashboard Admin</span>
       </a>
       <a
         *ngIf="canManageUsers()"
         routerLink="/admin/users"
-        routerLinkActive="app-bg-primary text-white"
-        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-slate-800 hover:text-white">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <span *ngIf="isOpen" class="font-medium text-sm">Utilisateurs</span>
+        routerLinkActive="active"
+        class="app-sidebar-item">
+        <span class="material-symbols-outlined">group</span>
+        <span *ngIf="isOpen" class="flex-1">Utilisateurs</span>
       </a>
     </div>
   </nav>
 
-  <!-- Logout -->
-  <div class="p-4 border-t border-slate-800">
+  <!-- Logout Section -->
+  <div class="p-4 border-t border-slate-100">
     <button
       (click)="logout()"
-      class="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800 transition-colors text-rose-400">
-      <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-      </svg>
-      <span *ngIf="isOpen" class="text-sm font-medium">Déconnexion</span>
+      class="w-full app-sidebar-item hover:bg-rose-50 text-rose-500 group border-none">
+      <span class="material-symbols-outlined">logout</span>
+      <span *ngIf="isOpen" class="flex-1">Déconnexion</span>
     </button>
   </div>
 </aside>

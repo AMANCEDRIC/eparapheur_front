@@ -10,96 +10,63 @@ import { DateFrPipe } from '../../date-fr.pipe';
   imports: [CommonModule, RouterModule, DateFrPipe],
   template: `
     <div
-      class="relative flex flex-col justify-between rounded-2xl bg-white/80 backdrop-blur
-             border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-0.5
-             transition-all duration-200 p-4 h-full">
-
-      <div class="flex items-start justify-between gap-3">
-        <div class="flex-1 min-w-0">
-          <h2 class="text-base font-semibold text-slate-900 mb-1 line-clamp-2" [title]="program.title">
-            {{ program.title }}
-          </h2>
-          <p class="text-[11px] uppercase tracking-wide app-label-important">
-            Type :
-            <span class="font-medium text-slate-700">
-              {{ program.programType }}
-            </span>
-          </p>
+      class="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col hover:shadow-lg transition-all duration-300 group h-full cursor-pointer"
+      (click)="onDetailClick()">
+      
+      <!-- Card Header area -->
+      <div class="h-24 bg-primary/5 p-4 flex items-start justify-between">
+        <div class="size-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+          <span class="material-symbols-outlined text-primary text-[20px]">
+            {{ program.programType === 'SIGNATURE' ? 'signature' : 'description' }}
+          </span>
         </div>
-
-        <span
-          class="app-badge flex-shrink-0"
+        <span 
+          class="px-2 py-1 text-[9px] font-bold uppercase tracking-wider rounded"
           [ngClass]="{
-            'app-badge-success': program.status === 'ACTIVE' || program.status === 'DRAFT',
-            'app-badge-danger': program.status === 'CANCELLED'
+            'bg-emerald-100 text-emerald-700': program.status === 'ACTIVE',
+            'bg-amber-100 text-amber-700': program.status === 'DRAFT' || program.status === 'PENDING',
+            'bg-slate-100 text-slate-600': program.status === 'ARCHIVED' || program.status === 'CANCELLED'
           }">
           {{ program.status }}
         </span>
       </div>
 
-      <div class="mt-3 space-y-1">
-        <div class="flex items-center justify-between">
-          <span class="text-[11px] app-label-important">Signataires</span>
-          <span class="text-[11px] app-label-important">Initiateur</span>
+      <!-- Card Body -->
+      <div class="p-4 flex-1">
+        <h3 class="text-sm font-bold group-hover:text-primary transition-colors line-clamp-1" [title]="program.title">
+          {{ program.title }}
+        </h3>
+        <p class="text-[11px] text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">
+          {{ program.description || 'Aucune description disponible pour ce programme.' }}
+        </p>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="px-4 py-3 border-t border-slate-50 flex items-center justify-between bg-slate-50/30">
+        <!-- Signatories Avatars -->
+        <div class="flex -space-x-2">
+          <div
+            *ngFor="let initials of getVisibleParticipants()"
+            class="size-7 rounded-full border-2 border-white bg-slate-100 text-[9px] font-bold text-slate-600 flex items-center justify-center"
+            [title]="initials">
+            {{ initials }}
+          </div>
+          <div
+            *ngIf="getExtraParticipantsCount() > 0"
+            class="size-7 rounded-full border-2 border-white bg-slate-200 text-[9px] font-bold text-slate-500 flex items-center justify-center">
+            +{{ getExtraParticipantsCount() }}
+          </div>
         </div>
 
-        <div class="flex items-center justify-between rounded-full bg-slate-50 px-3 py-1.5">
-          <!-- Signataires -->
-          <div class="flex items-center gap-1 -space-x-1.5">
-            <div
-              *ngFor="let initials of getVisibleParticipants()"
-              class="h-7 w-7 rounded-full bg-slate-200 text-[11px] text-slate-600
-             flex items-center justify-center border border-white">
-              {{ initials }}
-            </div>
-            <div
-              *ngIf="getExtraParticipantsCount() > 0"
-              class="h-7 w-7 rounded-full bg-slate-100 text-[10px] text-slate-500
-             flex items-center justify-center border border-dashed border-slate-300">
-              +{{ getExtraParticipantsCount() }}
-            </div>
-          </div>
-
-          <div
-            class="h-7 w-7 rounded-full app-bg-primary text-[11px] text-white
-           flex items-center justify-center border border-white">
+        <!-- Initiator -->
+        <div class="flex items-center gap-2">
+          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tight">Initiateur</span>
+          <div 
+            class="size-7 rounded-full ring-2 ring-primary/10 bg-primary text-white flex items-center justify-center text-[9px] font-bold"
+            [title]="getInitiatorInitials()">
             {{ getInitiatorInitials() }}
           </div>
         </div>
-      </div>
-
-      <div class="mt-4 grid grid-cols-2 gap-4 text-xs text-slate-500">
-        <div>
-          <div class="uppercase tracking-wide text-[10px] app-label-important">Début</div>
-          <div class="font-medium text-slate-800">
-            {{ program.startDate | dateFr:'short' }}
-          </div>
-        </div>
-        <div>
-          <div class="uppercase tracking-wide text-[10px] app-label-important">Fin</div>
-          <div class="font-medium text-slate-800">
-            {{ program.endDate | dateFr:'short' }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Pied de carte : action discrète avec icône oeil -->
-      <div class="mt-5 flex items-center justify-between text-xs text-slate-500">
-        <div class="text-[11px] text-slate-400 line-clamp-1 flex-1 mr-2">
-          {{ program.description }}
-        </div>
-
-        <button
-          (click)="onDetailClick()"
-          class="app-btn app-btn-outline px-2 py-1 rounded border border-slate-300 hover:bg-slate-100 flex-shrink-0"
-          title="Voir le détail">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-        </button>
       </div>
     </div>
   `
@@ -117,7 +84,7 @@ export class ItemProgramComponent {
     if (person?.firstName || person?.lastName) {
       const first = (person.firstName || '').charAt(0).toUpperCase();
       const last = (person.lastName || '').charAt(0).toUpperCase();
-      const initials = `${first}${last}`.trim();
+      const initials = (first + last).trim();
       return initials || participant.account.login.slice(0, 2).toUpperCase();
     }
     return participant.account.login.slice(0, 2).toUpperCase();
@@ -153,7 +120,7 @@ export class ItemProgramComponent {
     if (initiator?.person?.firstName || initiator?.person?.lastName) {
       const first = (initiator.person.firstName || '').charAt(0).toUpperCase();
       const last = (initiator.person.lastName || '').charAt(0).toUpperCase();
-      const initials = `${first}${last}`.trim();
+      const initials = (first + last).trim();
       return initials || (initiator.login ? initiator.login.slice(0, 2).toUpperCase() : 'IN');
     }
 

@@ -1,44 +1,73 @@
-<div class="space-y-6 app-fade-slide-in">
-  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-    <div>
-      <h1 class="text-2xl font-bold text-slate-900">{{ getListTitle() }}</h1>
-      <p class="app-text-muted text-sm">{{ getListDescription() }}</p>
-    </div>
-    <a
-      routerLink="/dashboard/programs/create"
-      class="app-btn app-btn-primary px-4 py-2 font-medium flex items-center gap-2 text-sm">
-      Créer un programme
-    </a>
+<div class="p-4 sm:p-2 space-y-3 app-fade-slide-in">
+  <!-- Title Section -->
+  <div class="flex flex-col gap-2">
+    <h1 class="text-3xl font-black tracking-tight text-slate-900">{{ getListTitle() }}</h1>
+    <p class="text-slate-500 max-w-2xl">{{ getListDescription() }}</p>
   </div>
 
-  <div *ngIf="loading" class="flex justify-center py-12">
-    <app-loading-spinner message="Chargement des programmes..."></app-loading-spinner>
+  <!-- Tabs Navigation -->
+  <div class="flex border-b border-slate-200 gap-8">
+    <button class="pb-4 border-b-2 border-primary text-primary text-sm font-bold">Tous les programmes</button>
+    <button class="pb-4 border-b-2 border-transparent text-slate-500 hover:text-slate-700 text-sm font-medium transition-colors">Actifs</button>
+    <button class="pb-4 border-b-2 border-transparent text-slate-500 hover:text-slate-700 text-sm font-medium transition-colors">Terminés</button>
+
   </div>
 
-  <div *ngIf="error && !loading" class="app-alert-danger">
-    {{ error }}
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-100 shadow-sm">
+    <app-loading-spinner message="Optimisation de votre espace de travail..."></app-loading-spinner>
   </div>
 
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="bg-rose-50 border border-rose-100 text-rose-600 p-4 rounded-xl flex items-center gap-3">
+    <span class="material-symbols-outlined">error</span>
+    <span class="text-sm font-bold">{{ error }}</span>
+  </div>
+
+  <!-- Content Grid -->
   <div *ngIf="!loading">
-    <div *ngIf="programs.length === 0" class="app-card px-6 py-8 text-center text-gray-500 text-sm">
-      Aucun programme trouvé.
-    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-    <div *ngIf="programs.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- List of existing programs -->
       <app-item-program
         *ngFor="let program of programs"
         [program]="program"
         (actionClick)="onViewDetail($event)">
       </app-item-program>
+
+      <!-- Add New Program Placeholder Card -->
+      <div
+        routerLink="/dashboard/programs/create"
+        class="border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center p-8 gap-4 hover:bg-slate-50 hover:border-primary/30 transition-all cursor-pointer group min-h-[220px]">
+        <div class="size-14 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
+          <span class="material-symbols-outlined text-3xl">add</span>
+        </div>
+        <div class="text-center">
+          <p class="font-bold text-slate-900">Nouveau Programme</p>
+          <p class="text-xs text-slate-500 mt-1">Démarrer un nouveau workflow de signature</p>
+        </div>
+      </div>
     </div>
 
-    <app-pagination
-      [total]="total"
-      [page]="page"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="pageSizeOptions"
-      (pageChange)="onPageChange($event)"
-      (pageSizeChange)="onPageSizeChange($event)">
-    </app-pagination>
+    <!-- Empty State -->
+    <div *ngIf="programs.length === 0 && !loading" class="flex flex-col items-center justify-center py-20 text-center">
+      <div class="size-20 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 mb-4">
+        <span class="material-symbols-outlined text-4xl">inventory_2</span>
+      </div>
+      <h3 class="text-lg font-bold text-slate-900">Aucun programme trouvé</h3>
+      <p class="text-sm text-slate-500 mt-1">Vous n'avez pas encore de programmes correspondant à ces critères.</p>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-12 pt-8 border-t border-slate-100">
+      <app-pagination
+        [total]="total"
+        [page]="page"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)">
+      </app-pagination>
+    </div>
   </div>
 </div>

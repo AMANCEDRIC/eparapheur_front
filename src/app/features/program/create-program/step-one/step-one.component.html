@@ -1,183 +1,137 @@
-<form class="space-y-6 app-fade-slide-in" [formGroup]="form" (ngSubmit)="onNext()">
-  <!-- Titre bloc -->
-<!--  <div>-->
-<!--    <h2 class="text-xl font-semibold text-slate-900">Informations générales</h2>-->
-<!--    <p class="app-text-muted text-sm">-->
-<!--      Définissez le libellé, la description et les dates du programme.-->
-<!--    </p>-->
-<!--  </div>-->
+<div class="space-y-4 animate-fade-slide-in">
+  <!-- Header de section -->
+  <div class="border-b border-slate-100 pb-2">
+    <h3 class="text-base font-bold text-slate-900">Informations Générales</h3>
+    <p class="text-slate-500 text-[10px]">Configuration initiale du programme de signature.</p>
+  </div>
 
-  <!-- Formulaire infos générales -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div>
-      <label class="block text-sm font-medium app-label-important mb-1">
-        Libellé du programme
-      </label>
-      <input
-        type="text"
-        formControlName="label"
-        class="app-input"
-        placeholder="Ex : Signature contrat de prestation">
-      <div
-        class="text-xs text-red-500 mt-1"
-        *ngIf="form.get('label')?.touched && form.get('label')?.hasError('required')">
-        Le libellé est obligatoire.
+  <form [formGroup]="form" (ngSubmit)="onNext()" class="space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Program Title -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" for="title">Titre du programme</label>
+        <input 
+          id="title"
+          type="text" 
+          formControlName="label"
+          class="w-full rounded-md border border-slate-200 bg-slate-50/50 text-slate-900 focus:border-primary focus:ring-1 focus:ring-primary/20 h-8 px-3 text-xs transition-all" 
+          placeholder="Ex: Contrat de partenariat stratégique 2024">
+        <div class="text-[9px] text-rose-500 font-bold" *ngIf="form.get('label')?.touched && form.get('label')?.hasError('required')">
+          * Ce champ est obligatoire.
+        </div>
+      </div>
+
+      <!-- Dates Range -->
+      <div class="grid grid-cols-2 gap-3">
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Début</label>
+          <input 
+            type="datetime-local" 
+            formControlName="startDate" 
+            class="w-full rounded-md border border-slate-200 bg-slate-50/50 text-slate-900 focus:border-primary focus:ring-1 focus:ring-primary/20 h-8 px-2 text-[10px] transition-all">
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Échéance</label>
+          <input 
+            type="datetime-local" 
+            formControlName="endDate" 
+            class="w-full rounded-md border border-slate-200 bg-slate-50/50 text-slate-900 focus:border-primary focus:ring-1 focus:ring-primary/20 h-8 px-2 text-[10px] transition-all">
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="flex flex-col gap-1.5 md:col-span-2">
+        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" for="description">Description & Contexte</label>
+        <textarea 
+          id="description"
+          formControlName="description"
+          class="w-full rounded-md border border-slate-200 bg-slate-50/50 text-slate-900 focus:border-primary focus:ring-1 focus:ring-primary/20 p-2.5 text-xs transition-all resize-none" 
+          placeholder="Décrivez les objectifs..." 
+          rows="2"></textarea>
       </div>
     </div>
 
-    <div>
-      <label class="block text-sm font-medium app-label-important mb-1">
-        Description
+    <!-- Options (Identité Numérique) -->
+    <div class="p-2.5 bg-slate-50 rounded-md border border-slate-100 flex items-center justify-between group hover:bg-white transition-all">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 bg-white rounded flex items-center justify-center text-primary border border-slate-200">
+          <span class="material-symbols-outlined text-base">verified_user</span>
+        </div>
+        <div>
+          <h3 class="text-[11px] font-bold text-slate-900 leading-tight">Empreinte d'identité numérique</h3>
+          <p class="text-[9px] text-slate-500 font-medium">Nom et date inclus sur chaque signature.</p>
+        </div>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer scale-75 origin-right">
+        <input type="checkbox" formControlName="displayIdentity" class="sr-only peer">
+        <div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
       </label>
-      <textarea
-        formControlName="description"
-        rows="3"
-        class="app-textarea"
-        placeholder="Décrivez le contexte du programme de signature"></textarea>
     </div>
 
-    <div>
-      <label class="block text-sm font-medium app-label-important mb-1">
-        Date de début
-      </label>
-      <input
-        type="datetime-local"
-        formControlName="startDate"
-        class="app-input">
-    </div>
+    <!-- Document Upload Section -->
+    <div class="space-y-2.5">
+      <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Documents à signer</label>
+      
+      <!-- Dropzone -->
+      <div class="relative group cursor-pointer" (click)="fileInput.click()">
+        <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-md py-4 px-4 bg-slate-50/50 hover:border-primary/50 hover:bg-white transition-all">
+          <span class="material-symbols-outlined text-xl text-slate-300 mb-1 group-hover:text-primary transition-colors">cloud_upload</span>
+          <p class="text-[10px] font-bold text-slate-700 uppercase tracking-tight">Glisser-déposer vos PDF</p>
+          <p class="text-[8px] text-slate-400 uppercase mt-0.5">Max. 20MB</p>
+          <input #fileInput type="file" multiple accept="application/pdf" class="hidden" (change)="onFilesSelected($event)"/>
+        </div>
+      </div>
 
-    <div>
-      <label class="block text-sm font-medium app-label-important mb-1">
-        Date de fin
-      </label>
-      <input
-        type="datetime-local"
-        formControlName="endDate"
-        class="app-input">
-    </div>
-
-    <!-- Affichage Identité Signature -->
-    <div class="col-span-1 md:col-span-2 mt-2">
-      <div class="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition-all">
-        <div class="flex items-center gap-3">
-          <div class="p-2 bg-blue-50 rounded-lg">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
+      <!-- File List -->
+      <div class="grid gap-2" *ngIf="documents.length > 0">
+        <div 
+          *ngFor="let doc of documents; let i = index"
+          class="flex items-center justify-between p-2 bg-white border border-slate-100 rounded-md hover:border-primary/20 transition-all">
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 bg-slate-50 text-slate-400 rounded flex items-center justify-center">
+              <span class="material-symbols-outlined text-base">description</span>
+            </div>
+            <div class="min-w-0">
+              <p class="text-[10px] font-bold text-slate-800 truncate leading-tight">{{ doc.documentName }}</p>
+              <p class="text-[8px] font-bold text-slate-400 uppercase">{{ (doc.documentSize / 1024) | number:'1.0-0' }} KB</p>
+            </div>
           </div>
-          <div>
-            <h4 class="text-sm font-semibold text-slate-900">Afficher l'identité sur la signature</h4>
-            <p class="text-xs app-text-muted">Ajoute "Signé par [Nom] le [Date]" sous l'image de signature</p>
+          <div class="flex items-center gap-1">
+            <button type="button" class="w-6 h-6 flex items-center justify-center rounded hover:bg-slate-50 text-slate-300 hover:text-primary transition-all" (click)="onTogglePreview(doc)">
+              <span class="material-symbols-outlined text-base">visibility</span>
+            </button>
+            <button type="button" class="w-6 h-6 flex items-center justify-center rounded hover:bg-rose-50 text-slate-300 hover:text-rose-500 transition-all" (click)="removeDocument(i)">
+              <span class="material-symbols-outlined text-base">delete</span>
+            </button>
           </div>
         </div>
-        <label class="relative inline-flex items-center cursor-pointer">
-          <input type="checkbox" formControlName="displayIdentity" class="sr-only peer">
-          <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-        </label>
-      </div>
-    </div>
-  </div>
-
-  <!-- Upload documents -->
-  <div class="space-y-3">
-    <div>
-      <h3 class="text-sm font-semibold app-section-title mb-2">Documents</h3>
-      <p class="text-xs app-text-muted mb-2">
-        Importez un ou plusieurs fichiers PDF à signer. Les documents seront associés aux étapes de signature.
-      </p>
-      <input
-        type="file"
-        multiple
-        accept="application/pdf"
-        class="hidden"
-        (change)="onFilesSelected($event)"
-        #fileInput>
-      <div
-        class="app-upload-dropzone px-4 py-6 cursor-pointer flex items-center gap-3 text-sm"
-        [class.opacity-50]="loadingFiles"
-        [class.cursor-not-allowed]="loadingFiles"
-        (click)="!loadingFiles && fileInput.click()">
-        <span class="text-lg font-semibold">+</span>
-        <span *ngIf="!loadingFiles">
-          Cliquer pour charger un fichier PDF
-        </span>
-        <span *ngIf="loadingFiles">
-          Conversion en cours...
-        </span>
       </div>
     </div>
 
-    <div *ngIf="documents.length === 0" class="text-xs app-text-muted">
-      Aucun document ajouté pour le moment.
+    <!-- Navigation -->
+    <div class="pt-2 flex justify-end">
+      <button 
+        type="submit"
+        [disabled]="!isValid()"
+        class="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-2 px-6 rounded-md transition-all shadow-md shadow-primary/10 text-[10px] uppercase tracking-widest">
+        Suivant
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </button>
     </div>
+  </form>
 
-    <div class="space-y-2" *ngIf="documents.length > 0">
-      <div
-        *ngFor="let doc of documents; let i = index"
-        class="flex items-center justify-between px-3 py-2 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 app-spring-in">
-        <div class="flex flex-col">
-          <span class="font-medium truncate max-w-xs">
-            {{ doc.documentName }}
-          </span>
-          <span class="text-[11px] app-text-muted">
-            {{ doc.documentType }} • {{ doc.documentSize | number }} octets
-          </span>
-        </div>
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            class="app-btn   p-1.5 text-xs border border-slate-200 text-slate-600 hover:bg-slate-50"
-            [class.bg-slate-100]="isPreviewed(doc)"
-            (click)="onTogglePreview(doc)"
-            [title]="isPreviewed(doc) ? 'Fermer la prévisualisation' : 'Prévisualiser le PDF'">
-            <!-- œil normal -->
-            <svg *ngIf="!isPreviewed(doc)" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-            <!-- œil barré -->
-            <svg *ngIf="isPreviewed(doc)" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.97 9.97 0 012.17-3.568M6.18 6.18A9.956 9.956 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.97 9.97 0 01-1.249 2.592M3 3l18 18" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            class="text-red-600 hover:text-red-900 p-1 rounded-md hover:bg-red-50 transition-colors"
-            (click)="removeDocument(i)"
-            title="Supprimer le document">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-        </div>
+  <!-- PDF Preview Overlay -->
+  <div *ngIf="previewSrc" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4">
+    <div class="bg-white rounded-lg w-full max-w-4xl h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-spring-in">
+      <div class="px-5 py-3 flex items-center justify-between border-b border-slate-100">
+        <h3 class="text-sm font-bold text-slate-900">Aperçu</h3>
+        <button (click)="previewDocument = null" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-50 text-slate-400">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+      <div class="flex-1 overflow-hidden">
+        <app-program-pdf-viewer [src]="previewSrc"></app-program-pdf-viewer>
       </div>
     </div>
   </div>
-
-  <!-- Aperçu PDF -->
-  <div class="mt-4 space-y-2" *ngIf="previewSrc">
-    <div class="flex items-center justify-between">
-      <div>
-        <h3 class="text-sm font-semibold text-slate-900">Aperçu du document sélectionné</h3>
-        <p class="text-xs app-text-muted">
-          Cliquez sur l’icône œil pour changer de document à prévisualiser ou fermer l’aperçu.
-        </p>
-      </div>
-    </div>
-    <app-program-pdf-viewer [src]="previewSrc"></app-program-pdf-viewer>
-  </div>
-
-  <!-- Actions -->
-  <div class="flex justify-end pt-4">
-    <button
-      type="submit"
-      class="app-btn app-btn-primary text-sm px-4 py-2 disabled:opacity-50"
-      [disabled]="!isValid()">
-      Suivant
-    </button>
-  </div>
-</form>
+</div>

@@ -24,6 +24,15 @@ export class StepThreeComponent {
     this.back.emit();
   }
 
+  getTotalParticipants(): number {
+    if (!this.program.steps) return 0;
+    const ids = new Set<number>();
+    this.program.steps.forEach(step => {
+      step.participants.forEach(p => ids.add(p.accountId));
+    });
+    return ids.size;
+  }
+
   onRequestOtp(): void {
     this.requestOtp.emit();
   }
