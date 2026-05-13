@@ -78,7 +78,7 @@ Use the following design system as the visual DNA.
 
 Primary color:
 
-* #094cb2
+* #0083c0
 
 Usage:
 

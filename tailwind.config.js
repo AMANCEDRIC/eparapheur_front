@@ -6,19 +6,30 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#094cb2', // Bleu Cryptoneo
-        'primary-dim': '#eef4ff',
+        primary: '#0083c0', // SigFlow Indigo
+        'primary-dim': 'rgba(0, 131, 192, 0.1)',
+        'background-light': '#F9FAFB',
+        'surface-white': '#FFFFFF',
+        'text-primary': '#111827',
+        'text-secondary': '#6B7280',
+        'border-subtle': '#E2E8F0',
         success: '#10B981',
         warning: '#F59E0B',
-        danger: '#EF4444',
-        tertiary: '#6d5e00', // Or Archival
-        surface: {
-          lowest: '#ffffff',
-          low: '#f8fafc',
-          DEFAULT: '#f1f5f9',
-          high: '#e2e8f0',
-          dim: '#cbd5e1'
-        }
+        danger: '#F43F5E', // status-error
+        info: '#3B82F6',
+      },
+      borderRadius: {
+        'sm': '1px',
+        'DEFAULT': '2px',
+        'md': '4px',
+        'lg': '6px',
+        'xl': '8px',
+      },
+      maxWidth: {
+        'container': '84rem',
+      },
+      spacing: {
+        'section': '5rem',
       }
     },
   },

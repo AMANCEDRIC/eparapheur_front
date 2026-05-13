@@ -1,20 +1,20 @@
 <div class="space-y-4 animate-fade-slide-in">
   <!-- Header de section -->
-  <div class="border-b border-slate-100 pb-2">
-    <h3 class="text-base font-bold text-slate-900">Informations Générales</h3>
-    <p class="text-slate-500 text-[10px]">Configuration initiale du programme de signature.</p>
-  </div>
+<!--  <div class="border-b border-slate-100 pb-2">-->
+<!--    <h3 class="text-base font-bold text-slate-900">Informations Générales</h3>-->
+<!--    <p class="text-slate-500 text-[10px]">Configuration initiale du programme de signature.</p>-->
+<!--  </div>-->
 
   <form [formGroup]="form" (ngSubmit)="onNext()" class="space-y-4">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- Program Title -->
       <div class="flex flex-col gap-1.5">
         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" for="title">Titre du programme</label>
-        <input 
+        <input
           id="title"
-          type="text" 
+          type="text"
           formControlName="label"
-          class="w-full rounded-md border border-slate-200 bg-slate-50/50 text-slate-900 focus:border-primary focus:ring-1 focus:ring-primary/20 h-8 px-3 text-xs transition-all" 
+          class="w-full rounded-md border border-slate-300 bg-slate-90/90 text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 h-9 px-3 text-xs transition-all"
           placeholder="Ex: Contrat de partenariat stratégique 2024">
         <div class="text-[9px] text-rose-500 font-bold" *ngIf="form.get('label')?.touched && form.get('label')?.hasError('required')">
           * Ce champ est obligatoire.
@@ -25,34 +25,34 @@
       <div class="grid grid-cols-2 gap-3">
         <div class="flex flex-col gap-1.5">
           <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Début</label>
-          <input 
-            type="datetime-local" 
-            formControlName="startDate" 
-            class="w-full rounded-md border border-slate-200 bg-slate-50/50 text-slate-900 focus:border-primary focus:ring-1 focus:ring-primary/20 h-8 px-2 text-[10px] transition-all">
+          <input
+            type="datetime-local"
+            formControlName="startDate"
+            class="w-full rounded-md border border-slate-300 bg-slate-90/90 text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 h-9 px-2 text-[10px] transition-all">
         </div>
         <div class="flex flex-col gap-1.5">
           <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Échéance</label>
-          <input 
-            type="datetime-local" 
-            formControlName="endDate" 
-            class="w-full rounded-md border border-slate-200 bg-slate-50/50 text-slate-900 focus:border-primary focus:ring-1 focus:ring-primary/20 h-8 px-2 text-[10px] transition-all">
+          <input
+            type="datetime-local"
+            formControlName="endDate"
+            class="w-full rounded-md border border-slate-300 bg-slate-90/90 text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 h-9 px-2 text-[10px] transition-all">
         </div>
       </div>
 
       <!-- Description -->
       <div class="flex flex-col gap-1.5 md:col-span-2">
         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" for="description">Description & Contexte</label>
-        <textarea 
+        <textarea
           id="description"
           formControlName="description"
-          class="w-full rounded-md border border-slate-200 bg-slate-50/50 text-slate-900 focus:border-primary focus:ring-1 focus:ring-primary/20 p-2.5 text-xs transition-all resize-none" 
-          placeholder="Décrivez les objectifs..." 
+          class="w-full rounded-md border border-slate-300 bg-slate-90 outline-none text-slate-900 focus:border-primary focus:ring-1 focus:ring-primary/20 p-2.5 text-xs transition-all resize-none"
+          placeholder="Décrivez les objectifs..."
           rows="2"></textarea>
       </div>
     </div>
 
     <!-- Options (Identité Numérique) -->
-    <div class="p-2.5 bg-slate-50 rounded-md border border-slate-100 flex items-center justify-between group hover:bg-white transition-all">
+    <div class="p-2.5 bg-slate-50 rounded-md border border-slate-200 flex items-center justify-between group hover:bg-white transition-all">
       <div class="flex items-center gap-2.5">
         <div class="w-7 h-7 bg-white rounded flex items-center justify-center text-primary border border-slate-200">
           <span class="material-symbols-outlined text-base">verified_user</span>
@@ -71,10 +71,10 @@
     <!-- Document Upload Section -->
     <div class="space-y-2.5">
       <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Documents à signer</label>
-      
+
       <!-- Dropzone -->
       <div class="relative group cursor-pointer" (click)="fileInput.click()">
-        <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-md py-4 px-4 bg-slate-50/50 hover:border-primary/50 hover:bg-white transition-all">
+        <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-md py-4 px-4 bg-slate-50/50 hover:border-primary/50 hover:bg-white transition-all">
           <span class="material-symbols-outlined text-xl text-slate-300 mb-1 group-hover:text-primary transition-colors">cloud_upload</span>
           <p class="text-[10px] font-bold text-slate-700 uppercase tracking-tight">Glisser-déposer vos PDF</p>
           <p class="text-[8px] text-slate-400 uppercase mt-0.5">Max. 20MB</p>
@@ -84,9 +84,9 @@
 
       <!-- File List -->
       <div class="grid gap-2" *ngIf="documents.length > 0">
-        <div 
+        <div
           *ngFor="let doc of documents; let i = index"
-          class="flex items-center justify-between p-2 bg-white border border-slate-100 rounded-md hover:border-primary/20 transition-all">
+          class="flex items-center justify-between p-2 bg-white border border-slate-200 rounded-md hover:border-primary/20 transition-all">
           <div class="flex items-center gap-2.5">
             <div class="w-7 h-7 bg-slate-50 text-slate-400 rounded flex items-center justify-center">
               <span class="material-symbols-outlined text-base">description</span>
@@ -110,10 +110,10 @@
 
     <!-- Navigation -->
     <div class="pt-2 flex justify-end">
-      <button 
+      <button
         type="submit"
         [disabled]="!isValid()"
-        class="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-2 px-6 rounded-md transition-all shadow-md shadow-primary/10 text-[10px] uppercase tracking-widest">
+        class="flex items-center justify-center app-btn-primary gap-2 bg-primary hover:app-btn-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-2 px-6 rounded-md transition-all shadow-md shadow-primary/10 text-[10px] uppercase tracking-widest">
         Suivant
         <span class="material-symbols-outlined text-sm">arrow_forward</span>
       </button>

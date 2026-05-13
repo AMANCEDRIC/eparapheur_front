@@ -125,6 +125,9 @@ export class UserDashboardComponent implements OnInit {
   }
 
   getSignatureImageSrc(visual: SignatureVisual): string {
+    if (visual.visualUrl) {
+      return this.signatureService.formatFileUrl(visual.visualUrl);
+    }
     if (!visual.image?.trim()) {
       return '';
     }
@@ -135,7 +138,8 @@ export class UserDashboardComponent implements OnInit {
   }
 
   hasVisualImage(visual: SignatureVisual | null): boolean {
-    return !!visual?.image?.trim();
+    if (!visual) return false;
+    return !!visual.visualUrl || !!visual.image?.trim();
   }
 
   getIconColorClass(color: string): string {
