@@ -1,107 +1,115 @@
 <div class="space-y-4 animate-fade-slide-in">
   <!-- Header de section -->
-<!--  <div class="border-b border-slate-100 pb-2">-->
-<!--    <h3 class="text-base font-bold text-slate-900">Informations Générales</h3>-->
-<!--    <p class="text-slate-500 text-[10px]">Configuration initiale du programme de signature.</p>-->
+<!--  <div class="flex items-center justify-between pb-3 border-b border-slate-100">-->
+<!--    <div class="space-y-0.5">-->
+<!--      <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest leading-none">Informations Générales</h3>-->
+<!--      <p class="text-slate-500 text-[10px] font-medium uppercase tracking-tight">Définissez l'identité et les documents du programme.</p>-->
+<!--    </div>-->
 <!--  </div>-->
 
   <form [formGroup]="form" (ngSubmit)="onNext()" class="space-y-4">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- Program Title -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" for="title">Titre du programme</label>
-        <input
-          id="title"
-          type="text"
-          formControlName="label"
-          class="w-full rounded-md border border-slate-300 bg-slate-90/90 text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 h-9 px-3 text-xs transition-all"
-          placeholder="Ex: Contrat de partenariat stratégique 2024">
-        <div class="text-[9px] text-rose-500 font-bold" *ngIf="form.get('label')?.touched && form.get('label')?.hasError('required')">
-          * Ce champ est obligatoire.
+        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest" for="title">Titre du programme</label>
+        <div class="relative group">
+          <input
+            id="title"
+            type="text"
+            formControlName="label"
+            class="w-full rounded border border-slate-200 bg-slate-50/50 text-slate-900 outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 h-9 px-3 text-xs font-bold transition-all group-hover:border-slate-300"
+            placeholder="Ex: Contrat de prestation de services">
+          <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors text-lg">edit_note</span>
+        </div>
+        <div class="text-[9px] text-rose-500 font-bold flex items-center gap-1 ml-1" *ngIf="form.get('label')?.touched && form.get('label')?.hasError('required')">
+          <span class="material-symbols-outlined text-[12px]">error</span>
+          Ce champ est obligatoire
         </div>
       </div>
 
       <!-- Dates Range -->
       <div class="grid grid-cols-2 gap-3">
         <div class="flex flex-col gap-1.5">
-          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Début</label>
+          <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Date de début</label>
           <input
             type="datetime-local"
             formControlName="startDate"
-            class="w-full rounded-md border border-slate-300 bg-slate-90/90 text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 h-9 px-2 text-[10px] transition-all">
+            class="w-full rounded border border-slate-200 bg-slate-50/50 text-slate-900 outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 h-9 px-2 text-[11px] font-bold transition-all">
         </div>
         <div class="flex flex-col gap-1.5">
-          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Échéance</label>
+          <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Échéance</label>
           <input
             type="datetime-local"
             formControlName="endDate"
-            class="w-full rounded-md border border-slate-300 bg-slate-90/90 text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 h-9 px-2 text-[10px] transition-all">
+            class="w-full rounded border border-slate-200 bg-slate-50/50 text-slate-900 outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 h-9 px-2 text-[11px] font-bold transition-all">
         </div>
       </div>
 
       <!-- Description -->
       <div class="flex flex-col gap-1.5 md:col-span-2">
-        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" for="description">Description & Contexte</label>
+        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest" for="description">Description & Contexte</label>
         <textarea
           id="description"
           formControlName="description"
-          class="w-full rounded-md border border-slate-300 bg-slate-90 outline-none text-slate-900 focus:border-primary focus:ring-1 focus:ring-primary/20 p-2.5 text-xs transition-all resize-none"
-          placeholder="Décrivez les objectifs..."
+          class="w-full rounded border border-slate-200 bg-slate-50/50 outline-none text-slate-900 focus:border-primary focus:ring-4 focus:ring-primary/5 px-3 py-2 text-xs font-medium transition-all resize-none group-hover:border-slate-300"
+          placeholder="Détaillez les objectifs de ce programme de signature..."
           rows="2"></textarea>
       </div>
     </div>
 
     <!-- Options (Identité Numérique) -->
-    <div class="p-2.5 bg-slate-50 rounded-md border border-slate-200 flex items-center justify-between group hover:bg-white transition-all">
-      <div class="flex items-center gap-2.5">
-        <div class="w-7 h-7 bg-white rounded flex items-center justify-center text-primary border border-slate-200">
-          <span class="material-symbols-outlined text-base">verified_user</span>
+    <div class="p-3 bg-slate-50/50 rounded-lg border border-slate-200 flex items-center justify-between group hover:bg-white hover:border-primary/20 transition-all duration-300">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white rounded flex items-center justify-center text-primary border border-slate-200 shadow-sm transition-transform group-hover:scale-105">
+          <span class="material-symbols-outlined text-xl">verified_user</span>
         </div>
         <div>
-          <h3 class="text-[11px] font-bold text-slate-900 leading-tight">Empreinte d'identité numérique</h3>
-          <p class="text-[9px] text-slate-500 font-medium">Nom et date inclus sur chaque signature.</p>
+          <h3 class="text-xs font-black text-slate-900 leading-tight">Empreinte d'identité numérique</h3>
+          <p class="text-[10px] text-slate-500 font-medium">Afficher le nom et la date sur chaque zone de signature.</p>
         </div>
       </div>
-      <label class="relative inline-flex items-center cursor-pointer scale-75 origin-right">
+      <label class="relative inline-flex items-center cursor-pointer">
         <input type="checkbox" formControlName="displayIdentity" class="sr-only peer">
-        <div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+        <div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary shadow-inner"></div>
       </label>
     </div>
 
     <!-- Document Upload Section -->
-    <div class="space-y-2.5">
-      <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Documents à signer</label>
+    <div class="space-y-3 pt-1">
+      <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Chargement des documents</label>
 
       <!-- Dropzone -->
       <div class="relative group cursor-pointer" (click)="fileInput.click()">
-        <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-md py-4 px-4 bg-slate-50/50 hover:border-primary/50 hover:bg-white transition-all">
-          <span class="material-symbols-outlined text-xl text-slate-300 mb-1 group-hover:text-primary transition-colors">cloud_upload</span>
-          <p class="text-[10px] font-bold text-slate-700 uppercase tracking-tight">Glisser-déposer vos PDF</p>
-          <p class="text-[8px] text-slate-400 uppercase mt-0.5">Max. 20MB</p>
+        <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-lg py-5 px-4 bg-slate-50/30 group-hover:border-primary/50 group-hover:bg-primary/[0.02] transition-all duration-300">
+          <div class="w-10 h-10 rounded-lg bg-white shadow-sm flex items-center justify-center mb-2 group-hover:scale-110 group-hover:shadow-md transition-all border border-slate-100">
+            <span class="material-symbols-outlined text-xl text-slate-400 group-hover:text-primary transition-colors">cloud_upload</span>
+          </div>
+          <p class="text-[10px] font-black text-slate-700 uppercase tracking-widest">Glisser-déposer vos fichiers PDF</p>
+          <p class="text-[9px] text-slate-400 font-bold mt-1 uppercase tracking-tighter">Format PDF uniquement • Max. 20 MB</p>
           <input #fileInput type="file" multiple accept="application/pdf" class="hidden" (change)="onFilesSelected($event)"/>
         </div>
       </div>
 
       <!-- File List -->
-      <div class="grid gap-2" *ngIf="documents.length > 0">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" *ngIf="documents.length > 0">
         <div
           *ngFor="let doc of documents; let i = index"
-          class="flex items-center justify-between p-2 bg-white border border-slate-200 rounded-md hover:border-primary/20 transition-all">
-          <div class="flex items-center gap-2.5">
-            <div class="w-7 h-7 bg-slate-50 text-slate-400 rounded flex items-center justify-center">
-              <span class="material-symbols-outlined text-base">description</span>
+          class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg hover:border-primary/30 hover:shadow-sm transition-all group animate-fade-slide-in">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 bg-slate-50 text-slate-400 rounded flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors border border-slate-100">
+              <span class="material-symbols-outlined text-lg">description</span>
             </div>
             <div class="min-w-0">
-              <p class="text-[10px] font-bold text-slate-800 truncate leading-tight">{{ doc.documentName }}</p>
-              <p class="text-[8px] font-bold text-slate-400 uppercase">{{ (doc.documentSize / 1024) | number:'1.0-0' }} KB</p>
+              <p class="text-[11px] font-bold text-slate-800 truncate leading-tight">{{ doc.documentName }}</p>
+              <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter">{{ (doc.documentSize / 1024) | number:'1.0-0' }} KB</p>
             </div>
           </div>
-          <div class="flex items-center gap-1">
-            <button type="button" class="w-6 h-6 flex items-center justify-center rounded hover:bg-slate-50 text-slate-300 hover:text-primary transition-all" (click)="onTogglePreview(doc)">
-              <span class="material-symbols-outlined text-base">visibility</span>
+          <div class="flex items-center gap-1.5">
+            <button type="button" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-50 text-slate-300 hover:text-primary transition-all" (click)="onTogglePreview(doc)">
+              <span class="material-symbols-outlined text-lg">visibility</span>
             </button>
-            <button type="button" class="w-6 h-6 flex items-center justify-center rounded hover:bg-rose-50 text-slate-300 hover:text-rose-500 transition-all" (click)="removeDocument(i)">
-              <span class="material-symbols-outlined text-base">delete</span>
+            <button type="button" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-rose-50 text-slate-300 hover:text-rose-500 transition-all" (click)="removeDocument(i)">
+              <span class="material-symbols-outlined text-lg">delete</span>
             </button>
           </div>
         </div>
@@ -109,23 +117,23 @@
     </div>
 
     <!-- Navigation -->
-    <div class="pt-2 flex justify-end">
+    <div class="pt-4 flex justify-end border-t border-slate-100">
       <button
         type="submit"
         [disabled]="!isValid()"
-        class="flex items-center justify-center app-btn-primary gap-2 bg-primary hover:app-btn-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-2 px-6 rounded-md transition-all shadow-md shadow-primary/10 text-[10px] uppercase tracking-widest">
+        class="flex items-center justify-center app-btn app-btn-primary !px-8 !py-2.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-primary/20 text-[10px] uppercase tracking-widest font-black">
         Suivant
-        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        <span class="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
       </button>
     </div>
   </form>
 
   <!-- PDF Preview Overlay -->
-  <div *ngIf="previewSrc" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4">
-    <div class="bg-white rounded-lg w-full max-w-4xl h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-spring-in">
-      <div class="px-5 py-3 flex items-center justify-between border-b border-slate-100">
-        <h3 class="text-sm font-bold text-slate-900">Aperçu</h3>
-        <button (click)="previewDocument = null" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-50 text-slate-400">
+  <div *ngIf="previewSrc" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/70 backdrop-blur-md p-4">
+    <div class="bg-white rounded-lg w-full max-w-4xl h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-spring-in border border-slate-200">
+      <div class="px-5 py-3 flex items-center justify-between border-b border-slate-200 bg-slate-50/50">
+        <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">Aperçu du document</h3>
+        <button (click)="previewDocument = null" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-500 transition-colors">
           <span class="material-symbols-outlined text-xl">close</span>
         </button>
       </div>

@@ -21,9 +21,10 @@ module.exports = {
       borderRadius: {
         'sm': '1px',
         'DEFAULT': '2px',
-        'md': '4px',
-        'lg': '6px',
-        'xl': '8px',
+        'md': '2px',
+        'lg': '4px',
+        'xl': '6px',
+        '2xl': '8px',
       },
       maxWidth: {
         'container': '84rem',
@@ -35,4 +36,3 @@ module.exports = {
   },
   plugins: [],
 }
-

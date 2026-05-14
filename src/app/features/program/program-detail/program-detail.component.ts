@@ -35,6 +35,7 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
   documents: SignatureProgramDocumentRequest[] = [];
   selectedDocument: SignatureProgramDocumentRequest | null = null;
   selectedStep: SignatureProgramStepDTO | null = null;
+  expandedSteps: Set<number> = new Set();
   loading = false;
   loadingPdf = false;
   error = '';
@@ -131,6 +132,7 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
           this.extractDocumentsFromSteps(response.data);
           if (this.program.steps && this.program.steps.length > 0) {
             this.selectedStep = this.program.steps[0];
+            this.expandedSteps.add(this.selectedStep.id);
           }
           if (this.documents.length > 0) {
             this.selectDocument(this.documents[0]);
@@ -191,6 +193,22 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
 
   selectStep(step: SignatureProgramStepDTO): void {
     this.selectedStep = step;
+    this.expandedSteps.add(step.id);
+  }
+
+  toggleStep(step: SignatureProgramStepDTO, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    if (this.expandedSteps.has(step.id)) {
+      this.expandedSteps.delete(step.id);
+    } else {
+      this.expandedSteps.add(step.id);
+    }
+  }
+
+  isExpanded(step: SignatureProgramStepDTO): boolean {
+    return this.expandedSteps.has(step.id);
   }
 
   private loadPdfForDocument(doc: SignatureProgramDocumentRequest, forceRefresh = false): void {
