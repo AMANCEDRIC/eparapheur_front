@@ -35,8 +35,22 @@ import { AlertComponent } from '../../../shared/components/alert/alert.component
 
         <app-card>
           <form [formGroup]="validateForm" (ngSubmit)="onSubmit()" class="space-y-6">
-            <app-alert *ngIf="error" type="error" [message]="error"></app-alert>
-            <app-alert *ngIf="success" type="success" message="Compte activé avec succès ! Redirection vers la page de connexion..."></app-alert>            <div class="space-y-4">
+            <app-alert
+              *ngIf="error"
+              type="error"
+              title="DIGISIGN E-PARAPHEUR"
+              [message]="error"
+              (close)="error = ''">
+            </app-alert>
+            <app-alert
+              *ngIf="success"
+              type="success"
+              title="DIGISIGN E-PARAPHEUR"
+              message="Compte activé avec succès ! Redirection vers la page de connexion..."
+              [closable]="false">
+            </app-alert>
+
+            <div class="space-y-4">
               <app-input
                 label="Nouveau mot de passe"
                 type="password"

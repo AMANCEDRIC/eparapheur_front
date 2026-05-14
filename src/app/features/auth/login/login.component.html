@@ -1,310 +1,242 @@
 <div class="h-screen app-bg-layout overflow-hidden">
-  <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 xl:px-12 py-4 sm:py-6 h-full">
-    <div class="h-full flex">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-center py-12 lg:py-20">
+    <div class="w-full flex bg-white  shadow-[0_40px_120px_-20px_rgba(0,0,0,0.18)] overflow-hidden border border-slate-100/50 min-h-[600px] app-fade-slide-in">
       <!-- Left Column - Login Form -->
-      <div class="flex-1 flex flex-col justify-center items-center bg-white py-6 app-fade-slide-in">
+      <div class="flex-1 flex flex-col justify-center items-center py-6 px-4">
         <div class="w-full max-w-md">
-      <!-- Logo/Brand -->
-      <div class="text-center mb-4">
-        <!-- Logo Cryptoneo -->
-        <div class="mb-1 flex justify-center -mt-5">
-          <img
-            src="assets/images/logos/Cryptoneo_logo.png"
-            alt="Cryptoneo Logo"
-            class="h-8 w-auto object-contain">
-        </div>
-        <h1 class="text-2xl font-bold text-gray-900 mb-1">E-Parapheur</h1>
-        <h2 class="text-xl font-semibold text-gray-800">Bienvenue</h2>
-        <p class="mt-1 text-xs text-gray-600">
-          Application de signature électronique sécurisée
-        </p>
-      </div>
+          <!-- Logo/Brand -->
+          <div class="text-center mb-4">
+            <!-- Logo Cryptoneo -->
+            <div class="mb-1 flex justify-center -mt-5">
+              <img src="assets/images/logos/Cryptoneo_logo.png" alt="Cryptoneo Logo" class="h-8 w-auto object-contain">
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900 mb-1">E-Parapheur</h1>
+            <h2 class="text-xl font-semibold text-gray-800">Bienvenue</h2>
+            <p class="mt-1 text-xs text-gray-600">
+              Application de signature électronique sécurisée
+            </p>
+          </div>
 
-      <!-- Login Form -->
-      <div class="">
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" *ngIf="!showOtp" class="space-y-4">
-          <app-alert
-            *ngIf="error"
-            type="error"
-            title="DIGISIGN E-PARAPHEUR"
-            [message]="error"
-            (close)="error = ''">
-          </app-alert>
+          <!-- Login Form -->
+          <div class="">
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" *ngIf="!showOtp" class="space-y-4">
+              <app-alert *ngIf="error" type="error" title="DIGISIGN E-PARAPHEUR" [message]="error" (close)="error = ''">
+              </app-alert>
 
-          <div>
-            <label class="block text-xs font-medium app-label-important mb-1.5">
-              Adresse email
-            </label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-300">
-                <!-- icône user, plus légère -->
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 8l7.5 4.5L18" />
-                  <rect x="3" y="5" width="18" height="14" rx="2" ry="2"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
+              <div>
+                <label class="block text-xs font-medium app-label-important mb-1.5">
+                  Adresse email
+                </label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-300">
+                    <!-- icône user, plus légère -->
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.5 4.5L18" />
+                      <rect x="3" y="5" width="18" height="14" rx="2" ry="2" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </div>
+                  <input formControlName="login" type="text" placeholder="votre@email.com"
+                    class="app-input !pl-9 text-sm"
+                    [class.border-red-300]="loginForm.get('login')?.hasError('required') && loginForm.get('login')?.touched">
+                </div>
+                <p *ngIf="loginForm.get('login')?.hasError('required') && loginForm.get('login')?.touched"
+                  class="mt-1 text-[11px] text-red-600">
+                  L'identifiant est requis
+                </p>
               </div>
-              <input
-                formControlName="login"
-                type="text"
-                placeholder="votre@email.com"
-                class="app-input !pl-9 text-sm"
-                [class.border-red-300]="loginForm.get('login')?.hasError('required') && loginForm.get('login')?.touched">
-            </div>
-            <p *ngIf="loginForm.get('login')?.hasError('required') && loginForm.get('login')?.touched"
-               class="mt-1 text-[11px] text-red-600">
-              L'identifiant est requis
-            </p>
-          </div>
 
-          <div>
-            <label class="block text-xs font-medium app-label-important mb-1.5">
-              Mot de passe
-            </label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-300">
-                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
+              <div>
+                <label class="block text-xs font-medium app-label-important mb-1.5">
+                  Mot de passe
+                </label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-300">
+                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <input formControlName="password" [type]="showPassword ? 'text' : 'password'"
+                    placeholder="Votre mot de passe" class="app-input !pl-9 pr-9 text-sm"
+                    [class.border-red-300]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                  <button type="button" (click)="togglePasswordVisibility()"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <svg *ngIf="!showPassword" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    <svg *ngIf="showPassword" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    </svg>
+                  </button>
+                </div>
+                <p *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched"
+                  class="mt-1 text-[11px] text-red-600">
+                  Le mot de passe est requis
+                </p>
+                <p *ngIf="loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched"
+                  class="mt-0.5 text-[11px] text-red-600">
+                  Le mot de passe doit contenir au moins 6 caractères
+                </p>
               </div>
-              <input
-                formControlName="password"
-                [type]="showPassword ? 'text' : 'password'"
-                placeholder="Votre mot de passe"
-                class="app-input !pl-9 pr-9 text-sm"
-                [class.border-red-300]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-              <button
-                type="button"
-                (click)="togglePasswordVisibility()"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
-                <svg *ngIf="!showPassword" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                <svg *ngIf="showPassword" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                </svg>
+
+              <div class="flex items-center justify-between">
+                <div class="text-sm">
+                  <a routerLink="/forgot-password" class="font-medium app-link-primary text-xs">
+                    Mot de passe oublié ?
+                  </a>
+                </div>
+              </div>
+
+              <button type="submit" [disabled]="loginForm.invalid || loading"
+                class="app-btn app-btn-primary w-full justify-center text-sm shadow-sm">
+                <span *ngIf="loading" class="mr-2">
+                  <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                  </svg>
+                </span>
+                Se connecter
               </button>
-            </div>
-            <p *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched"
-               class="mt-1 text-[11px] text-red-600">
-              Le mot de passe est requis
-            </p>
-            <p *ngIf="loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched"
-               class="mt-0.5 text-[11px] text-red-600">
-              Le mot de passe doit contenir au moins 6 caractères
-            </p>
-          </div>
+            </form>
 
-          <div class="flex items-center justify-between">
-            <div class="text-sm">
-              <a routerLink="/forgot-password" class="font-medium app-link-primary text-xs">
-                Mot de passe oublié ?
-              </a>
-            </div>
-          </div>
+            <!-- OTP Form (for Admin) -->
+            <form [formGroup]="otpForm" (ngSubmit)="onVerifyOtp()" *ngIf="showOtp" class="space-y-5">
 
-          <button
-            type="submit"
-            [disabled]="loginForm.invalid || loading"
-            class="app-btn app-btn-primary w-full justify-center text-sm shadow-sm">
-            <span *ngIf="loading" class="mr-2">
-              <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            </span>
-            Se connecter
-          </button>
-        </form>
+              <!-- Titre + email + timer -->
+              <div class="text-center space-y-2">
+                <h3 class="text-lg font-semibold text-slate-900">
+                  Entrer le code de vérification
+                </h3>
+                <!--            <p class="text-xs text-slate-500">-->
+                <!--              Un code à 6 chiffres a été envoyé à :-->
+                <!--            </p>-->
+                <!--            <p class="text-sm font-medium text-slate-900">-->
+                <!--              {{ userEmail }}-->
+                <!--            </p>-->
+                <div class="text-xs font-medium mt-1">
+                  <span *ngIf="timerMinutes > 0 || timerSeconds > 0" class="text-slate-600">
+                    {{ getTimerDisplay() }} minutes restantes
+                  </span>
+                  <span *ngIf="timerMinutes === 0 && timerSeconds === 0" class="text-red-600">
+                    Code expiré
+                  </span>
+                </div>
+              </div>
 
-        <!-- OTP Form (for Admin) -->
-        <form
-          [formGroup]="otpForm"
-          (ngSubmit)="onVerifyOtp()"
-          *ngIf="showOtp"
-          class="space-y-5">
+              <!-- Message d'erreur global -->
+              <app-alert *ngIf="error" type="error" title="DIGISIGN E-PARAPHEUR" [message]="error" (close)="error = ''">
+              </app-alert>
 
-          <!-- Titre + email + timer -->
-          <div class="text-center space-y-2">
-            <h3 class="text-lg font-semibold text-slate-900">
-              Entrer le code de vérification
-            </h3>
-<!--            <p class="text-xs text-slate-500">-->
-<!--              Un code à 6 chiffres a été envoyé à :-->
-<!--            </p>-->
-<!--            <p class="text-sm font-medium text-slate-900">-->
-<!--              {{ userEmail }}-->
-<!--            </p>-->
-            <div class="text-xs font-medium mt-1">
-              <span *ngIf="timerMinutes > 0 || timerSeconds > 0" class="text-slate-600">
-                {{ getTimerDisplay() }} minutes restantes
-              </span>
-              <span *ngIf="timerMinutes === 0 && timerSeconds === 0" class="text-red-600">
-                Code expiré
-              </span>
-            </div>
-          </div>
+              <!-- Libellé OTP -->
+              <div class="text-center">
+                <span class="text-[11px] app-label-important">
+                  Code de vérification
+                </span>
+              </div>
 
-          <!-- Message d'erreur global -->
-          <app-alert
-            *ngIf="error"
-            type="error"
-            title="DIGISIGN E-PARAPHEUR"
-            [message]="error"
-            (close)="error = ''">
-          </app-alert>
-
-          <!-- Libellé OTP -->
-          <div class="text-center">
-            <span class="text-[11px] app-label-important">
-              Code de vérification
-            </span>
-          </div>
-
-          <!-- Champs OTP -->
-          <div class="flex justify-center gap-2">
-            <input
-              #otpInput1
-              formControlName="otp1"
-              type="text"
-              maxlength="1"
-              (input)="onOtpInput($event, 1)"
-              (keydown)="onOtpKeyDown($event, 1)"
-              (paste)="onOtpPaste($event)"
-              class="w-10 h-10 md:w-12 md:h-12 text-center text-xl md:text-2xl font-semibold
+              <!-- Champs OTP -->
+              <div class="flex justify-center gap-2">
+                <input #otpInput1 formControlName="otp1" type="text" maxlength="1" (input)="onOtpInput($event, 1)"
+                  (keydown)="onOtpKeyDown($event, 1)" (paste)="onOtpPaste($event)" class="w-10 h-10 md:w-12 md:h-12 text-center text-xl md:text-2xl font-semibold
              rounded-lg border border-slate-300 bg-slate-50
              focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
              transition-colors"
-              [class.border-red-300]="otpForm.get('otp1')?.hasError('required') && otpForm.get('otp1')?.touched">
+                  [class.border-red-300]="otpForm.get('otp1')?.hasError('required') && otpForm.get('otp1')?.touched">
 
-            <input
-              #otpInput2
-              formControlName="otp2"
-              type="text"
-              maxlength="1"
-              (input)="onOtpInput($event, 2)"
-              (keydown)="onOtpKeyDown($event, 2)"
-              (paste)="onOtpPaste($event)"
-              class="w-10 h-10 md:w-12 md:h-12 text-center text-xl md:text-2xl font-semibold
+                <input #otpInput2 formControlName="otp2" type="text" maxlength="1" (input)="onOtpInput($event, 2)"
+                  (keydown)="onOtpKeyDown($event, 2)" (paste)="onOtpPaste($event)" class="w-10 h-10 md:w-12 md:h-12 text-center text-xl md:text-2xl font-semibold
              rounded-lg border border-slate-300 bg-slate-50
              focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
              transition-colors"
-              [class.border-red-300]="otpForm.get('otp2')?.hasError('required') && otpForm.get('otp2')?.touched">
+                  [class.border-red-300]="otpForm.get('otp2')?.hasError('required') && otpForm.get('otp2')?.touched">
 
-            <input
-              #otpInput3
-              formControlName="otp3"
-              type="text"
-              maxlength="1"
-              (input)="onOtpInput($event, 3)"
-              (keydown)="onOtpKeyDown($event, 3)"
-              (paste)="onOtpPaste($event)"
-              class="w-10 h-10 md:w-12 md:h-12 text-center text-xl md:text-2xl font-semibold
+                <input #otpInput3 formControlName="otp3" type="text" maxlength="1" (input)="onOtpInput($event, 3)"
+                  (keydown)="onOtpKeyDown($event, 3)" (paste)="onOtpPaste($event)" class="w-10 h-10 md:w-12 md:h-12 text-center text-xl md:text-2xl font-semibold
              rounded-lg border border-slate-300 bg-slate-50
              focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
              transition-colors"
-              [class.border-red-300]="otpForm.get('otp3')?.hasError('required') && otpForm.get('otp3')?.touched">
+                  [class.border-red-300]="otpForm.get('otp3')?.hasError('required') && otpForm.get('otp3')?.touched">
 
-            <input
-              #otpInput4
-              formControlName="otp4"
-              type="text"
-              maxlength="1"
-              (input)="onOtpInput($event, 4)"
-              (keydown)="onOtpKeyDown($event, 4)"
-              (paste)="onOtpPaste($event)"
-              class="w-10 h-10 md:w-12 md:h-12 text-center text-xl md:text-2xl font-semibold
+                <input #otpInput4 formControlName="otp4" type="text" maxlength="1" (input)="onOtpInput($event, 4)"
+                  (keydown)="onOtpKeyDown($event, 4)" (paste)="onOtpPaste($event)" class="w-10 h-10 md:w-12 md:h-12 text-center text-xl md:text-2xl font-semibold
              rounded-lg border border-slate-300 bg-slate-50
              focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
              transition-colors"
-              [class.border-red-300]="otpForm.get('otp4')?.hasError('required') && otpForm.get('otp4')?.touched">
+                  [class.border-red-300]="otpForm.get('otp4')?.hasError('required') && otpForm.get('otp4')?.touched">
 
-            <input
-              #otpInput5
-              formControlName="otp5"
-              type="text"
-              maxlength="1"
-              (input)="onOtpInput($event, 5)"
-              (keydown)="onOtpKeyDown($event, 5)"
-              (paste)="onOtpPaste($event)"
-              class="w-10 h-10 md:w-12 md:h-12 text-center text-xl md:text-2xl font-semibold
+                <input #otpInput5 formControlName="otp5" type="text" maxlength="1" (input)="onOtpInput($event, 5)"
+                  (keydown)="onOtpKeyDown($event, 5)" (paste)="onOtpPaste($event)" class="w-10 h-10 md:w-12 md:h-12 text-center text-xl md:text-2xl font-semibold
              rounded-lg border border-slate-300 bg-slate-50
              focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
              transition-colors"
-              [class.border-red-300]="otpForm.get('otp5')?.hasError('required') && otpForm.get('otp5')?.touched">
+                  [class.border-red-300]="otpForm.get('otp5')?.hasError('required') && otpForm.get('otp5')?.touched">
 
-            <input
-              #otpInput6
-              formControlName="otp6"
-              type="text"
-              maxlength="1"
-              (input)="onOtpInput($event, 6)"
-              (keydown)="onOtpKeyDown($event, 6)"
-              (paste)="onOtpPaste($event)"
-              class="w-10 h-10 md:w-12 md:h-12 text-center text-xl md:text-2xl font-semibold
+                <input #otpInput6 formControlName="otp6" type="text" maxlength="1" (input)="onOtpInput($event, 6)"
+                  (keydown)="onOtpKeyDown($event, 6)" (paste)="onOtpPaste($event)" class="w-10 h-10 md:w-12 md:h-12 text-center text-xl md:text-2xl font-semibold
              rounded-lg border border-slate-300 bg-slate-50
              focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
              transition-colors"
-              [class.border-red-300]="otpForm.get('otp6')?.hasError('required') && otpForm.get('otp6')?.touched">
+                  [class.border-red-300]="otpForm.get('otp6')?.hasError('required') && otpForm.get('otp6')?.touched">
+              </div>
+
+              <!-- Erreur de complétion -->
+              <div *ngIf="otpForm.invalid && otpForm.touched" class="text-center">
+                <p class="text-[11px] text-red-600">
+                  Veuillez remplir tous les champs
+                </p>
+              </div>
+
+              <!-- Renvoyer le code -->
+              <div class="text-center">
+                <p class="text-xs app-text-muted">
+                  Vous n'avez pas reçu le code ?
+                  <button type="button" (click)="resendOtp()" [disabled]="loading"
+                    class="app-link-primary font-medium underline focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed">
+                    Cliquez pour renvoyer
+                  </button>
+                </p>
+              </div>
+
+              <!-- Boutons -->
+              <div class="space-y-3">
+                <button type="submit"
+                  [disabled]="otpForm.invalid || loading || (timerMinutes === 0 && timerSeconds === 0)"
+                  class="app-btn app-btn-primary w-full justify-center text-sm shadow-sm disabled:opacity-60 disabled:cursor-not-allowed">
+                  <span *ngIf="loading" class="mr-2">
+                    <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                      </path>
+                    </svg>
+                  </span>
+                  <span *ngIf="!loading">Continuer</span>
+                  <span *ngIf="loading">Vérification...</span>
+                </button>
+
+                <button type="button" (click)="backToLogin()"
+                  class="w-full text-xs text-slate-500 hover:text-slate-700 flex items-center justify-center focus:outline-none">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+                  Retour à la connexion
+                </button>
+              </div>
+            </form>
           </div>
-
-          <!-- Erreur de complétion -->
-          <div *ngIf="otpForm.invalid && otpForm.touched" class="text-center">
-            <p class="text-[11px] text-red-600">
-              Veuillez remplir tous les champs
-            </p>
-          </div>
-
-          <!-- Renvoyer le code -->
-          <div class="text-center">
-            <p class="text-xs app-text-muted">
-              Vous n'avez pas reçu le code ?
-              <button
-                type="button"
-                (click)="resendOtp()"
-                [disabled]="loading"
-                class="app-link-primary font-medium underline focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed">
-                Cliquez pour renvoyer
-              </button>
-            </p>
-          </div>
-
-          <!-- Boutons -->
-          <div class="space-y-3">
-            <button
-              type="submit"
-              [disabled]="otpForm.invalid || loading || (timerMinutes === 0 && timerSeconds === 0)"
-              class="app-btn app-btn-primary w-full justify-center text-sm shadow-sm disabled:opacity-60 disabled:cursor-not-allowed">
-      <span *ngIf="loading" class="mr-2">
-        <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-      </span>
-              <span *ngIf="!loading">Continuer</span>
-              <span *ngIf="loading">Vérification...</span>
-            </button>
-
-            <button
-              type="button"
-              (click)="backToLogin()"
-              class="w-full text-xs text-slate-500 hover:text-slate-700 flex items-center justify-center focus:outline-none">
-              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-              </svg>
-              Retour à la connexion
-            </button>
-          </div>
-        </form>
-      </div>
         </div>
       </div>
 
       <!-- Right Column - Promotional Content -->
-      <div class="hidden lg:flex lg:flex-1 flex-col justify-center items-center bg-gradient-to-br from-primary to-blue-700 relative overflow-hidden py-6">
+      <div
+        class="hidden lg:flex lg:flex-1 flex-col justify-center items-center bg-gradient-to-br from-primary to-blue-700 relative overflow-hidden py-6">
         <div class="w-full max-w-lg mx-auto">
           <div class="flex flex-col justify-center p-6 text-white relative z-10">
             <div class="mb-4">
@@ -318,16 +250,16 @@
 
             <!-- Illustration SVG -->
             <div class="mt-4 flex justify-center">
-              <img
-                src="assets/images/illustrations/Signing_a_contract-rafiki.png"
-                alt="Illustration signature électronique"
-                class="w-full h-auto max-w-xs opacity-90">
+              <img src="assets/images/illustrations/Signing_a_contract-rafiki.png"
+                alt="Illustration signature électronique" class="w-full h-auto max-w-xs opacity-90">
             </div>
           </div>
         </div>
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-10">
-          <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+          <div class="absolute inset-0"
+            style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;">
+          </div>
         </div>
       </div>
     </div>

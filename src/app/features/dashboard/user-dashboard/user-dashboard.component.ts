@@ -2,8 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { ProgramService } from '../../../core/services/program.service';
 import { SignatureService } from '../../../core/services/signature.service';
 import { SignatureVisual } from '../../../core/models/signature.model';
+import { 
+  SignatureProgramDTO, 
+  SignatureProgramStepDTO, 
+  SignatureProgramStepParticipantDTO 
+} from '../../../core/models/signature-program.model';
 
 interface StatCard {
   label: string;
@@ -63,34 +69,13 @@ export class UserDashboardComponent implements OnInit {
   signatureWidgetLoading = false;
   mySignatureVisual: SignatureVisual | null = null;
 
-  programs = [
-    {
-      title: 'Accord virement',
-      date: 'Du 26 Avr. au 30 Avr. 2024',
-      signers: ['AK', 'AK', 'AK', '+10'],
-      status: '75%',
-      state: 'En cours'
-    },
-    {
-      title: 'Accord virement',
-      date: 'Du 26 Avr. au 30 Avr. 2024',
-      signers: ['AK', 'AK', 'AK', '+10'],
-      status: 'Terminé',
-      state: 'Terminé'
-    },
-    {
-      title: 'Accord virement',
-      date: 'Du 26 Avr. au 30 Avr. 2024',
-      signers: ['AK', 'AK', 'AK', '+10'],
-      status: '95%',
-      state: 'Terminé'
-    }
-  ];
+  programs: any[] = [];
 
   constructor(
     public authService: AuthService,
     private router: Router,
-    private readonly signatureService: SignatureService
+    private readonly signatureService: SignatureService,
+    private readonly programService: ProgramService
   ) {}
 
   ngOnInit(): void {
@@ -99,6 +84,64 @@ export class UserDashboardComponent implements OnInit {
       return;
     }
     this.loadSignatureForWidget();
+    this.loadRecentInvolvedPrograms();
+  }
+
+  private loadRecentInvolvedPrograms(): void {
+    this.programService.getInvolvingMe(1, 4).subscribe({
+      next: (res) => {
+        if (res.data?.items) {
+          this.programs = res.data.items.map((p: SignatureProgramDTO) => ({
+            id: p.id,
+            title: p.title,
+            date: p.createdAt ? `Créé le ${new Date(p.createdAt).toLocaleDateString('fr-FR')}` : 'Date inconnue',
+            signers: this.extractSignersInitials(p),
+            status: this.formatStatus(p.status),
+            state: p.status
+          }));
+        }
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des programmes récents', err);
+      }
+    });
+  }
+
+  private extractSignersInitials(p: SignatureProgramDTO): string[] {
+    const initials: string[] = [];
+    if (p.steps) {
+      p.steps.forEach((s: SignatureProgramStepDTO) => {
+        if (s.participants) {
+          s.participants.forEach((part: SignatureProgramStepParticipantDTO) => {
+            if (part.account?.person) {
+              const f = part.account.person.firstName?.charAt(0) || '';
+              const l = part.account.person.lastName?.charAt(0) || '';
+              const ini = (f + l).toUpperCase();
+              if (ini && !initials.includes(ini)) {
+                initials.push(ini);
+              }
+            }
+          });
+        }
+      });
+    }
+    
+    if (initials.length > 3) {
+      const display = initials.slice(0, 3);
+      display.push(`+${initials.length - 3}`);
+      return display;
+    }
+    return initials;
+  }
+
+  private formatStatus(status: string): string {
+    switch (status) {
+      case 'COMPLETED': return 'Terminé';
+      case 'PENDING': return 'En attente';
+      case 'IN_PROGRESS': return 'En cours';
+      case 'REJECTED': return 'Rejeté';
+      default: return status;
+    }
   }
 
   private loadSignatureForWidget(): void {

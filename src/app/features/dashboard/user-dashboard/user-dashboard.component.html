@@ -53,7 +53,7 @@
           <h3 class="font-bold text-text-primary text-sm">Derniers programmes de signature</h3>
           <p class="text-[10px] text-text-secondary mt-0.5 font-medium">Terminé 40% &nbsp;·&nbsp; 3 en cours</p>
         </div>
-        <button class="app-btn app-btn-outline !py-1 !px-2.5 text-[10px]">
+        <button routerLink="/dashboard/programs/involved" class="app-btn app-btn-outline !py-1 !px-2.5 text-[10px]">
           Voir tout
         </button>
       </div>
@@ -62,6 +62,7 @@
       <div class="divide-y divide-border-subtle">
         <div
           *ngFor="let p of programs"
+          [routerLink]="['/dashboard/programs', p.id]"
           class="group flex items-center gap-3 p-4 hover:bg-slate-50/50 transition-all duration-200 cursor-pointer">
 
           <!-- Icône doc -->

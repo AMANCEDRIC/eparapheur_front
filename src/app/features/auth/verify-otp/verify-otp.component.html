@@ -11,9 +11,12 @@
 
     <app-card>
       <form [formGroup]="otpForm" (ngSubmit)="onSubmit()" class="space-y-6">
-        <div *ngIf="error" class="app-alert-danger">
-          {{ error }}
-        </div>
+        <app-alert
+          *ngIf="error"
+          type="error"
+          [message]="error"
+          (close)="error = ''">
+        </app-alert>
 
         <app-input
           formControlName="otp"

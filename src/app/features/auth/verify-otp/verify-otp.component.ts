@@ -6,6 +6,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { CardComponent } from '../../../shared/components/card/card.component';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-verify-otp',
@@ -16,7 +17,8 @@ import { CardComponent } from '../../../shared/components/card/card.component';
     RouterModule,
     ButtonComponent,
     InputComponent,
-    CardComponent
+    CardComponent,
+    AlertComponent
   ],
   templateUrl: './verify-otp.component.html',
   styleUrl: './verify-otp.component.sass'

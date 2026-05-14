@@ -1,338 +1,241 @@
-<div class="min-h-[calc(100vh-120px)] app-white-color flex flex-col">
-  <!-- Header -->
-  <div class="bg-white border-b app-secondary-color px-6 lg:px-8 py-4 flex justify-between items-center">
-
-    <!-- LEFT: back + divider + title -->
+<div class="h-[calc(100vh-64px)] flex flex-col app-bg-layout overflow-hidden font-sans">
+  <!-- Top Header / Breadcrumb -->
+  <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between flex-shrink-0 z-30 shadow-sm">
     <div class="flex items-center gap-4">
       <button
-        type="button"
         (click)="goBack()"
-        class="app-btn app-btn-outline flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors"
+        class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all text-sm font-medium"
       >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
+        <span class="material-symbols-outlined text-lg">arrow_back</span>
         Programmes
       </button>
-
       <div class="h-6 w-px bg-slate-200"></div>
-
       <div *ngIf="program">
-        <h1 class="text-base lg:text-lg font-bold text-slate-900 leading-tight">
-          {{ program.title }}
-        </h1>
-        <p class="text-xs text-slate-400 mt-0.5" *ngIf="program.description">
-          {{ program.description }}
-        </p>
+        <h1 class="text-sm font-bold text-slate-900 leading-tight">{{ program.title }}</h1>
+        <p class="text-[11px] text-slate-500 truncate max-w-[200px]" *ngIf="program.description">{{ program.description }}</p>
       </div>
     </div>
 
     <div *ngIf="program" class="flex items-center gap-4">
+      <div class="hidden md:flex items-center gap-3 text-[11px] text-slate-400 font-medium">
+        <div class="flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">calendar_today</span>
+          <span>{{ program.startDate | date:'dd MMM yyyy' }}</span>
+        </div>
+        <span class="text-slate-300">→</span>
+        <div class="flex items-center gap-1.5">
+          <span>{{ program.endDate | date:'dd MMM yyyy' }}</span>
+        </div>
+      </div>
+      <span class="px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase border"
+            [class.bg-emerald-50]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
+            [class.text-emerald-700]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
+            [class.border-emerald-200]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
+            [class.bg-slate-50]="program.status === 'CANCELLED'"
+            [class.text-slate-500]="program.status === 'CANCELLED'"
+            [class.border-slate-200]="program.status === 'CANCELLED'">
+        {{ program.status }}
+      </span>
+    </div>
+  </header>
 
-      <div *ngIf="program.startDate || program.endDate"
-           class="hidden lg:flex items-center gap-2 text-xs text-slate-400 app-section-title">
-        <svg class="w-3.5 h-3.5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"/>
-          <line x1="16" y1="2" x2="16" y2="6" stroke-width="2"/>
-          <line x1="8" y1="2" x2="8" y2="6" stroke-width="2"/>
-          <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"/>
-        </svg>
-        <span *ngIf="program.startDate">{{ program.startDate | date:'dd MMM yyyy' }}</span>
-        <span *ngIf="program.startDate && program.endDate" class="text-slate-300">→</span>
-        <span *ngIf="program.endDate">{{ program.endDate | date:'dd MMM yyyy' }}</span>
+  <!-- Main Layout -->
+  <div class="flex-1 flex overflow-hidden">
+    <!-- Sidebar: Workflow -->
+    <aside class="w-72 lg:w-80 xl:w-96 border-r border-slate-200 bg-white flex flex-col h-full flex-shrink-0">
+      <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">Workflow</h2>
+        <span *ngIf="steps" class="text-[10px] font-bold px-2 py-0.5 bg-slate-200 text-slate-600 rounded-full">
+          {{ steps.length }}
+        </span>
       </div>
 
-      <div *ngIf="program.startDate || program.endDate" class="hidden lg:block h-5 w-px bg-slate-200"></div>
-
-      <span
-        class="px-2.5 py-1 text-xs font-semibold rounded-md uppercase tracking-wide"
-        [class.bg-green-50]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
-        [class.text-green-700]="program.status === 'ACTIVE' || program.status === 'DRAFT'"
-        [class.bg-red-50]="program.status === 'CANCELLED'"
-        [class.text-red-700]="program.status === 'CANCELLED'">
-      {{ program.status }}
-    </span>
-    </div>
-  </div>
-
-  <!-- Contenu principal -->
-  <div class="flex-1 flex overflow-hidden">
-    <!-- Sidebar gauche : infos programme + workflow -->
-    <div class="w-full lg:w-96 border-r app-secondary-color bg-white flex flex-col">
-<!--      <div class="p-4 lg:p-5 border-b app-secondary-color space-y-3">-->
-<!--        &lt;!&ndash; Infos programme &ndash;&gt;-->
-<!--        <div *ngIf="program" class="space-y-2 text-sm">-->
-<!--          <h2 class="text-xs font-semibold app-section-title">Informations du programme</h2>-->
-<!--          <div class="space-y-1">-->
-<!--            <div class="flex text-xs text-slate-600">-->
-<!--              <span class="font-medium mr-1">Début :</span>-->
-<!--              <span class="text-slate-900" *ngIf="program.startDate; else noStart">-->
-<!--                {{ program.startDate | dateFr:'short' }}-->
-<!--              </span>-->
-<!--              <ng-template #noStart>-->
-<!--                <span class="text-slate-400 italic">Non renseigné</span>-->
-<!--              </ng-template>-->
-<!--            </div>-->
-<!--            <div class="flex text-xs text-slate-600">-->
-<!--              <span class="font-medium mr-1">Fin :</span>-->
-<!--              <span class="text-slate-900" *ngIf="program.endDate; else noEnd">-->
-<!--                {{ program.endDate | dateFr:'short' }}-->
-<!--              </span>-->
-<!--              <ng-template #noEnd>-->
-<!--                <span class="text-slate-400 italic">Non renseigné</span>-->
-<!--              </ng-template>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-
-      <!-- Workflow : étapes + participants + documents -->
-      <div class="flex-1 overflow-y-auto p-4 space-y-4">
-        <div *ngIf="loading" class="text-sm app-text-muted">
-          Chargement du programme...
+      <div class="flex-1 overflow-y-auto p-5 space-y-6 scroll-smooth">
+        <div *ngIf="loading" class="flex flex-col items-center justify-center h-40">
+           <div class="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
         </div>
 
-        <div *ngIf="error && !loading" class="app-badge app-badge-danger px-4 py-3 text-sm">
-          {{ error }}
-        </div>
+        <div *ngIf="steps && steps.length > 0" class="relative pl-4 space-y-8">
+          <!-- Continuous Vertical Line -->
+          <div class="absolute left-[19px] top-2 bottom-6 w-0.5 bg-slate-100"></div>
 
-        <!-- Liste des étapes -->
-        <div class="space-y-2" *ngIf="!loading && steps">
-          <h2 class="text-xs font-semibold app-section-title">Workflow de signature</h2>
-
-          <div *ngIf="steps.length === 0" class="text-sm text-slate-500">
-            Aucune étape définie pour ce programme.
-          </div>
-
-          <div *ngIf="steps.length > 0" class="space-y-2">
+          <div *ngFor="let step of steps; let last = last" class="relative">
+            <!-- Indicator -->
             <div
-              *ngFor="let step of steps; let last = last"
-              class="flex gap-3">
-              <!-- Timeline -->
-              <div class="flex flex-col items-center pt-1">
-                <div
-                  class="w-6 h-6 rounded-full text-[11px] font-semibold flex items-center justify-center border"
-                  [class.bg-indigo-600]="selectedStep === step"
-                  [class.text-white]="selectedStep === step"
-                  [class.border-indigo-600]="selectedStep === step"
-                  [class.bg-slate-100]="selectedStep !== step"
-                  [class.text-slate-600]="selectedStep !== step"
-                  [class.border-slate-300]="selectedStep !== step">
-                  {{ step.stepOrder }}
+              class="absolute -left-[27px] top-0 w-10 h-10 rounded-full border-4 border-white shadow-sm flex items-center justify-center z-10 transition-all duration-300"
+              [class.bg-primary]="selectedStep === step"
+              [class.text-white]="selectedStep === step"
+              [class.scale-110]="selectedStep === step"
+              [class.bg-slate-100]="selectedStep !== step"
+              [class.text-slate-400]="selectedStep !== step"
+            >
+              <span class="text-xs font-black">{{ step.stepOrder }}</span>
+            </div>
+
+            <!-- Step Card -->
+            <div
+              (click)="selectStep(step)"
+              class="ml-4 app-card !p-4 cursor-pointer transition-all duration-300 group"
+              [class.shadow-xl]="selectedStep === step"
+              [class.bg-white]="selectedStep === step"
+              [ngClass]="{
+                '!border-primary': selectedStep === step,
+                'shadow-primary/10': selectedStep === step,
+                'bg-slate-50/30': selectedStep !== step,
+                'hover:bg-white': selectedStep !== step
+              }"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">{{ step.name }}</h3>
+                  <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ getActionLabel(step.actionType) }}</span>
                 </div>
-                <div
-                  *ngIf="!last"
-                  class="flex-1 w-px bg-slate-200 mt-1">
-                </div>
+                <span class="material-symbols-outlined text-slate-300 group-hover:text-primary/40 transition-colors">
+                  {{ selectedStep === step ? 'expand_more' : 'chevron_right' }}
+                </span>
               </div>
 
-              <!-- Carte d'étape -->
-              <div
-                class="flex-1 border rounded-lg p-3 cursor-pointer transition-colors bg-slate-50"
-                [class.border-indigo-600]="selectedStep === step"
-                [class.bg-indigo-50]="selectedStep === step"
-                (click)="selectStep(step)">
-                <div class="flex items-center justify-between mb-2">
-                  <div>
-                    <p class="text-sm font-semibold text-slate-900">
-                      {{ step.name }}
-                    </p>
-                    <p class="text-[11px] app-text-muted">
-                      {{ getActionLabel(step.actionType) }}
-                    </p>
-                  </div>
+              <!-- Participants Section -->
+              <div class="space-y-2">
+                <div class="flex items-center gap-2 mb-2">
+                   <div class="h-px flex-1 bg-slate-100"></div>
+                   <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Participants</span>
+                   <div class="h-px flex-1 bg-slate-100"></div>
                 </div>
 
-                <!-- Participants -->
-                <div class="space-y-1 mt-2">
-                  <p class="text-[11px] app-label-important">Participants</p>
-
-                  <div *ngIf="!step.participants || step.participants.length === 0" class="text-xs text-slate-500 italic">
-                    Aucun participant pour cette étape.
-                  </div>
-
-                  <div class="space-y-1" *ngIf="step.participants && step.participants.length > 0">
-                    <div
-                      *ngFor="let participant of step.participants"
-                      class="flex items-center justify-between px-2 py-1 rounded-md bg-white border border-slate-200">
-                      <div class="flex items-center gap-2 flex-1 min-w-0">
-                        <div class="w-7 h-7 rounded-full bg-indigo-50 flex items-center justify-center flex-shrink-0">
-                          <span class="text-[11px] font-semibold text-indigo-700">
-                            {{ getParticipantName(participant).charAt(0).toUpperCase() }}
-                          </span>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                          <p class="text-xs font-medium text-slate-900 truncate">
-                            {{ getParticipantName(participant) }}
-                          </p>
-                          <p class="text-[11px] text-slate-500 truncate">
-                            {{ participant.account.login }}
-                          </p>
-                        </div>
-                      </div>
-                      <span
-                        class="px-2 py-0.5 text-[10px] font-semibold rounded-md"
-                        [ngClass]="getStatusClass(participant.status)">
-                        {{ getStatusLabel(participant.status) }}
-                      </span>
+                <div *ngFor="let p of step.participants" class="flex items-center justify-between p-2 rounded-xl border border-slate-100 bg-white/50">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <div class="w-7 h-7 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center flex-shrink-0 font-bold text-[10px] text-primary">
+                      {{ getParticipantName(p).charAt(0).toUpperCase() }}
+                    </div>
+                    <div class="min-w-0">
+                      <p class="text-[11px] font-bold text-slate-800 truncate">{{ getParticipantName(p) }}</p>
                     </div>
                   </div>
+                  <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-tighter"
+                        [ngClass]="getStatusClass(p.status)">
+                    {{ getStatusLabel(p.status) }}
+                  </span>
                 </div>
+              </div>
 
-                <!-- Documents de l'étape -->
-                <div class="space-y-1 mt-3">
-                  <p class="text-[11px] app-label-important">Documents</p>
-
-                  <div *ngIf="!step.documents || step.documents.length === 0" class="text-xs text-slate-500 italic">
-                    Aucun document associé à cette étape.
-                  </div>
-
-                  <ul *ngIf="step.documents && step.documents.length > 0" class="space-y-1 text-xs">
-                    <li
-                      *ngFor="let doc of step.documents"
-                      class="flex items-center gap-2 px-2 py-1 rounded-md bg-white border border-slate-200 cursor-pointer"
-                      (click)="selectDocument(doc)">
-                      <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <span class="truncate flex-1">
-                        {{ doc.documentName }}
-                      </span>
-                    </li>
-                  </ul>
-                </div>
+              <!-- Documents Section (If needed) -->
+              <div *ngIf="step.documents && step.documents.length > 0" class="mt-4 pt-4 border-t border-slate-100">
+                 <div *ngFor="let doc of step.documents"
+                      (click)="selectDocument(doc); $event.stopPropagation()"
+                      class="flex items-center gap-2 p-2 rounded-lg border border-transparent transition-all cursor-pointer"
+                      [ngClass]="{'bg-primary/5 hover:bg-primary/5 border-primary/20': selectedDocument === doc, 'hover:bg-primary/5 hover:border-primary/10': selectedDocument !== doc}">
+                   <span class="material-symbols-outlined text-sm text-primary">description</span>
+                   <span class="text-[11px] font-medium text-slate-600 truncate">{{ doc.documentName }}</span>
+                 </div>
               </div>
             </div>
           </div>
-        </div> <!-- /workflow -->
+        </div>
       </div>
-    </div>
+    </aside>
 
-    <!-- Colonne droite : barre d’info document + viewer PDF -->
-    <div class="flex-1 bg-white overflow-y-auto px-4 lg:px-8 py-4 lg:py-6">
-      <div class="max-w-5xl mx-auto flex flex-col space-y-3 h-full">
-        <div
-          *ngIf="selectedDocument"
-          class="bg-white rounded-xl shadow-sm border border-slate-100 px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div class="flex items-center gap-3 min-w-0">
-            <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M7 3h8l4 4v10a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <p class="text-sm font-semibold text-slate-900 truncate">
-                {{ selectedDocument.documentName }}
-              </p>
-              <p class="text-[11px] text-slate-500">
-                {{ selectedDocument.documentSize | number }} octets
-              </p>
-              <a
-                *ngIf="selectedDocument.documentUrl"
-                [href]="formatUrl(selectedDocument.documentUrl)"
-                target="_blank"
-                download
-                class="text-[10px] text-indigo-600 hover:underline">
-                Télécharger le PDF
+    <!-- Main Content Area -->
+    <main class="flex-1 bg-slate-50/50 flex flex-col overflow-hidden relative">
+      <!-- Document Context / Actions Bar -->
+      <div *ngIf="selectedDocument" class="h-20 bg-white border-b border-slate-200 px-8 flex items-center justify-between z-20 shadow-sm flex-shrink-0">
+        <div class="flex items-center gap-4 min-w-0">
+          <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-primary text-2xl">description</span>
+          </div>
+          <div class="min-w-0">
+            <h2 class="text-base font-black text-slate-900 truncate">{{ selectedDocument.documentName }}</h2>
+            <div class="flex items-center gap-3 mt-0.5">
+              <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                {{ (selectedDocument.documentSize / 1024) | number:'1.0-1' }} KB
+              </span>
+              <a [href]="formatUrl(selectedDocument.documentUrl)" target="_blank" download class="text-[11px] font-bold text-primary flex items-center gap-1 hover:underline">
+                <span class="material-symbols-outlined text-sm">download</span>
+                Télécharger
               </a>
             </div>
           </div>
-          <div class="flex flex-col sm:flex-row sm:items-center gap-2 flex-shrink-0 w-full sm:w-auto">
-            <ng-container *ngIf="signing === 'idle'">
-              <button
-                *ngIf="canStartSignFlow()"
-                type="button"
-                class="app-btn app-btn-primary text-sm px-4 py-2"
-                (click)="onSignClick()">
-                Signer
-              </button>
-              <p
-                *ngIf="!canStartSignFlow() && canShowSignButton() && !pdfBlobUrl"
-                class="text-xs text-amber-700">Chargement du PDF requis…</p>
-            </ng-container>
-            <ng-container *ngIf="signing === 'placing' || signing === 'sendingOtp'">
-              <p class="text-xs text-indigo-800 bg-indigo-50 px-2 py-1 rounded self-start sm:self-center">
-                Glissez le cadre pour placer le visuel, puis confirmez.
-              </p>
-              <div class="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  class="app-btn app-btn-primary text-sm px-3 py-1.5 disabled:opacity-50"
-                  [disabled]="!currentPlacement || signing === 'sendingOtp'"
-                  (click)="onConfirmPlacement()">
-                  {{ signing === "sendingOtp" ? "Envoi du code…" : "Confirmer la position" }}
-                </button>
-                <button
-                  type="button"
-                  class="app-btn app-btn-outline text-sm px-3 py-1.5"
-                  (click)="cancelSignFlow()">
-                  Annuler
-                </button>
-              </div>
-            </ng-container>
-            <ng-container *ngIf="signing === 'otp' || signing === 'finalizing'">
-              <div class="flex flex-col gap-1 w-full sm:max-w-xs">
-                <label class="text-[10px] app-label-important">Code OTP (6 chiffres)</label>
-                <input
-                  type="text"
-                  [(ngModel)]="signOtp"
-                  name="docSignOtp"
-                  maxlength="6"
-                  inputmode="numeric"
-                  autocomplete="one-time-code"
-                  class="app-input text-sm text-center tracking-[0.2em] font-semibold"
-                  placeholder="______" />
-              </div>
-              <div class="flex flex-wrap gap-2 sm:ml-1">
-                <button
-                  type="button"
-                  class="app-btn app-btn-primary text-sm px-3 py-1.5 disabled:opacity-50"
-                  [disabled]="signOtp.length !== 6 || signing === 'finalizing'"
-                  (click)="onValidateOtpAndSign()">
-                  {{ signing === "finalizing" ? "Signature…" : "Valider la signature" }}
-                </button>
-                <button
-                  type="button"
-                  class="app-btn app-btn-outline text-sm px-3 py-1.5"
-                  [disabled]="signing === 'finalizing'"
-                  (click)="cancelSignFlow()">
-                  Annuler
-                </button>
-              </div>
-            </ng-container>
-            <p
-              *ngIf="getSignableParticipantForSelection() === null && selectedDocument && signing === 'idle'"
-              class="text-xs text-slate-500">
-              Signature disponible seulement si vous êtes participant en attente sur ce document.
-            </p>
-          </div>
         </div>
 
-        <!-- Viewer PDF -->
-        <div class="flex-1">
-          <div class="bg-white rounded-xl shadow-sm border border-slate-100 h-full p-4">
-            <div *ngIf="loadingPdf" class="text-sm text-slate-500 py-8 text-center">
-              Chargement du PDF...
-            </div>
+        <!-- Signature Flow Controls -->
+        <div class="flex items-center gap-3">
+          <!-- Idle -->
+          <ng-container *ngIf="signing === 'idle'">
+             <button *ngIf="canStartSignFlow()" (click)="onSignClick()" class="app-btn app-btn-primary !px-8 !py-2.5 shadow-xl shadow-primary/25">
+               <span class="material-symbols-outlined mr-2">edit_square</span>
+               Signer maintenant
+             </button>
+             <p *ngIf="getSignableParticipantForSelection() === null && selectedDocument" class="text-[10px] font-bold text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+               Signature indisponible
+             </p>
+          </ng-container>
+
+          <!-- Placing -->
+          <ng-container *ngIf="signing === 'placing' || signing === 'sendingOtp'">
+             <div class="flex items-center gap-3 bg-primary/5 border border-primary/20 px-4 py-2 rounded-2xl">
+                <span class="text-[11px] font-bold text-primary">Placez le visuel sur le PDF</span>
+                <div class="w-px h-6 bg-primary/20"></div>
+                <button (click)="onConfirmPlacement()" [disabled]="!currentPlacement || signing === 'sendingOtp'" class="app-btn app-btn-primary !py-2">
+                   {{ signing === "sendingOtp" ? "Envoi..." : "Confirmer" }}
+                </button>
+                <button (click)="cancelSignFlow()" class="app-btn app-btn-outline !py-2 bg-white">Annuler</button>
+             </div>
+          </ng-container>
+
+          <!-- OTP -->
+          <ng-container *ngIf="signing === 'otp' || signing === 'finalizing'">
+             <div class="flex items-center gap-3 bg-white border border-slate-200 p-1.5 rounded-2xl shadow-lg">
+                <input type="text" [(ngModel)]="signOtp" maxlength="6" inputmode="numeric" class="w-32 text-center text-lg font-black tracking-[0.3em] text-primary focus:outline-none border-none bg-transparent" placeholder="000000">
+                <div class="w-px h-8 bg-slate-100"></div>
+                <button (click)="onValidateOtpAndSign()" [disabled]="signOtp.length !== 6 || signing === 'finalizing'" class="app-btn app-btn-primary !py-2">
+                   {{ signing === "finalizing" ? "Finalisation..." : "Valider" }}
+                </button>
+                <button (click)="cancelSignFlow()" class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                   <span class="material-symbols-outlined">close</span>
+                </button>
+             </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- PDF Viewer Area -->
+      <div class="flex-1 overflow-hidden relative p-6">
+        <div class="h-full w-full bg-white rounded-[2rem] shadow-2xl border border-slate-200 overflow-hidden flex flex-col relative transition-all duration-500">
+          <!-- Loading Overlay -->
+          <div *ngIf="loadingPdf" class="absolute inset-0 z-50 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center">
+             <div class="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
+             <p class="text-sm font-black text-slate-800 tracking-widest uppercase">Initialisation du document</p>
+          </div>
+
+          <div class="flex-1 overflow-hidden">
             <app-program-pdf-viewer
               *ngIf="!loadingPdf && getPdfSrc(selectedDocument)"
               [src]="getPdfSrc(selectedDocument)!"
               [placementMode]="placementModeActive"
               [placementImage]="placementImageUrl"
-              (placementChange)="onPlacementChange($event)">
-            </app-program-pdf-viewer>
-            <div *ngIf="!loadingPdf && !getPdfSrc(selectedDocument) && selectedDocument" class="text-sm text-slate-500 py-8 text-center">
-              Aucun document sélectionné ou impossible de charger le PDF.
+              (placementChange)="onPlacementChange($event)"
+              class="w-full h-full"
+            ></app-program-pdf-viewer>
+
+            <div *ngIf="!loadingPdf && !getPdfSrc(selectedDocument) && selectedDocument" class="h-full flex flex-col items-center justify-center p-12 text-center">
+               <div class="w-24 h-24 rounded-full bg-slate-50 flex items-center justify-center mb-6">
+                  <span class="material-symbols-outlined text-5xl text-slate-300">visibility_off</span>
+               </div>
+               <h3 class="text-lg font-bold text-slate-800">Aperçu indisponible</h3>
+               <p class="text-sm text-slate-500 max-w-xs mt-2">Nous ne parvenons pas à afficher ce document. Veuillez le télécharger pour le consulter.</p>
+               <a [href]="formatUrl(selectedDocument.documentUrl)" class="mt-6 app-btn app-btn-outline !px-8">Télécharger le fichier</a>
+            </div>
+
+            <div *ngIf="!selectedDocument" class="h-full flex flex-col items-center justify-center p-12 text-center">
+               <div class="w-32 h-32 rounded-[2.5rem] bg-slate-50 flex items-center justify-center mb-8 border border-slate-100 shadow-inner">
+                  <span class="material-symbols-outlined text-6xl text-slate-200 animate-pulse">description</span>
+               </div>
+               <h3 class="text-xl font-black text-slate-900">Sélectionnez un document</h3>
+               <p class="text-sm text-slate-500 max-w-xs mt-3 leading-relaxed">Choisissez une étape dans le workflow à gauche pour visualiser les documents à signer.</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
-
 </div>

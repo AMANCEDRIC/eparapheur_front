@@ -245,15 +245,15 @@ export class ProgramDetailComponent implements OnInit, OnDestroy {
   getStatusClass(status: string): string {
     switch (status?.toUpperCase()) {
       case 'COMPLETED':
-        return 'bg-green-100 text-green-800';
+        return 'bg-emerald-50 text-emerald-700 border-emerald-100 border';
       case 'PENDING':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-amber-50 text-amber-700 border-amber-100 border';
       case 'REJECTED':
-        return 'bg-red-100 text-red-800';
+        return 'bg-rose-50 text-rose-700 border-rose-100 border';
       case 'CANCELLED':
-        return 'bg-slate-100 text-slate-800';
+        return 'bg-slate-50 text-slate-500 border-slate-100 border';
       default:
-        return 'bg-slate-100 text-slate-800';
+        return 'bg-slate-50 text-slate-500 border-slate-100 border';
     }
   }
 
