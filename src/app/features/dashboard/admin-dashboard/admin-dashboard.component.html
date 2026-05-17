@@ -1,27 +1,29 @@
-<div class="space-y-8">
-  <!-- Header -->
-  <div class="flex justify-between items-end">
-    <div>
-      <h1 class="text-2xl font-bold text-slate-900">Tableau de bord Administrateur</h1>
-      <p class="app-text-muted">Gestion de l'application E-Parapheur</p>
+<div class="app-container py-4 space-y-4 app-fade-slide-in">
+  <!-- Header de section -->
+  <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+    <div class="space-y-0.5">
+      <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest leading-none">Tableau de bord Admin</h3>
+      <p class="text-slate-500 text-[10px] font-medium uppercase tracking-tight">Vue d'ensemble et gestion de la plateforme.</p>
     </div>
-    <div class="flex gap-3">
-      <button class="app-btn app-btn-outline px-4 py-2 text-sm font-medium">
-        Exporter PDF
+    <div class="flex gap-2">
+      <button class="flex items-center gap-1.5 app-btn bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 px-3 py-1.5 rounded-lg font-black text-[10px] uppercase tracking-widest transition-all shadow-sm">
+        <span class="material-symbols-outlined text-base">download</span>
+        EXPORTER
       </button>
-      <button class="app-btn app-btn-primary px-4 py-2 text-sm font-medium shadow-lg shadow-indigo-100">
-        Nouveau Rapport
+      <button class="flex items-center gap-1.5 app-btn app-btn-primary px-3 py-1.5 rounded-lg font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-primary/20">
+        <span class="material-symbols-outlined text-base">add_circle</span>
+        NOUVEAU
       </button>
     </div>
   </div>
 
   <!-- Stats Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
     <app-stats-card
       title="Total utilisateurs"
       [value]="totalUsers"
       icon="document-text"
-      color="indigo"
+      color="red"
       trend="+12.5%"
       [isUp]="true">
     </app-stats-card>
@@ -51,27 +53,56 @@
     </app-stats-card>
   </div>
 
-  <!-- Quick Actions -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="app-card">
-      <h2 class="text-xl font-semibold mb-4 text-slate-900">Actions rapides</h2>
-      <div class="space-y-3">
-        <button
-          routerLink="/admin/users"
-          class="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-colors text-left">
-          Gérer les utilisateurs
-        </button>
-        <button
-          routerLink="/admin/users"
-          class="w-full bg-emerald-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-emerald-700 transition-colors text-left">
-          Créer un utilisateur
-        </button>
+  <!-- Main Content -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    
+    <!-- Actions Rapides -->
+    <section class="space-y-2">
+      <div class="flex items-center gap-2 text-slate-400">
+        <span class="material-symbols-outlined text-base">bolt</span>
+        <h4 class="text-[10px] font-black uppercase tracking-[0.2em]">Actions rapides</h4>
       </div>
-    </div>
-    <div class="app-card">
-      <h2 class="text-xl font-semibold mb-4 text-slate-900">Statistiques</h2>
-      <p class="text-slate-500">Graphiques et statistiques détaillées (à implémenter)</p>
-    </div>
+      <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm transition-all duration-300">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button
+            routerLink="/admin/users"
+            class="flex items-center gap-3 p-3 rounded-lg border border-slate-100 bg-slate-50 hover:bg-primary/[0.02] hover:border-primary/20 transition-all group text-left">
+            <div class="w-8 h-8 rounded bg-white flex items-center justify-center text-primary border border-slate-200 shadow-sm group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-lg">manage_accounts</span>
+            </div>
+            <div>
+              <p class="text-[10px] font-black text-slate-900 uppercase tracking-widest leading-tight">Gérer</p>
+              <p class="text-[9px] font-bold text-slate-500 uppercase tracking-tight mt-0.5">Utilisateurs</p>
+            </div>
+          </button>
+
+          <button
+            routerLink="/admin/users"
+            class="flex items-center gap-3 p-3 rounded-lg border border-slate-100 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-200 transition-all group text-left">
+            <div class="w-8 h-8 rounded bg-white flex items-center justify-center text-emerald-600 border border-slate-200 shadow-sm group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-lg">person_add</span>
+            </div>
+            <div>
+              <p class="text-[10px] font-black text-slate-900 uppercase tracking-widest leading-tight">Créer</p>
+              <p class="text-[9px] font-bold text-slate-500 uppercase tracking-tight mt-0.5">Nouvel accès</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistiques -->
+    <section class="space-y-2">
+      <div class="flex items-center gap-2 text-slate-400">
+        <span class="material-symbols-outlined text-base">monitoring</span>
+        <h4 class="text-[10px] font-black uppercase tracking-[0.2em]">Vue d'ensemble</h4>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm min-h-[120px] flex items-center justify-center border-dashed">
+         <div class="text-center opacity-50">
+           <span class="material-symbols-outlined text-3xl text-slate-300 mb-2">bar_chart</span>
+           <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Graphiques à implémenter</p>
+         </div>
+      </div>
+    </section>
   </div>
 </div>
-

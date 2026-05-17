@@ -66,10 +66,22 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   getInputClasses(): string {
-    const baseClasses = 'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200';
-    const errorClass = this.error ? 'border-danger' : 'border-gray-300';
-    const disabledClass = this.disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white';
-    const iconPadding = this.type === 'password' ? 'pr-10' : '';
-    return `${baseClasses} ${errorClass} ${disabledClass} ${iconPadding}`.trim();
+    const baseClasses = 'w-full rounded border outline-none h-9 text-xs font-bold transition-all';
+    
+    // Default vs Error borders
+    const borderClass = this.error 
+      ? 'border-rose-400 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 text-slate-900' 
+      : 'border-slate-200 group-hover:border-slate-300 focus:border-primary focus:ring-4 focus:ring-primary/5 text-slate-900';
+      
+    // Default vs Disabled backgrounds
+    const bgClass = this.disabled 
+      ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+      : 'bg-slate-50/50 focus:bg-white';
+      
+    // Padding
+    const paddingLeftClass = 'px-3';
+    const paddingRightClass = (this.type === 'password' || this.icon) ? 'pr-9' : '';
+    
+    return `${baseClasses} ${borderClass} ${bgClass} ${paddingLeftClass} ${paddingRightClass}`.trim();
   }
 }

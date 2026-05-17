@@ -2,22 +2,22 @@
   [class.w-[260px]]="isOpen"
   [class.w-20]="!isOpen"
   class="app-sidebar transition-all duration-300 flex flex-col min-h-screen fixed left-0 top-0 z-50 shadow-sm border-r border-slate-100">
-  
+
   <!-- Logo Section -->
   <div class="h-24 flex flex-col items-center justify-center border-b border-border-subtle bg-slate-50/30">
-    <div class="flex flex-col items-center justify-center" *ngIf="isOpen">
-      <img 
-        src="assets/images/logos/Cryptoneo_logo.png" 
-        alt="Cryptoneo" 
-        class="h-8 w-auto object-contain" />
-      <span class="text-[9px] font-bold text-text-secondary uppercase tracking-[0.2em] opacity-50 mt-2">Enterprise Edition</span>
+    <div class="flex flex-col items-center justify-center">
+      <img
+        src="assets/images/logos/Logo_BOAD.png"
+        alt="Cryptoneo"
+        class="h-12 w-auto object-contain" />
+<!--      <span class="text-[9px] font-bold text-text-secondary uppercase tracking-[0.2em] opacity-50 mt-2">Enterprise Edition</span>-->
     </div>
-    <div *ngIf="!isOpen">
-      <img 
-        src="assets/icons/android-chrome-192x192.png" 
-        alt="C" 
-        class="h-10 w-auto object-contain" />
-    </div>
+<!--    <div *ngIf="!isOpen">-->
+<!--      <img-->
+<!--        src="assets/icons/android-chrome-192x192.png"-->
+<!--        alt="C"-->
+<!--        class="h-10 w-auto object-contain" />-->
+<!--    </div>-->
   </div>
 
   <!-- Navigation -->

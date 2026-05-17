@@ -1,227 +1,200 @@
-<div class="min-h-[calc(100vh-120px)] bg-[#F8FAFC] flex flex-col shadow-md">
-  <!-- Header -->
-  <div class="bg-white border-b border-slate-200 px-6 lg:px-8 py-4 flex justify-between items-center">
+<div class="app-container py-4 h-[calc(100vh-80px)] flex flex-col app-fade-slide-in">
+  <!-- Header de section -->
+  <div class="flex items-center justify-between pb-3 border-b border-slate-100">
     <div class="flex items-center gap-4">
-      <!-- Si tu as une méthode de retour, sinon tu peux retirer ce bouton -->
       <button
         type="button"
-
-        class="p-2 hover:bg-slate-50 rounded-full transition-colors text-slate-500"
+        class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-500"
       >
-        ←
+        <span class="material-symbols-outlined text-lg">arrow_back</span>
       </button>
-      <div>
-        <h1 class="text-xl font-bold text-slate-900">Créer des utilisateurs</h1>
-        <p class="text-sm text-slate-500">
-          Ajoutez plusieurs utilisateurs, puis validez la création en une seule fois.
-        </p>
+      <div class="space-y-0.5">
+        <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest leading-none">Création d'utilisateurs</h3>
+        <p class="text-slate-500 text-[10px] font-medium uppercase tracking-tight">Ajoutez plusieurs utilisateurs à la fois.</p>
       </div>
     </div>
 
-    <app-button
+    <button
       type="button"
-      variant="primary"
-      [loading]="loadingCreate"
       [disabled]="draftUsers.length === 0 || loadingCreate"
       (click)="onCreateAll()"
-      class="hidden sm:inline-flex"
+      class="hidden sm:flex items-center justify-center gap-2 app-btn app-btn-primary !px-5 !py-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/20 text-[10px] uppercase tracking-widest font-black"
     >
-      Créer les utilisateurs ({{ draftUsers.length }})
-    </app-button>
+      CRÉER ({{ draftUsers.length }})
+      <span class="material-symbols-outlined text-base">check_circle</span>
+    </button>
   </div>
 
   <!-- Contenu principal -->
-  <div class="flex-1 flex overflow-hidden">
-    <div class="flex-1 bg-white overflow-y-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-6">
-      <div class="max-w-2xl mx-auto">
+  <div class="flex-1 flex overflow-hidden bg-white mt-4 rounded-xl border border-slate-200 shadow-sm">
+    <div class="flex-1 overflow-y-auto px-4 lg:px-8 py-6">
+      <div class="max-w-2xl mx-auto space-y-6">
         <!-- Feedback erreur globale -->
-        <div
-          *ngIf="error"
-          class="bg-danger/10 border border-danger text-danger px-3 py-2 rounded text-sm mb-4"
-        >
-          {{ error }}
+        <div *ngIf="error" class="bg-rose-50 border border-rose-200 text-rose-600 px-4 py-3 rounded-lg text-xs font-bold mb-4 flex items-center gap-2">
+           <span class="material-symbols-outlined text-base">error</span>
+           {{ error }}
         </div>
 
-        <div class="flex items-center gap-2 text-[#4F46E5] mb-4">
-          <span class="text-[10px] font-bold uppercase tracking-wider">Détails utilisateur</span>
-        </div>
-
-<!--        <h2 class="text-2xl lg:text-3xl font-bold text-slate-900 mb-1">-->
-<!--          Ajouter un utilisateur-->
-<!--        </h2>-->
-        <p class="text-slate-500 mb-5 text-sm app-label-important">
-          Renseignez les informations de l’utilisateur puis ajoutez-le à la liste de création.
-        </p>
-
-        <form
-          [formGroup]="createUserForm"
-          (ngSubmit)="onAddToDraft()"
-          class="space-y-6"
-        >
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <app-input
-              formControlName="firstName"
-              label="Prénom"
-              placeholder="Prénom"
-              [required]="true"
-              [error]="createUserForm.get('firstName')?.hasError('required') && createUserForm.get('firstName')?.touched ? 'Le prénom est requis' : ''">
-            </app-input>
-
-            <app-input
-              formControlName="lastName"
-              label="Nom"
-              placeholder="Nom"
-              [required]="true"
-              [error]="createUserForm.get('lastName')?.hasError('required') && createUserForm.get('lastName')?.touched ? 'Le nom est requis' : ''">
-            </app-input>
+        <section class="space-y-4">
+          <div class="flex items-center gap-2 text-primary pb-2 border-b border-slate-50">
+            <span class="material-symbols-outlined text-base">person_add</span>
+            <h4 class="text-[10px] font-black uppercase tracking-[0.2em]">Détails utilisateur</h4>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <app-input
-              formControlName="email"
-              type="email"
-              label="Email"
-              placeholder="email@example.com"
-              [required]="true"
-              [error]="createUserForm.get('email')?.hasError('required') && createUserForm.get('email')?.touched ? 'L\'email est requis' : createUserForm.get('email')?.hasError('email') && createUserForm.get('email')?.touched ? 'Email invalide' : ''">
-            </app-input>
+          <form
+            [formGroup]="createUserForm"
+            (ngSubmit)="onAddToDraft()"
+            class="space-y-4"
+          >
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <app-input
+                formControlName="firstName"
+                label="Prénom"
+                placeholder="Prénom"
+                [required]="true"
+                [error]="createUserForm.get('firstName')?.hasError('required') && createUserForm.get('firstName')?.touched ? 'Le prénom est requis' : ''">
+              </app-input>
 
-            <app-input
-              formControlName="phone"
-              type="tel"
-              label="Téléphone"
-              placeholder="+33 6 12 34 56 78">
-            </app-input>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="space-y-2">
-              <label class="block text-xs font-medium app-label-important mb-1.5">Genre</label>
-              <div class="relative">
-                <select
-                  formControlName="gender"
-                  class="w-full appearance-none bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#4F46E5]/10 focus:border-[#4F46E5] outline-none transition-all"
-                >
-                  <option value="">Sélectionner</option>
-                  <option value="M">Masculin</option>
-                  <option value="F">Féminin</option>
-                </select>
-                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                  ▼
-                </span>
-              </div>
+              <app-input
+                formControlName="lastName"
+                label="Nom"
+                placeholder="Nom"
+                [required]="true"
+                [error]="createUserForm.get('lastName')?.hasError('required') && createUserForm.get('lastName')?.touched ? 'Le nom est requis' : ''">
+              </app-input>
             </div>
 
-            <div class="space-y-2">
-              <label class="block text-xs font-medium app-label-important mb-1.5">Profil</label>
-              <div class="relative">
-                <select
-                  formControlName="profileId"
-                  class="w-full appearance-none bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#4F46E5]/10 focus:border-[#4F46E5] outline-none transition-all"
-                >
-                  <option
-                    *ngFor="let id of profiles"
-                    [value]="id"
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <app-input
+                formControlName="email"
+                type="email"
+                label="Email"
+                placeholder="email@example.com"
+                [required]="true"
+                [error]="createUserForm.get('email')?.hasError('required') && createUserForm.get('email')?.touched ? 'L\'email est requis' : createUserForm.get('email')?.hasError('email') && createUserForm.get('email')?.touched ? 'Email invalide' : ''">
+              </app-input>
+
+              <app-input
+                formControlName="phone"
+                type="tel"
+                label="Téléphone"
+                placeholder="+33 6 12 34 56 78">
+              </app-input>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Genre</label>
+                <div class="relative group">
+                  <select
+                    formControlName="gender"
+                    class="w-full rounded border border-slate-200 bg-slate-50/50 text-slate-900 outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 h-9 px-3 text-xs font-bold transition-all appearance-none group-hover:border-slate-300"
                   >
-                    {{ getProfileLabel(id) }}
-                  </option>
-                </select>
-                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                  ▼
-                </span>
+                    <option value="">Sélectionner</option>
+                    <option value="M">Masculin</option>
+                    <option value="F">Féminin</option>
+                  </select>
+                  <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none text-lg">expand_more</span>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Profil</label>
+                <div class="relative group">
+                  <select
+                    formControlName="profileId"
+                    class="w-full rounded border border-slate-200 bg-slate-50/50 text-slate-900 outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 h-9 px-3 text-xs font-bold transition-all appearance-none group-hover:border-slate-300"
+                  >
+                    <option
+                      *ngFor="let id of profiles"
+                      [value]="id"
+                    >
+                      {{ getProfileLabel(id) }}
+                    </option>
+                  </select>
+                  <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none text-lg">expand_more</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="flex justify-end pt-4">
-            <app-button
-              type="submit"
-              variant="primary"
-              [loading]="loadingAdd"
-              [disabled]="createUserForm.invalid || loadingAdd"
-            >
-              {{ selectedDraftIndex !== null ? 'Mettre à jour' : 'Ajouter à la liste' }}
-            </app-button>
-          </div>
-        </form>
+            <div class="flex justify-end pt-4 border-t border-slate-50">
+              <button
+                type="submit"
+                [disabled]="createUserForm.invalid || loadingAdd"
+                class="flex items-center justify-center gap-2 app-btn app-btn-outline !px-5 !py-2 disabled:opacity-50 text-[10px] font-black uppercase tracking-widest"
+              >
+                {{ selectedDraftIndex !== null ? 'METTRE À JOUR' : 'AJOUTER À LA LISTE' }}
+                <span class="material-symbols-outlined text-base">{{ selectedDraftIndex !== null ? 'sync' : 'playlist_add' }}</span>
+              </button>
+            </div>
+          </form>
+        </section>
 
-        <!-- Bouton "Créer les utilisateurs" en bas sur mobile -->
-        <div class="mt-10 flex justify-end sm:hidden">
-          <app-button
+        <!-- Bouton mobile -->
+        <div class="mt-8 flex justify-end sm:hidden">
+          <button
             type="button"
-            variant="primary"
-            [loading]="loadingCreate"
             [disabled]="draftUsers.length === 0 || loadingCreate"
             (click)="onCreateAll()"
+            class="flex items-center justify-center gap-2 app-btn app-btn-primary w-full !py-3 disabled:opacity-50 text-[10px] uppercase tracking-widest font-black"
           >
-            Créer les utilisateurs ({{ draftUsers.length }})
-          </app-button>
+            CRÉER LES UTILISATEURS ({{ draftUsers.length }})
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Sidebar - Utilisateurs à créer (à droite) -->
-    <div class="w-full lg:w-80 border-t lg:border-t-0 lg:border-l border-slate-200 bg-white flex flex-col">
-      <div class="p-4 lg:p-6 border-b border-slate-100">
-        <div class="flex justify-between items-center mb-1">
-          <h2 class="text-base lg:text-lg font-bold text-slate-900">
-            Utilisateurs à créer
-          </h2>
-          <span class="bg-[#EEF2FF] text-[#4F46E5] text-xs font-bold px-2 py-0.5 rounded-full">
+    <div class="w-full lg:w-80 border-t lg:border-t-0 lg:border-l border-slate-200 bg-slate-50/30 flex flex-col">
+      <div class="p-4 border-b border-slate-200 bg-white">
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center gap-2 text-slate-700">
+            <span class="material-symbols-outlined text-base">group</span>
+            <h4 class="text-[10px] font-black uppercase tracking-[0.2em]">En attente</h4>
+          </div>
+          <span class="bg-primary/10 text-primary border border-primary/20 text-[9px] font-black px-2 py-0.5 rounded">
             {{ draftUsers.length }}
           </span>
         </div>
-        <p class="text-xs lg:text-sm text-slate-500">
-          Liste des utilisateurs en attente de création
-        </p>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-3 lg:p-4 space-y-3">
+      <div class="flex-1 overflow-y-auto p-3 space-y-2.5">
         <div
           *ngIf="draftUsers.length === 0"
-          class="text-sm text-slate-500 py-4 text-center app-label-important"
+          class="flex flex-col items-center justify-center py-10 opacity-50"
         >
-          <img src="assets/images/illustrations/no-data.svg" alt="Aucun utilisateur" class="mx-auto mb-3 w-24 h-24 opacity-50" />
-          Aucun utilisateur ajouté pour le moment.
-          <br />
-          Utilisez le formulaire à gauche pour en ajouter.
+          <span class="material-symbols-outlined text-4xl text-slate-300 mb-2">person_off</span>
+          <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 text-center px-4">Aucun utilisateur<br/>ajouté pour le moment</p>
         </div>
 
         <div
           *ngFor="let user of draftUsers; trackBy: trackByDraftUser; let i = index"
-          class="group px-4 py-3 rounded-xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all flex items-center gap-4 cursor-pointer"
+          class="group p-3 bg-white rounded-lg border border-slate-200 hover:border-primary/40 hover:shadow-sm transition-all flex items-start gap-3 cursor-pointer"
           (click)="onSelectDraftUser(user, i)"
         >
-          <div class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold bg-slate-100 text-slate-500">
-            {{ user.firstName[0] }}{{ user.lastName[0] }}
+          <div class="w-8 h-8 rounded bg-primary/5 flex items-center justify-center text-[10px] font-black text-primary border border-primary/10 shrink-0">
+            {{ user.firstName[0] | uppercase }}{{ user.lastName[0] | uppercase }}
           </div>
           <div class="flex-1 min-w-0 flex flex-col gap-0.5">
-            <p class="text-[13px] font-semibold text-slate-900">
+            <p class="text-xs font-black text-slate-900 truncate">
               {{ user.firstName }} {{ user.lastName }}
             </p>
-            <p class="text-[11px] text-slate-500">
-              <span class="capitalize">{{ user.profileLabel }}</span>
-              • <span class="truncate inline-block max-w-[140px] align-bottom">{{ user.email }}</span>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter truncate">
+              <span class="text-primary">{{ user.profileLabel }}</span> • {{ user.email }}
             </p>
-            <p class="text-[11px] text-slate-400" *ngIf="user.phone || user.gender">
-              <ng-container *ngIf="user.phone">
-                {{ user.phone }}
-              </ng-container>
-              <ng-container *ngIf="user.phone && user.gender">
-                &nbsp;•&nbsp;
-              </ng-container>
-              <ng-container *ngIf="user.gender">
-                {{ user.gender === 'M' ? 'Masculin' : 'Féminin' }}
-              </ng-container>
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1" *ngIf="user.phone || user.gender">
+              <ng-container *ngIf="user.phone">{{ user.phone }}</ng-container>
+              <ng-container *ngIf="user.phone && user.gender"> • </ng-container>
+              <ng-container *ngIf="user.gender">{{ user.gender === 'M' ? 'MASC' : 'FÉM' }}</ng-container>
             </p>
           </div>
           <button
             type="button"
             (click)="removeDraftUser(user); $event.stopPropagation()"
-            class="text-red-400 hover:text-red-600 hover:scale-105 transition-transform text-sm"
-            title="Retirer de la liste"
+            class="w-6 h-6 flex items-center justify-center rounded text-slate-300 hover:text-rose-500 hover:bg-rose-50 transition-all shrink-0"
+            title="Retirer"
           >
-            ✕
+            <span class="material-symbols-outlined text-sm">close</span>
           </button>
         </div>
       </div>

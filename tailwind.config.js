@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#0083c0', // SigFlow Indigo
+        primary: '#A50034', // SigFlow Indigo
         'primary-dim': 'rgba(0, 131, 192, 0.1)',
         'background-light': '#F9FAFB',
         'surface-white': '#FFFFFF',
