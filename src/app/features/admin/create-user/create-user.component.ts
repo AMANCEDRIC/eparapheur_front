@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
+import { PhoneInputComponent } from '../../../shared/components/phone-input/phone-input.component';
 import { CardComponent } from '../../../shared/components/card/card.component';
 import { CreateUserRequest, IApiResponse } from '../../../core/models';
 import { forkJoin } from 'rxjs';
@@ -28,6 +29,7 @@ interface DraftUser {
     RouterModule,
     ButtonComponent,
     InputComponent,
+    PhoneInputComponent,
     CardComponent
   ],
   templateUrl: './create-user.component.html',

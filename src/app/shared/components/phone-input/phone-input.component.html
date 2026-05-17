@@ -1,0 +1,20 @@
+<div class="flex flex-col gap-1.5 w-full group">
+  <label *ngIf="label" class="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+    {{ label }}
+    <span *ngIf="required" class="text-rose-500 ml-0.5">*</span>
+  </label>
+  <div class="relative w-full">
+    <input
+      #phoneInput
+      type="tel"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [required]="required"
+      (blur)="onTouched()"
+      [class]="getInputClasses()" />
+  </div>
+  <div *ngIf="error" class="text-[9px] text-rose-500 font-bold flex items-center gap-1 ml-1 mt-0.5">
+    <span class="material-symbols-outlined text-[12px]">error</span>
+    {{ error }}
+  </div>
+</div>
