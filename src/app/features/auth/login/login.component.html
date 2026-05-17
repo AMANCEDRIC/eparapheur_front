@@ -4,16 +4,15 @@
       class="w-full flex bg-white  shadow-[0_40px_120px_-20px_rgba(0,0,0,0.18)] overflow-hidden border border-slate-100/50 min-h-[600px] app-fade-slide-in">
       <!-- Left Column - Login Form -->
       <div class="flex-1 flex flex-col justify-center items-center py-6 px-4">
-        <div class="w-full max-w-md">
+        <div class="w-full max-w-md -mt-16">
           <!-- Logo/Brand -->
-          <div class="text-center mb-4">
+          <div class="text-center mb-8">
             <!-- Logo Cryptoneo -->
-            <div class="mb-1 flex justify-center -mt-5">
-              <img src="assets/images/logos/Logo_BOAD.png" alt="BOAD Logo" class="h-16 w-auto object-contain">
+            <div class="mb-1 flex justify-center">
+              <img src="assets/images/logos/Logo_BOAD.png" alt="BOAD Logo" class="h-20 w-auto object-contain">
             </div>
-            <h1 class="text-2xl font-bold text-gray-900 mb-1">E-Parapheur</h1>
-            <h2 class="text-xl font-semibold text-gray-800">Bienvenue</h2>
-            <p class="mt-1 text-xs text-gray-600">
+
+            <p class="mt-2 text-xs text-gray-500 font-medium tracking-wide">
               Application de signature électronique sécurisée
             </p>
           </div>
@@ -85,12 +84,10 @@
                 </p>
               </div>
 
-              <div class="flex items-center justify-between">
-                <div class="text-sm">
-                  <a routerLink="/forgot-password" class="font-medium app-link-primary text-xs">
-                    Mot de passe oublié ?
-                  </a>
-                </div>
+              <div class="flex justify-end mt-1">
+                <a routerLink="/forgot-password" class="text-[11px] font-semibold text-primary hover:text-[#7A0026] transition-colors underline decoration-transparent hover:decoration-[#7A0026] underline-offset-2">
+                  Mot de passe oublié ?
+                </a>
               </div>
 
               <button type="submit" [disabled]="loginForm.invalid || loading"
@@ -240,13 +237,23 @@
         class="hidden lg:flex lg:flex-1 flex-col justify-center items-center bg-gradient-to-br from-primary to-[#A50034] relative overflow-hidden py-6">
         <div class="w-full max-w-lg mx-auto">
           <div class="flex flex-col justify-center p-6 text-white relative z-10">
-            <div class="mb-4">
-              <h2 class="text-2xl font-bold mb-2 leading-tight">
-                Révolutionnez votre façon de signer et gérer vos documents
+            <div class="mb-8 relative z-10">
+              <h2 class="text-2xl font-extrabold mb-3 leading-tight tracking-tight text-white flex items-center gap-3">
+                <div class="p-2 bg-white/10 border border-white/20 rounded-lg backdrop-blur-sm shrink-0 shadow-md">
+                  <span class="material-symbols-outlined text-[20px] text-white">draw</span>
+                </div>
+                <div>
+                  Bienvenue sur <br/>
+                  <span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-white to-rose-200 text-3xl">E-Parapheur</span>
+                </div>
               </h2>
-              <p class="text-blue-100 text-sm">
-                Une solution complète de signature électronique pour moderniser vos processus administratifs.
-              </p>
+              
+              <div class="pl-[52px]">
+                <p class="text-rose-50 text-[13px] leading-relaxed font-medium border-l-2 border-white/20 pl-3 py-0.5">
+                  La plateforme <strong class="text-white font-bold">collaborative web</strong> qui modernise vos processus métiers.
+                  Soumettez, validez et <strong class="text-white font-bold">signez électroniquement</strong> tous vos documents en toute simplicité.
+                </p>
+              </div>
             </div>
 
             <!-- Illustration SVG -->

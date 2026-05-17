@@ -2,38 +2,38 @@
   <div class="w-full max-w-sm space-y-3 pointer-events-auto">
     <div
       *ngFor="let notif of notifications$ | async; trackBy: trackById"
-      class="rounded-2xl shadow-lg border px-5 py-4 bg-white flex flex-col gap-2"
+      class="rounded shadow-md border-l-4 border-y border-r px-4 py-3 bg-white flex flex-col gap-2"
       [ngClass]="{
-        'border-emerald-200': notif.status === 'success',
-        'border-red-200': notif.status === 'error',
-        'border-blue-200': notif.status === 'info',
-        'border-amber-200': notif.status === 'warning'
+        'border-l-emerald-500 border-y-slate-200 border-r-slate-200': notif.status === 'success',
+        'border-l-rose-500 border-y-slate-200 border-r-slate-200': notif.status === 'error',
+        'border-l-blue-500 border-y-slate-200 border-r-slate-200': notif.status === 'info',
+        'border-l-amber-500 border-y-slate-200 border-r-slate-200': notif.status === 'warning'
       }"
     >
       <div class="flex items-start gap-3">
         <!-- Icône + couleur -->
         <div
-          class="h-8 w-8 rounded-full flex items-center justify-center text-white shrink-0"
+          class="h-6 w-6 rounded flex items-center justify-center text-white shrink-0 mt-0.5"
           [ngClass]="{
             'bg-emerald-500': notif.status === 'success',
-            'bg-red-500': notif.status === 'error',
+            'bg-rose-500': notif.status === 'error',
             'bg-blue-500': notif.status === 'info',
             'bg-amber-500': notif.status === 'warning'
           }"
         >
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <ng-container [ngSwitch]="notif.status">
               <g *ngSwitchCase="'success'">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                      d="M5 13l4 4L19 7" />
               </g>
               <g *ngSwitchCase="'error'">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a1 1 0 00.86 1.5h18.64a1 1 0 00.86-1.5L13.71 3.86a1 1 0 00-1.72 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                      d="M6 18L18 6M6 6l12 12" />
               </g>
               <g *ngSwitchCase="'warning'">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 9v4m0 4h.01M4.93 19h14.14L12 5 4.93 19z" />
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </g>
               <g *ngSwitchDefault>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -45,10 +45,10 @@
 
         <!-- Texte -->
         <div class="flex-1">
-          <div *ngIf="notif.title" class="text-sm font-semibold text-slate-900 mb-0.5">
+          <div *ngIf="notif.title" class="text-[10px] font-black uppercase tracking-widest text-slate-800 mb-0.5">
             {{ notif.title }}
           </div>
-          <div class="text-xs text-slate-600">
+          <div class="text-[11px] font-bold text-slate-500 leading-snug">
             {{ notif.description }}
           </div>
         </div>
@@ -56,10 +56,10 @@
         <!-- Bouton fermer -->
         <button
           type="button"
-          class="text-xs text-slate-400 hover:text-slate-600"
+          class="text-slate-300 hover:text-slate-500 transition-colors mt-0.5"
           (click)="dismiss(notif.id)"
         >
-          ✕
+          <span class="material-symbols-outlined text-[16px]">close</span>
         </button>
       </div>
     </div>
